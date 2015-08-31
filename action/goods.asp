@@ -341,7 +341,7 @@ end if
 %>  
 <%if action="view" then
 set rs=server.createobject("adodb.recordset") 
-sql="select * from Information where id="&Request("id")
+sql="select * from GoodsInfo where id="&Request("id")
 rs.open sql,conn,1,1
 if not rs.eof Then
 %>
