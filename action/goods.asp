@@ -164,7 +164,7 @@ function check()
  rs.open sql,conn,1,1
  if not rs.eof then
  proCount=rs.recordcount
-	rs.PageSize=3
+	rs.PageSize=8
      if not IsEmpty(Request("ToPage")) then
 	    ToPage=CInt(Request("ToPage"))
 		if ToPage>rs.PageCount then

@@ -7,18 +7,23 @@ if Request("wor")="del" then
  id=request("id")
  idArr=split(id,",")
  for i=0 to ubound(idArr)
-  sql="update GoodsInfo set is_ok='false' where id="&trim(idArr(i))
+  sql="update billInfo set is_ok='false' where id="&trim(idArr(i))
   conn.execute(sql)
  next
+elseif Request("addon")="yes" then 
+ sql="insert into billInfo (billno,status,cuser) values ('"&Request("billno")&"',0,'"&session("RealName")&"')"
+ conn.execute(sql)
 end if
 %>
 <%
 '-添加和修改记录 id为空则为添加 否则为修改-
 action=Request("action")
+addon=Request("addon")
 id=Request("id")
+
 if action="yes" Then
  set rs=server.createobject("adodb.recordset") 
-if id="" then
+ if id="" then
    set rsCheck = conn.execute("select Gname from GoodsInfo where Gname='" & trim(Request.Form("cname")) & "'")
      if not (rsCheck.bof and rsCheck.eof) then
       response.write "<script language='javascript'>alert('商品商品编号 " & trim(Request.Form("idcard")) & " 已存在，请检查！');history.back(-1);</script>"
@@ -28,24 +33,23 @@ if id="" then
    sql="select * from GoodsInfo " 
    rs.open sql,conn,3,3
    rs.addnew
-else
+ else
    sql="select * from GoodsInfo where id="&id&"" 
    rs.open sql,conn,1,2
-end if
-rs("Gname")=Request("cname")
-rs("Gcat")=Request("address")
-rs("Gcost")=Request("pcode")
-rs("Gsell")=Request("owner")
-if id="" then 
-rs("adduser")=session("admin_name")
-end if 
-rs("Muser")=session("admin_name")
-rs.update
-rs.close
-set rs=nothing
+ end if
+ rs("Gname")=Request("cname")
+ rs("Gcat")=Request("address")
+ rs("Gcost")=Request("pcode")
+ rs("Gsell")=Request("owner")
+ if id="" then 
+ rs("adduser")=session("admin_name")
+ end if 
+
+ rs("Muser")=session("admin_name")
+ rs.update
+ rs.close
+ set rs=nothing
  Response.Redirect "?action=list"
-elseif action="billadd" then 
-sc "sd"
 end if
 %>
 <html>
@@ -246,9 +250,9 @@ else
 <%if action="list" then%>
 <BR>
   <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
-  <form name="add" method="post" action="bill.asp">
+  <form name="danadd" method="post" action="bill.asp">
     <tr align="center" bgcolor="#F2FDFF">
-       <td colspan="6"  class="optiontitle"> 添加商品订单 </td>
+       <td colspan="6"  class="optiontitle"> 添加商品订单444 </td>
     </tr>
     <tr bgcolor='#F2FDFF'>
        <td align='right' bgcolor="#FFFFFF"> 商品订单：</td>
@@ -258,8 +262,9 @@ else
     </tr>		
     <tr align="center" bgcolor="#ebf0f7">
        <td colspan="6" >
-	   <INPUT TYPE="hidden" name="action" id="action" value="billadd" >
-	   <input type="button" name="Submit" value="新增" >
+	   <INPUT TYPE="hidden" name="action" id="action" value="list" >
+	   <INPUT TYPE="hidden" name="addon" id="addon" value="yes" >
+	   <input type="Submit" name="Submit" value="新增" >
 	   </td>
     </tr>
   </FORM>
@@ -271,21 +276,21 @@ else
         </tr>
         <tr align="center" bgcolor="#ebf0f7">
 		  <td width="5%">选中</td>
-          <td width="10%">商品名称</td>
-          <td width="10%">商品类别</td>
-          <td width="10%">采购成本</td>
-          <td width="10%">销售价格</td>
-          <td width="10%">修改时间</td>
-          <td width="10%">修改人员</td>
-          <td width="10%">执行操作</td>
+          <td width="10%">单号</td>
+          <td width="10%">数量</td>
+          <td width="10%">金额</td>
+          <td width="10%">日期</td>
+          <td width="10%">状态</td>
+          <td width="10%">人员</td>
+          <td width="10%">操作</td>
         </tr>	
 <%
- sql="select * from GoodsInfo where is_ok='true' order by id desc"
+ sql="select * from BillInfo where is_ok='true' order by id desc"
  set rs=server.createobject("adodb.recordset") 
  rs.open sql,conn,1,1
  if not rs.eof then
  proCount=rs.recordcount
-	rs.PageSize=3
+	rs.PageSize=8
      if not IsEmpty(Request("ToPage")) then
 	    ToPage=CInt(Request("ToPage"))
 		if ToPage>rs.PageCount then
@@ -311,12 +316,12 @@ else
        <form name="del" action="" method="post">
         <tr align='center' bgcolor='#FFFFFF' onmouseover='this.style.background="#F2FDFF"' onmouseout='this.style.background="#FFFFFF"'>
           <td><input type="checkbox" name="id" value="<%=rs("id")%>"></td>
-          <td><%=rs("Gname")%></td>
-		  <td><%=rs("Gcat")%></td>
-          <td><%=rs("Gcost")%></td>
-		  <td><%=rs("Gsell")%></td>
-		  <td><%=rs("addtime")%></td>
-		  <td><%=rs("adduser")%></td>
+          <td><%=rs("billno")%></td>
+		  <td><%=rs("billqyt")%></td>
+          <td><%=rs("billcash")%></td>
+		  <td><%=rs("billdate")%></td>
+		  <td><%=rs("status")%></td>
+		  <td><%=rs("cuser")%></td>
           <td><IMG src="../images/view.gif" align="absmiddle"><a href="?action=view&id=<%=rs("id")%>">查看</a> | <IMG src="../images/edit.gif" align="absmiddle"><a href="?action=edit&id=<%=rs("id")%>">修改</a> | <IMG src="../images/drop.gif" align="absmiddle"><a href="javascript:DoEmpty('?wor=del&id=<%=rs("id")%>&action=list&ToPage=<%=intCurPage%>')">删除</a></td>
         </tr>
 <%
@@ -399,7 +404,7 @@ end if
 %>  
 <%if action="view" then
 set rs=server.createobject("adodb.recordset") 
-sql="select * from GoodsInfo where id="&Request("id")
+sql="select * from billInfo where id="&Request("id")
 rs.open sql,conn,1,1
 if not rs.eof Then
 %>
@@ -409,15 +414,15 @@ if not rs.eof Then
 		</tr>
 		<tr bgcolor='#F2FDFF'>
           <td align='right' bgcolor="#FFFFFF"> 商品名称：</td>
-          <td colspan="5" bgcolor="#FFFFFF"><%=rs("Gname")%></td>
+          <td colspan="5" bgcolor="#FFFFFF"><%=rs("billno")%></td>
         </tr>		
 		<tr bgcolor='#FFFFFF'>
 		  <td align='right' bgcolor="#FFFFFF"> 商品类别：</td>
-		  <td><%=rs("gcat")%></td>
+		  <td><%=rs("billqyt")%></td>
 		  <td align='right'>采购成本：</td>
-		  <td><%=rs("gcost")%></td>
+		  <td><%=rs("billcash")%></td>
 		  <td align='right'>销售价格：</td>
-		  <td><%=rs("gsell")%></td>
+		  <td><%=rs("billdate")%></td>
 		</tr>
 		<tr align="center" bgcolor="#ebf0f7">
 		  <td colspan="6">
