@@ -14,7 +14,7 @@ if request("action")="login" then
    Username=trim(request("admin_name"))
    Password=trim(request("admin_pass"))
 end if
-If Instr(Username,"or")<>0 or Instr(Password,"or")<>0 or Instr(Username,"and")<>0 or Instr(Password,"and")<>0Then
+If Instr(Username,"or")<>0 or Instr(Password,"or")<>0 or Instr(Username,"and")<>0 or Instr(Password,"and")<>0 Then
    response.write "<br><br><br><br><font size=2><center>没事别搞人家后台，谢谢！<br>否则一切后果自负！<br>校无忧-Www.Xiao5u.Com</font>"
 else
 set rs=server.createobject("adodb.recordset")
@@ -28,6 +28,8 @@ rs.open sql,conn,1,3
 		rs("LastLoginTime")=now()
 		rs.update
         session("admin_name")=request("admin_name")
+		session("RealName")=rs("RealName")
+		session("Limit")=rs("LimitText")
         response.redirect "sys.asp"
 	end if 
 rs.close

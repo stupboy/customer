@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
-<title>校无忧管理系统</title>
+<title>管理系统</title>
+<!--#include file="lib/lib.all.asp"-->
 <style type="text/css">
 <!--
 body {
@@ -59,15 +60,19 @@ body {
 	  d = new dTree('d');
 	  d.config.target="mainFrame";
 	  d.add(0,-1,' 网站内容管理');
-      d.add(1, 0, ' 管理员管理', 'Admin.asp?action=list');
-      d.add(1, 0, ' 网站设置', 'SiteConfig.asp'); 
+	  <% if qx("C1",session("Limit")) then %>
+	  d.add(1, 0, ' 系统管理', '');
+      d.add(11, 1, ' 用户管理', 'action.asp?dz=a002');
+      d.add(12, 1, ' 网站设置', 'SiteConfig.asp'); 
+	  <% end if %>
 	  d.add(2, 0, ' 商品管理', '');
 	  d.add(21, 2, ' 商品信息', 'action.asp?dz=a001');
 	  d.add(3, 0, ' 库存管理', '');
+	  d.add(30, 3, ' 生产订单', 'action.asp?dz=a003');
 	  d.add(31, 3, ' 客户信息列表', 'Information.asp?action=list');
 	  d.add(32, 3, ' 添加客户信息', 'Information.asp?action=add');
 	  d.add(33, 3, ' 查询客户信息', 'Search.asp');
-	  d.add(9, 0, ' 系统管理', '');
+	  d.add(9, 0, ' 个人管理', '');
 	  d.add(91, 9, ' 退出登入', 'logout.asp');		
 	  document.write(d);
 	  //-->
