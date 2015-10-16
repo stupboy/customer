@@ -252,7 +252,7 @@ else
   <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
   <form name="danadd" method="post" action="bill.asp">
     <tr align="center" bgcolor="#F2FDFF">
-       <td colspan="6"  class="optiontitle"> 添加商品订单444 </td>
+       <td colspan="6"  class="optiontitle">添加商品订单</td>
     </tr>
     <tr bgcolor='#F2FDFF'>
        <td align='right' bgcolor="#FFFFFF"> 商品订单：</td>
@@ -272,16 +272,17 @@ else
 <br>
   <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
         <tr align="center" bgcolor="#F2FDFF">
-          <td colspan="8"  class="optiontitle">商品信息</td>
+          <td colspan="9"  class="optiontitle">商品信息</td>
         </tr>
         <tr align="center" bgcolor="#ebf0f7">
 		  <td width="5%">选中</td>
           <td width="10%">单号</td>
-          <td width="10%">数量</td>
-          <td width="10%">金额</td>
+          <td width="5%">数量</td>
+          <td width="8%">金额</td>
           <td width="10%">日期</td>
-          <td width="10%">状态</td>
-          <td width="10%">人员</td>
+          <td width="5%">状态</td>
+		  <td width="5%">途径</td>
+          <td width="8%">人员</td>
           <td width="10%">操作</td>
         </tr>	
 <%
@@ -321,15 +322,16 @@ else
           <td><%=rs("billcash")%></td>
 		  <td><%=rs("billdate")%></td>
 		  <td><%=rs("status")%></td>
+		  <td></td>
 		  <td><%=rs("cuser")%></td>
-          <td><IMG src="../images/view.gif" align="absmiddle"><a href="?action=view&id=<%=rs("id")%>">查看</a> | <IMG src="../images/edit.gif" align="absmiddle"><a href="?action=edit&id=<%=rs("id")%>">修改</a> | <IMG src="../images/drop.gif" align="absmiddle"><a href="javascript:DoEmpty('?wor=del&id=<%=rs("id")%>&action=list&ToPage=<%=intCurPage%>')">删除</a></td>
+          <td><IMG src="../images/view.gif" align="absmiddle"><a href="?action=view&id=<%=rs("id")%>">查看</a> | <IMG src="../images/drop.gif" align="absmiddle"><a href="javascript:DoEmpty('?wor=del&id=<%=rs("id")%>&action=list&ToPage=<%=intCurPage%>')">删除</a></td>
         </tr>
 <%
 rs.movenext 
 next
 %>
 		<tr bgcolor="#F2FDFF">
-		  <td colspan="8">&nbsp;&nbsp;
+		  <td colspan="9">&nbsp;&nbsp;
 		   <input name="chkall" type="checkbox" id="chkall" value="select" onclick=CheckAll(this.form)> 全选
 		   <input name="wor" type="hidden" id="wor" value="del" />
 		   <input type="submit" name="Submit3" value="删除所选" onClick="{if(confirm('确定要删除记录吗？删除后将被无法恢复！')){return true;}return false;}" />
@@ -337,7 +339,7 @@ next
 		</tr>
 		</form>
         <tr align="center" bgcolor="#ebf0f7">
-          <td colspan="8">总共：
+          <td colspan="9">总共：
 		  <font color="#ff0000"><%=rs.PageCount%></font>页, 
 		  <font color="#ff0000"><%=proCount%></font>条商品信息, 当前页：
 		  <font color="#ff0000"><%=intCurPage%> </font>
@@ -356,7 +358,7 @@ next
 else
 %>
         <tr align="center" bgcolor="#ffffff">
-          <td colspan="8">对不起！目前数据库中还没有添加商品信息！</td>
+          <td colspan="9">对不起！目前数据库中还没有添加商品信息！</td>
         </tr>
         <%
           rs.close
@@ -410,8 +412,8 @@ if not rs.eof Then
 %>
 	  <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
 		<tr align="center" bgcolor="#F2FDFF">
-		  <td colspan=6  class="optiontitle"> 商品信息 </td>
-		</tr>
+		  <td colspan=6  class="optiontitle"> 单号：<%=rs("billno")%> </td>
+		</tr><!--
 		<tr bgcolor='#F2FDFF'>
           <td align='right' bgcolor="#FFFFFF"> 商品名称：</td>
           <td colspan="5" bgcolor="#FFFFFF"><%=rs("billno")%></td>
@@ -423,6 +425,14 @@ if not rs.eof Then
 		  <td><%=rs("billcash")%></td>
 		  <td align='right'>销售价格：</td>
 		  <td><%=rs("billdate")%></td>
+		</tr>-->
+	    <tr bgcolor='#FFFFFF'>
+		  <td>选中</td>
+		  <td>商品</td>
+		  <td>类别</td>
+		  <td>数量</td>
+		  <td>金额</td>
+		  <td>操作</td>
 		</tr>
 		<tr align="center" bgcolor="#ebf0f7">
 		  <td colspan="6">
