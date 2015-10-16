@@ -404,14 +404,19 @@ end if
 end if
 %>  
 <%if action="view" then
+viewaction=request("viewaction")
+if viewaction="yes" then 
+sql="insert into billdetail ()"
+end if 
 set rs=server.createobject("adodb.recordset") 
 sql="select * from billInfo where id="&Request("id")
 rs.open sql,conn,1,1
 if not rs.eof Then
 %>
 	  <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
+	    <form action="bill.asp?action=view&id=<%=id%>" method="POST" name="billd" id="billd">
 		<tr align="center" bgcolor="#F2FDFF">
-		  <td colspan=6  class="optiontitle"> 单号：<%=rs("billno")%> </td>
+		  <td colspan=6  class="optiontitle"> 单号：<%=rs("billno")%> <input type="hidden" id="viewaction" name="viewaction" value="yes"></td>
 		</tr>
 	    <tr bgcolor='#EBF0F7' align='center'>
 		  <td>选中</td>
@@ -421,10 +426,17 @@ if not rs.eof Then
 		  <td>金额</td>
 		  <td>操作</td>
 		</tr>
+	    <tr bgcolor='#FFFFFF' align='center'>
+		  <td colspan=2>输入商品：</td>
+		  <td>数量:<input id="dqyt" name="dqyt" size="4" value="1"></td>
+		  <td colspan=2><input id="dname" name="dname" style="width:100%" /></td>
+		  <td><input type="Submit" name="Submit3" value="提交" ></td>
+		</tr>
 		<tr align="center" bgcolor="#ebf0f7">
 		  <td colspan="6">
           <input type="button" name="Submit2" value="返回" onClick="history.back(-1)"></td>
 		</tr>
+		</form>
   	</table>
 <%
 end if
