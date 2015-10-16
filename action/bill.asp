@@ -11,16 +11,15 @@ if Request("wor")="del" then
   conn.execute(sql)
  next
 elseif Request("addon")="yes" then 
- sql="insert into billInfo (billno,status,cuser) values ('"&Request("billno")&"',0,'"&session("RealName")&"')"
+ sql="insert into billInfo (billno,status,cuser,billway) values ('"&Request("billno")&"',0,'"&session("RealName")&"','下单')"
  conn.execute(sql)
 end if
-%>
-<%
 '-添加和修改记录 id为空则为添加 否则为修改-
+'-获取传递变量-
 action=Request("action")
 addon=Request("addon")
 id=Request("id")
-
+'--增加商品信息记录-
 if action="yes" Then
  set rs=server.createobject("adodb.recordset") 
  if id="" then
@@ -54,7 +53,7 @@ end if
 %>
 <html>
 <head>
-<title>销售管理系统</title>
+<title>订单管理</title>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312">
 <link href="../images/main.css" rel="stylesheet" type="text/css">
 <script language=JavaScript type=text/JavaScript>
@@ -322,7 +321,7 @@ else
           <td><%=rs("billcash")%></td>
 		  <td><%=rs("billdate")%></td>
 		  <td><%=rs("status")%></td>
-		  <td></td>
+		  <td><%=rs("billway")%></td>
 		  <td><%=rs("cuser")%></td>
           <td><IMG src="../images/view.gif" align="absmiddle"><a href="?action=view&id=<%=rs("id")%>">查看</a> | <IMG src="../images/drop.gif" align="absmiddle"><a href="javascript:DoEmpty('?wor=del&id=<%=rs("id")%>&action=list&ToPage=<%=intCurPage%>')">删除</a></td>
         </tr>
@@ -413,20 +412,8 @@ if not rs.eof Then
 	  <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
 		<tr align="center" bgcolor="#F2FDFF">
 		  <td colspan=6  class="optiontitle"> 单号：<%=rs("billno")%> </td>
-		</tr><!--
-		<tr bgcolor='#F2FDFF'>
-          <td align='right' bgcolor="#FFFFFF"> 商品名称：</td>
-          <td colspan="5" bgcolor="#FFFFFF"><%=rs("billno")%></td>
-        </tr>		
-		<tr bgcolor='#FFFFFF'>
-		  <td align='right' bgcolor="#FFFFFF"> 商品类别：</td>
-		  <td><%=rs("billqyt")%></td>
-		  <td align='right'>采购成本：</td>
-		  <td><%=rs("billcash")%></td>
-		  <td align='right'>销售价格：</td>
-		  <td><%=rs("billdate")%></td>
-		</tr>-->
-	    <tr bgcolor='#FFFFFF'>
+		</tr>
+	    <tr bgcolor='#EBF0F7' align='center'>
 		  <td>选中</td>
 		  <td>商品</td>
 		  <td>类别</td>
