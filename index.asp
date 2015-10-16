@@ -2,7 +2,7 @@
 <!DOCtYPE html PUBLIC "-//W3C//Dtd html 4.01 transitional//EN" "http://www.w3c.org/tr/1999/REC-html401-19991224/loose.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title><%=SiteName%>_Www.Xiao5u.Com</title>
+<title><%=SiteName%></title>
 <meta http-equiv=Content-type content="text/html; charset=gb2312">
 <!--#include file=images/ini.sys -->
 <STYLE type=text/css> 

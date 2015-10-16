@@ -1,23 +1,29 @@
 <!--#include file="../inc/right.asp"--> 
 <!--#include file="../inc/conn.asp"-->
+<!--#include file="../lib/lib.all.asp"-->
 <%
 '-删除记录 is_ok='false'-
 if Request("wor")="del" then
  id=request("id")
  idArr=split(id,",")
  for i=0 to ubound(idArr)
-  sql="update GoodsInfo set is_ok='false' where id="&trim(idArr(i))
+  sql="update billInfo set is_ok='false' where id="&trim(idArr(i))
   conn.execute(sql)
  next
+elseif Request("addon")="yes" then 
+ sql="insert into billInfo (billno,status,cuser) values ('"&Request("billno")&"',0,'"&session("RealName")&"')"
+ conn.execute(sql)
 end if
 %>
 <%
 '-添加和修改记录 id为空则为添加 否则为修改-
 action=Request("action")
+addon=Request("addon")
 id=Request("id")
+
 if action="yes" Then
  set rs=server.createobject("adodb.recordset") 
-if id="" then
+ if id="" then
    set rsCheck = conn.execute("select Gname from GoodsInfo where Gname='" & trim(Request.Form("cname")) & "'")
      if not (rsCheck.bof and rsCheck.eof) then
       response.write "<script language='javascript'>alert('商品商品编号 " & trim(Request.Form("idcard")) & " 已存在，请检查！');history.back(-1);</script>"
@@ -27,21 +33,22 @@ if id="" then
    sql="select * from GoodsInfo " 
    rs.open sql,conn,3,3
    rs.addnew
-else
+ else
    sql="select * from GoodsInfo where id="&id&"" 
    rs.open sql,conn,1,2
-end if
-rs("Gname")=Request("cname")
-rs("Gcat")=Request("address")
-rs("Gcost")=Request("pcode")
-rs("Gsell")=Request("owner")
-if id="" then 
-rs("adduser")=session("admin_name")
-end if 
-rs("Muser")=session("admin_name")
-rs.update
-rs.close
-set rs=nothing
+ end if
+ rs("Gname")=Request("cname")
+ rs("Gcat")=Request("address")
+ rs("Gcost")=Request("pcode")
+ rs("Gsell")=Request("owner")
+ if id="" then 
+ rs("adduser")=session("admin_name")
+ end if 
+
+ rs("Muser")=session("admin_name")
+ rs.update
+ rs.close
+ set rs=nothing
  Response.Redirect "?action=list"
 end if
 %>
@@ -116,15 +123,15 @@ function check()
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr valign="top">
     <td bgcolor="#FFFFFF">
-<%if action="list" then%><BR>
+	<%if action="list1" then%><BR>
         <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
         <form name="add" method="post" action="goods.asp">
         <tr align="center" bgcolor="#F2FDFF">
-          <td colspan="6"  class="optiontitle"> 添加商品信息 </td>
+          <td colspan="6"  class="optiontitle"> 添加商品订单 </td>
         </tr>
         <tr bgcolor='#F2FDFF'>
           <td align='right' bgcolor="#FFFFFF"> 商品名称：</td>
-          <td colspan="5" bgcolor="#FFFFFF"><input name="cname" type="text" id="cname" onKeyDown="next()" size="15" maxlength="50" > 
+          <td colspan="5" bgcolor="#FFFFFF"><input name="cname" type="text" id="cname" onKeyDown="next()" size="15" maxlength="50" value="<%=danhao("D")%>" > 
             按回车\TAB键即可输入下一选项</td>
         </tr>		
 		<tr bgcolor='#FFFFFF'>
@@ -164,7 +171,7 @@ function check()
  rs.open sql,conn,1,1
  if not rs.eof then
  proCount=rs.recordcount
-	rs.PageSize=8
+	rs.PageSize=3
      if not IsEmpty(Request("ToPage")) then
 	    ToPage=CInt(Request("ToPage"))
 		if ToPage>rs.PageCount then
@@ -239,6 +246,127 @@ else
         %>
       </table><br>
 <%end if%>
+<!--增加订单 及 订单列表-->
+<%if action="list" then%>
+<BR>
+  <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
+  <form name="danadd" method="post" action="bill.asp">
+    <tr align="center" bgcolor="#F2FDFF">
+       <td colspan="6"  class="optiontitle">添加商品订单</td>
+    </tr>
+    <tr bgcolor='#F2FDFF'>
+       <td align='right' bgcolor="#FFFFFF"> 商品订单：</td>
+       <td colspan="5" bgcolor="#FFFFFF">
+	   <input name="billno" type="text" id="billno" onKeyDown="next()" size="15" maxlength="50" value="<%=danhao("D")%>" readonly="readonly" />
+	   </td>
+    </tr>		
+    <tr align="center" bgcolor="#ebf0f7">
+       <td colspan="6" >
+	   <INPUT TYPE="hidden" name="action" id="action" value="list" >
+	   <INPUT TYPE="hidden" name="addon" id="addon" value="yes" >
+	   <input type="Submit" name="Submit" value="新增" >
+	   </td>
+    </tr>
+  </FORM>
+  </table> 
+<br>
+  <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
+        <tr align="center" bgcolor="#F2FDFF">
+          <td colspan="9"  class="optiontitle">商品信息</td>
+        </tr>
+        <tr align="center" bgcolor="#ebf0f7">
+		  <td width="5%">选中</td>
+          <td width="10%">单号</td>
+          <td width="5%">数量</td>
+          <td width="8%">金额</td>
+          <td width="10%">日期</td>
+          <td width="5%">状态</td>
+		  <td width="5%">途径</td>
+          <td width="8%">人员</td>
+          <td width="10%">操作</td>
+        </tr>	
+<%
+ sql="select * from BillInfo where is_ok='true' order by id desc"
+ set rs=server.createobject("adodb.recordset") 
+ rs.open sql,conn,1,1
+ if not rs.eof then
+ proCount=rs.recordcount
+	rs.PageSize=8
+     if not IsEmpty(Request("ToPage")) then
+	    ToPage=CInt(Request("ToPage"))
+		if ToPage>rs.PageCount then
+		   rs.AbsolutePage=rs.PageCount
+		   intCurPage=rs.PageCount
+		elseif ToPage<=0 then
+		   rs.AbsolutePage=1
+		   intCurPage=1
+		else
+		   rs.AbsolutePage=ToPage
+		   intCurPage=ToPage
+		end if
+	 else
+		rs.AbsolutePage=1
+		intCurPage=1
+	 end if
+	 intCurPage=CInt(intCurPage)
+	 For i = 1 to rs.PageSize
+	 if rs.eof then     
+	 Exit For 
+	 end if
+%>
+       <form name="del" action="" method="post">
+        <tr align='center' bgcolor='#FFFFFF' onmouseover='this.style.background="#F2FDFF"' onmouseout='this.style.background="#FFFFFF"'>
+          <td><input type="checkbox" name="id" value="<%=rs("id")%>"></td>
+          <td><%=rs("billno")%></td>
+		  <td><%=rs("billqyt")%></td>
+          <td><%=rs("billcash")%></td>
+		  <td><%=rs("billdate")%></td>
+		  <td><%=rs("status")%></td>
+		  <td></td>
+		  <td><%=rs("cuser")%></td>
+          <td><IMG src="../images/view.gif" align="absmiddle"><a href="?action=view&id=<%=rs("id")%>">查看</a> | <IMG src="../images/drop.gif" align="absmiddle"><a href="javascript:DoEmpty('?wor=del&id=<%=rs("id")%>&action=list&ToPage=<%=intCurPage%>')">删除</a></td>
+        </tr>
+<%
+rs.movenext 
+next
+%>
+		<tr bgcolor="#F2FDFF">
+		  <td colspan="9">&nbsp;&nbsp;
+		   <input name="chkall" type="checkbox" id="chkall" value="select" onclick=CheckAll(this.form)> 全选
+		   <input name="wor" type="hidden" id="wor" value="del" />
+		   <input type="submit" name="Submit3" value="删除所选" onClick="{if(confirm('确定要删除记录吗？删除后将被无法恢复！')){return true;}return false;}" />
+		  </td>
+		</tr>
+		</form>
+        <tr align="center" bgcolor="#ebf0f7">
+          <td colspan="9">总共：
+		  <font color="#ff0000"><%=rs.PageCount%></font>页, 
+		  <font color="#ff0000"><%=proCount%></font>条商品信息, 当前页：
+		  <font color="#ff0000"><%=intCurPage%> </font>
+		  <%if intCurPage<>1 then%>
+		  <a href="?action=list">首页</a> | 
+		  <a href="?action=list&ToPage=<%=intCurPage-1%>">上一页</a> | 
+		  <% end if
+             if intCurPage<>rs.PageCount then %>
+          <a href="?action=list&ToPage=<%=intCurPage+1%>">下一页</a> | 
+		  <a href="?action=list&ToPage=<%=rs.PageCount%>"> 最后页</a>
+		  <% end if%>
+		  </span>
+		  </td>
+        </tr>
+<%
+else
+%>
+        <tr align="center" bgcolor="#ffffff">
+          <td colspan="9">对不起！目前数据库中还没有添加商品信息！</td>
+        </tr>
+        <%
+          rs.close
+          set rs=nothing
+          end if
+        %>
+      </table><br>
+<%end if%>
 <%if action="edit" then
 set rs=server.createobject("adodb.recordset") 
 sql="select * from GoodsInfo where id="&Request("id")
@@ -278,25 +406,33 @@ end if
 %>  
 <%if action="view" then
 set rs=server.createobject("adodb.recordset") 
-sql="select * from GoodsInfo where id="&Request("id")
+sql="select * from billInfo where id="&Request("id")
 rs.open sql,conn,1,1
 if not rs.eof Then
 %>
 	  <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
 		<tr align="center" bgcolor="#F2FDFF">
-		  <td colspan=6  class="optiontitle"> 商品信息 </td>
-		</tr>
+		  <td colspan=6  class="optiontitle"> 单号：<%=rs("billno")%> </td>
+		</tr><!--
 		<tr bgcolor='#F2FDFF'>
           <td align='right' bgcolor="#FFFFFF"> 商品名称：</td>
-          <td colspan="5" bgcolor="#FFFFFF"><%=rs("Gname")%></td>
+          <td colspan="5" bgcolor="#FFFFFF"><%=rs("billno")%></td>
         </tr>		
 		<tr bgcolor='#FFFFFF'>
 		  <td align='right' bgcolor="#FFFFFF"> 商品类别：</td>
-		  <td><%=rs("gcat")%></td>
+		  <td><%=rs("billqyt")%></td>
 		  <td align='right'>采购成本：</td>
-		  <td><%=rs("gcost")%></td>
+		  <td><%=rs("billcash")%></td>
 		  <td align='right'>销售价格：</td>
-		  <td><%=rs("gsell")%></td>
+		  <td><%=rs("billdate")%></td>
+		</tr>-->
+	    <tr bgcolor='#FFFFFF'>
+		  <td>选中</td>
+		  <td>商品</td>
+		  <td>类别</td>
+		  <td>数量</td>
+		  <td>金额</td>
+		  <td>操作</td>
 		</tr>
 		<tr align="center" bgcolor="#ebf0f7">
 		  <td colspan="6">

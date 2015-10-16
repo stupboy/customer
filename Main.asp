@@ -16,7 +16,7 @@
       </tr>
       <tr bgcolor="#FFFFFF">
         <td>后台操作管理员：</td>
-        <td colspan="3"><%=session("admin_name")%></td>
+        <td colspan="3"><%=session("admin_name")%><%=session("RealName")%></td>
       </tr>
       <tr bgcolor="#FFFFFF">
         <td width="100">服务器名：</td>
@@ -93,22 +93,19 @@ End Function
       </tr>
       <tr bgcolor="#FFFFFF">
         <td> 最新版本：</td>
-        <td><!--请不要修改以下链接,可获取系统最新版本及通知--><script src="http://www.xiao5u.com/Notice/Customer.js"></script><!--请不要修改以上链接,可获取系统最新版本及通知--></td>
+        <td></td>
       </tr>
       <tr bgcolor="#FFFFFF">
         <td> 程序开发：</td>
-        <td>校无忧科技</td>
+        <td>stupboy</td>
       </tr>
       <tr bgcolor="#FFFFFF">
         <td> 官方网站：</td>
-        <td><a href="http://www.xiao5u.com/" target="_blank">http://www.xiao5u.com/</a></td>
+        <td></td>
       </tr>
       <tr bgcolor="#FFFFFF">
         <td> 版权申明：</td>
-        <td><a href="http://www.xiao5u.com/" target="_blank">1、本软件为试用软件，未经授权，不得向第三方提供用于商业使用；<br />
-2、用户自由选择是否使用，在使用中出现问题和造成的损失校无忧将不承担任何责任；<br />
-3、您可对本系统进行修改和美化，但必须保留完整的版权；<br />
-4、本试用软件仅为测试所用，如需更多功能及技术服务，请购买商业版。 </a> <script src="http://s84.cnzz.com/stat.php?id=585346&web_id=585346" language="JavaScript"></script></td>
+        <td></td>
       </tr>
     </table>
 	</td>
