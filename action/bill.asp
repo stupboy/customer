@@ -407,6 +407,7 @@ end if
 viewaction=request("viewaction")
 if viewaction="yes" then 
 sql="insert into billdetail ()"
+sc is_sku(request("dname"),"GoodsInfo","Gname")
 end if 
 set rs=server.createobject("adodb.recordset") 
 sql="select * from billInfo where id="&Request("id")
@@ -441,10 +442,9 @@ if not rs.eof Then
 <%
 end if
 end if
-%> 
-  
-    </td>
-  </tr>
+%>
+</td>
+</tr>
 </table>
 </body>
 </html>

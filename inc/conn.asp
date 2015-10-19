@@ -9,6 +9,7 @@
 
 'Set rs = Server.CreateObject("ADODB.Recordset")-
 '数据库连接文件-
+'-LIB函数文件中也有-
 set conn=server.CreateObject("adodb.connection")
 '“.”为服务器地址、ST为连接数据库名称、sa为数据库用户名、PWD为数据库密码-
 ConnStr="server=113.10.138.110;driver={sql server};database=cha;uid=sa;pwd=!@#$%asdfg"
