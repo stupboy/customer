@@ -15,6 +15,7 @@
 '-11. date_preweek(x) 获取当期日期所在周上周周一日期-
 '-12. re_char(x,y,z)  rechar(a,b,c)若a=b则输出c，否则输出a-
 '-13. is_sku(a.b.c)   查找b表中是否包含字段c=a的值返回1和0-
+'-14. dbdo(x,y,z)     [s]数据库操作函数 x=1 为-
 '-待增加-
 '-函数明细列表-
 '-输出函数SC -
@@ -144,9 +145,7 @@ set conn=server.CreateObject("adodb.connection")
 '“.”为服务器地址、ST为连接数据库名称、sa为数据库用户名、PWD为数据库密码-
 ConnStr="server=113.10.138.110;driver={sql server};database=cha;uid=sa;pwd=!@#$%asdfg"
 conn.Open connstr
-
-'on error resume next 
-
+on error resume next 
 set rs=server.createobject("adodb.recordset") 
 SQL="select * from "&b&" WHERE "&c&" = '"&a&"'"
 rs.open sql,conn,1,1
@@ -159,6 +158,41 @@ if not rs.eof Then
 set Rs=nothing
 is_sku=TEMP
 end function 
+'-数据库操作函数无返回值-
+sub dbdo(x,y,z) '--
+set conn=server.CreateObject("adodb.connection")
+'“.”为服务器地址、ST为连接数据库名称、sa为数据库用户名、PWD为数据库密码-
+ConnStr="server=113.10.138.110;driver={sql server};database=cha;uid=sa;pwd=!@#$%asdfg"
+conn.Open connstr
+'on error resume next 
+if x= 1 then 
+ mx=split(z,"-")
+ mxa=split(mx(0),"|")
+ mxb=split(mx(1),"|")
+ mxs=ubound(mxa)
+ for i = 0 to mxs
+  zd=zd&","&mxa(i)
+  nr=nr&","&mxb(i)
+ next 
+  zd=trim(mid(zd,2,999))
+  nr=trim(mid(nr,2,999))
+ sql="insert into "&y&" ("&zd&") values ("&nr&") "
+ conn.execute(sql)
+elseif x=2 then 
+ mx=split(z,"-")
+ mxa=split(mx(0),"|")
+ mxb=split(mx(1),"|")
+ mxs=ubound(mxa)
+ for i = 0 to mxs
+  zd=zd&","&mxa(i)&"="&mxb(i)
+ next 
+  zd=trim(mid(zd,2,999))
+  nr=trim(mid(nr,2,999))
+ sql="update "&y&" set  "&zd&" where "&mx(2)
+ 'conn.execute(sql)
+ sc sql
+end if 
+end sub 
 '-测试函数语句-
 'sc esql("UserInfo","Username:stupboy|password:123456")
 %>
