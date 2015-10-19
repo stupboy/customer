@@ -14,6 +14,7 @@
 '-10. date_thisweek(x)获取当期日期所在周的周一日期-
 '-11. date_preweek(x) 获取当期日期所在周上周周一日期-
 '-12. re_char(x,y,z)  rechar(a,b,c)若a=b则输出c，否则输出a-
+'-13. is_sku(a.b.c)   查找b表中是否包含字段c=a的值返回1和0-
 '-待增加-
 '-函数明细列表-
 '-输出函数SC -
@@ -136,6 +137,28 @@ function re_char(x,y,z)
   re_char=x
  end if
 end function
+'-查找数据库是否包含值-
+function is_sku(a,b,c)
+temp=0
+set conn=server.CreateObject("adodb.connection")
+'“.”为服务器地址、ST为连接数据库名称、sa为数据库用户名、PWD为数据库密码-
+ConnStr="server=113.10.138.110;driver={sql server};database=cha;uid=sa;pwd=!@#$%asdfg"
+conn.Open connstr
+
+'on error resume next 
+
+set rs=server.createobject("adodb.recordset") 
+SQL="select * from "&b&" WHERE "&c&" = '"&a&"'"
+rs.open sql,conn,1,1
+if not rs.eof Then
+  temp=1
+ else
+  temp=0
+ end if
+ Rs.close
+set Rs=nothing
+is_sku=TEMP
+end function 
 '-测试函数语句-
 'sc esql("UserInfo","Username:stupboy|password:123456")
 %>
