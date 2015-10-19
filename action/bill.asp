@@ -406,8 +406,17 @@ end if
 <%if action="view" then
 viewaction=request("viewaction")
 if viewaction="yes" then 
-sql="insert into billdetail ()"
-sc is_sku(request("dname"),"GoodsInfo","Gname")
+ if is_sku(request("dname"),"GoodsInfo","Gname")=1 then 
+  'sc "有该款式！"
+  sql="insert into billDetail "
+  if is_sku(request("dname"),"billdetail","goodsid")=0 then 
+  call dbdo(1,"billdetail","billno|goodsid|billqyt|cuser-'"&request("danno")&"'|'"&request("dname")&"'|"&request("dqyt")&"|'"&session("RealName")&"'")
+  else 
+  call dbdo(2,"billdetail","billno|goodsid|billqyt|cuser-'"&request("danno")&"'|'"&request("dname")&"'|"&request("dqyt")&"|'"&session("RealName")&"'-billno=11 and goods=dd")
+  end if 
+ else
+ sc "该商品不存在！"
+ end if 
 end if 
 set rs=server.createobject("adodb.recordset") 
 sql="select * from billInfo where id="&Request("id")
@@ -417,7 +426,8 @@ if not rs.eof Then
 	  <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
 	    <form action="bill.asp?action=view&id=<%=id%>" method="POST" name="billd" id="billd">
 		<tr align="center" bgcolor="#F2FDFF">
-		  <td colspan=6  class="optiontitle"> 单号：<%=rs("billno")%> <input type="hidden" id="viewaction" name="viewaction" value="yes"></td>
+		  <td colspan=6  class="optiontitle"> 单号：<%=rs("billno")%> <input type="hidden" id="viewaction" name="viewaction" value="yes"> 
+		  <input type="hidden" id="danno" name="danno" value="<%=rs("billno")%>"></td>
 		</tr>
 	    <tr bgcolor='#EBF0F7' align='center'>
 		  <td>选中</td>
@@ -427,6 +437,31 @@ if not rs.eof Then
 		  <td>金额</td>
 		  <td>操作</td>
 		</tr>
+<%
+   sql2="select * from billdetail where billno='"&rs("billno")&"'  "
+   set rs2=server.createobject("adodb.recordset") 
+   rs2.open sql2,conn,1,1
+   if not rs.eof then
+	 For i = 0 to rs2.recordcount
+	 if rs2.eof then     
+	 Exit For 
+	 end if
+%>
+	    <tr bgcolor='#FFFFFF' align='center'>
+		  <td><%=rs2("id")%></td>
+		  <td><%=rs2("goodsid")%></td>
+		  <td><%=rs2("billqyt")%></td>
+		  <td><%=rs2("goodsid")%></td>
+		  <td><%=rs2("goodsid")%></td>
+		  <td></td>
+		</tr>
+<%
+   rs2.movenext 
+   next
+   rs2.close
+   set rs2=nothing
+   end if
+%>
 	    <tr bgcolor='#FFFFFF' align='center'>
 		  <td colspan=2>输入商品：</td>
 		  <td>数量:<input id="dqyt" name="dqyt" size="4" value="1"></td>
