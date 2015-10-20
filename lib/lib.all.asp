@@ -141,13 +141,22 @@ end function
 '-查找数据库是否包含值-
 function is_sku(a,b,c)
 temp=0
+TiaoJian=""
+mxa=split(a,"|")
+mxc=split(c,"|")
+mxs=ubound(mxa)
+
+for k=0 to mxs
+TiaoJian=TiaoJian&" and "&mxa(k)&" = "&mxc(k)
+next 
+TiaoJian=Trim(Mid(TiaoJian,5,99))
+SQL="select * from "&b&" WHERE "&TiaoJian
 set conn=server.CreateObject("adodb.connection")
 '“.”为服务器地址、ST为连接数据库名称、sa为数据库用户名、PWD为数据库密码-
 ConnStr="server=113.10.138.110;driver={sql server};database=cha;uid=sa;pwd=!@#$%asdfg"
 conn.Open connstr
 on error resume next 
 set rs=server.createobject("adodb.recordset") 
-SQL="select * from "&b&" WHERE "&c&" = '"&a&"'"
 rs.open sql,conn,1,1
 if not rs.eof Then
   temp=1
@@ -156,8 +165,9 @@ if not rs.eof Then
  end if
  Rs.close
 set Rs=nothing
-is_sku=TEMP
+is_sku=Temp
 end function 
+'response.write is_sku("abc|edf","table","ffff|ggg")
 '-数据库操作函数无返回值-
 sub dbdo(x,y,z) '--
 set conn=server.CreateObject("adodb.connection")
@@ -179,18 +189,9 @@ if x= 1 then
  sql="insert into "&y&" ("&zd&") values ("&nr&") "
  conn.execute(sql)
 elseif x=2 then 
- mx=split(z,"-")
- mxa=split(mx(0),"|")
- mxb=split(mx(1),"|")
- mxs=ubound(mxa)
- for i = 0 to mxs
-  zd=zd&","&mxa(i)&"="&mxb(i)
- next 
-  zd=trim(mid(zd,2,999))
-  nr=trim(mid(nr,2,999))
- sql="update "&y&" set  "&zd&" where "&mx(2)
- 'conn.execute(sql)
- sc sql
+ sql=y
+ conn.execute(sql)
+ 'sc sql
 end if 
 end sub 
 '-测试函数语句-
