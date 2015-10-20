@@ -253,30 +253,39 @@ else
           <td colspan="6"  class="optiontitle"> 添加客户信息 </td>
         </tr>
         <tr bgcolor='#F2FDFF'>
-          <td align='right' bgcolor="#FFFFFF"> 单号：</td>
-          <td colspan="5" bgcolor="#FFFFFF"><input name="billno" type="text" id="billno" value="<%=danhao("D")%>" size="30" maxlength="50" readonly="readonly" > 
+          <td align='right' bgcolor="#F2FDFF"> 单号：</td>
+          <td colspan="5" bgcolor="#F2FDFF"><input name="billno" type="text" id="billno" value="<%=danhao("D")%>" size="30" maxlength="50" readonly="readonly" > 
             按回车\TAB键即可输入下一选项</td>
         </tr>		
 		<tr bgcolor='#FFFFFF'>
 		  <td align='right' bgcolor="#FFFFFF"> 客户：</td>
 		  <td colspan="5" >
-           <select name="rank" id="rank" selfvalue="客户级别">
-              <option value="">请选择</option>
-              <option value="1">★</option>
-              <option value="2">★★</option>
-              <option value="3">★★★</option>
-              <option value="4">★★★★</option>
-              <option value="5">★★★★★</option>
-            </select>
+<%
+ sql="select * from Information "
+ set rs_kehu=conn.execute(sql)
+%>
+ <select name="rank" id="rank" selfvalue="客户级别">
+ <option value="">请选择</option>
+<%
+ do while rs_kehu.eof=false
+%>
+ <option value="1"><%=rs_kehu("cname")%></option>
+<%
+ rs_kehu.movenext
+ loop
+ rs_kehu.close
+ set rs_kehu=nothing 
+%>
+ </select>
 		  </td>
 		</tr>
 		<tr bgcolor='#FFFFFF'>
 		  <td align='right' bgcolor="#FFFFFF"> 地址：</td>
-		  <td><input name="address" type="text" id="address" onKeyDown="next()"></td>
+		  <td><input name="address" type="text" id="address" onKeyDown="next()" ></td>
 		  <td align='right'>邮编：</td>
 		  <td><input name="pcode" type="text" id="pcode" onKeyDown="next()"></td>
-		  <td align='right'>责任人：</td>
-		  <td><input name="owner" type="text" id="owner" onKeyDown="next()"></td>
+		  <td align='right'>下单人：</td>
+		  <td><input name="owner" type="text" id="owner" onKeyDown="next()" value="<%=session("RealName")%>"></td>
 		</tr>
 		<tr bgcolor='#FFFFFF'>
 		  <td align='right' bgcolor="#FFFFFF"> 备注：</td>
