@@ -62,16 +62,22 @@ body {
 	  d.add(0,-1,' 网站内容管理');
 	  <% if qx("C1",session("Limit")) then %>
 	  d.add(1, 0, ' 系统管理', '');
-      d.add(11, 1, ' 用户管理', 'action.asp?dz=a002');
-      d.add(12, 1, ' 网站设置', 'SiteConfig.asp'); 
+      d.add(10, 1, ' 用户档案', 'action.asp?dz=a002');
+      d.add(11, 1, ' 客户档案', 'action.asp?dz=a002'); 
+	  d.add(12, 1, ' 销售档案', 'action.asp?dz=a002');
+	  d.add(13, 1, ' 商品档案', 'action.asp?dz=a001');
+	  d.add(14, 1, ' 原料档案', 'action.asp?dz=a004');
 	  <% end if %>
-	  d.add(2, 0, ' 商品管理', '');
-	  d.add(21, 2, ' 商品信息', 'action.asp?dz=a001');
-	  d.add(3, 0, ' 库存管理', '');
-	  d.add(30, 3, ' 销售下单', 'action.asp?dz=a003');
-	  d.add(31, 3, ' 客户信息列表', 'Information.asp?action=list');
-	  d.add(32, 3, ' 添加客户信息', 'Information.asp?action=add');
-	  d.add(33, 3, ' 查询客户信息', 'Search.asp');
+	  d.add(2, 0, ' 运营中心', '');
+	  d.add(20, 2, ' 销售下单', 'action.asp?dz=a003');
+	  d.add(21, 2, ' 客户信息列表', 'Information.asp?action=list');
+	  d.add(22, 2, ' 添加客户信息', 'Information.asp?action=add');
+	  d.add(23, 2, ' 查询客户信息', 'Search.asp');
+	  d.add(3, 0, ' 仓库管理', '');
+	  d.add(30, 3, ' 生产订单', 'action.asp?dz=a003');
+	  d.add(31, 3, ' 商品库存', 'Information.asp?action=list');
+	  d.add(32, 3, ' 原料库存', 'Information.asp?action=add');
+	  d.add(33, 3, ' 生产进度', 'Information.asp?action=add');
 	  d.add(9, 0, ' 个人管理', '');
 	  d.add(91, 9, ' 退出登入', 'logout.asp');		
 	  document.write(d);
