@@ -247,27 +247,50 @@ else
 <%end if%>
 <!--增加订单 及 订单列表-->
 <%if action="list" then%>
-<BR>
-  <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
-  <form name="danadd" method="post" action="bill.asp">
-    <tr align="center" bgcolor="#F2FDFF">
-       <td colspan="6"  class="optiontitle">添加商品订单</td>
-    </tr>
-    <tr bgcolor='#F2FDFF'>
-       <td align='right' bgcolor="#FFFFFF"> 商品订单：</td>
-       <td colspan="5" bgcolor="#FFFFFF">
-	   <input name="billno" type="text" id="billno" onKeyDown="next()" size="15" maxlength="50" value="<%=danhao("D")%>" readonly="readonly" />
-	   </td>
-    </tr>		
-    <tr align="center" bgcolor="#ebf0f7">
-       <td colspan="6" >
-	   <INPUT TYPE="hidden" name="action" id="action" value="list" >
-	   <INPUT TYPE="hidden" name="addon" id="addon" value="yes" >
-	   <input type="Submit" name="Submit" value="新增" >
-	   </td>
-    </tr>
-  </FORM>
-  </table> 
+        <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
+        <form name="add" method="post" action="bill.asp">
+        <tr align="center" bgcolor="#F2FDFF">
+          <td colspan="6"  class="optiontitle"> 添加客户信息 </td>
+        </tr>
+        <tr bgcolor='#F2FDFF'>
+          <td align='right' bgcolor="#FFFFFF"> 单号：</td>
+          <td colspan="5" bgcolor="#FFFFFF"><input name="billno" type="text" id="billno" value="<%=danhao("D")%>" size="30" maxlength="50" readonly="readonly" > 
+            按回车\TAB键即可输入下一选项</td>
+        </tr>		
+		<tr bgcolor='#FFFFFF'>
+		  <td align='right' bgcolor="#FFFFFF"> 客户：</td>
+		  <td colspan="5" >
+           <select name="rank" id="rank" selfvalue="客户级别">
+              <option value="">请选择</option>
+              <option value="1">★</option>
+              <option value="2">★★</option>
+              <option value="3">★★★</option>
+              <option value="4">★★★★</option>
+              <option value="5">★★★★★</option>
+            </select>
+		  </td>
+		</tr>
+		<tr bgcolor='#FFFFFF'>
+		  <td align='right' bgcolor="#FFFFFF"> 地址：</td>
+		  <td><input name="address" type="text" id="address" onKeyDown="next()"></td>
+		  <td align='right'>邮编：</td>
+		  <td><input name="pcode" type="text" id="pcode" onKeyDown="next()"></td>
+		  <td align='right'>责任人：</td>
+		  <td><input name="owner" type="text" id="owner" onKeyDown="next()"></td>
+		</tr>
+		<tr bgcolor='#FFFFFF'>
+		  <td align='right' bgcolor="#FFFFFF"> 备注：</td>
+		  <td colspan="5"><textarea name="comment" cols="60" rows="5" id="comment" onKeyDown="next()"></textarea></td>
+		</tr>
+        <tr align="center" bgcolor="#ebf0f7">
+          <td colspan="6" >
+		    <INPUT TYPE="hidden" name="action" id="action" value="list" >
+	        <INPUT TYPE="hidden" name="addon" id="addon" value="yes" >
+            <input type="submit" name="Submit" value="提交" onClick="check()">
+          	<input type="button" name="Submit2" value="返回" onClick="history.back(-1)"></td>
+        </tr>
+		</FORM>
+      </table> 
 <br>
   <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
         <tr align="center" bgcolor="#F2FDFF">
