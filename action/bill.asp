@@ -440,17 +440,18 @@ viewaction=request("viewaction")
 if viewaction="yes" then 
  if is_sku(request("dname"),"GoodsInfo","Gname")=1 then 
   'sc "有该款式！"
-  sql="insert into billDetail "
-  if is_sku(request("dname"),"billdetail","goodsid")=0 then 
+  if is_sku("billno|goodsid","billdetail","'"&request("danno")&"'|'"&request("dname")&"'")=0 then 
   call dbdo(1,"billdetail","billno|goodsid|billqyt|cuser-'"&request("danno")&"'|'"&request("dname")&"'|"&request("dqyt")&"|'"&session("RealName")&"'")
   else 
-  call dbdo(2,"billdetail","billno|goodsid|billqyt|cuser-'"&request("danno")&"'|'"&request("dname")&"'|"&request("dqyt")&"|'"&session("RealName")&"'-billno=11 and goods=dd")
+  sql="update billdetail set billqyt=billqyt +1 where billno='"&request("danno")&"' and goods='"&request("dname")&"' "
+  call dbdo(2,sql,sql)
   end if 
  else
  sc "该商品不存在！"
  end if 
 end if 
 set rs=server.createobject("adodb.recordset") 
+'sql="select * from billInfo where id="&Request("id")
 sql="select * from billInfo where id="&Request("id")
 rs.open sql,conn,1,1
 if not rs.eof Then
@@ -483,8 +484,8 @@ if not rs.eof Then
 		  <td><%=rs2("id")%></td>
 		  <td><%=rs2("goodsid")%></td>
 		  <td><%=rs2("billqyt")%></td>
-		  <td><%=rs2("goodsid")%></td>
-		  <td><%=rs2("goodsid")%></td>
+		  <td></td>
+		  <td></td>
 		  <td></td>
 		</tr>
 <%
