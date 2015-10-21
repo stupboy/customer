@@ -317,7 +317,7 @@ else
           <td width="10%">操作</td>
         </tr>	
 <%
- sql="select * from BillInfo where is_ok='true' order by id desc"
+ sql=" select a.*,b.数量,b.金额 from billInfo a left join billdetail_sum b on a.billno=b.billno where a.is_ok='TRUE' order by billno desc "
  set rs=server.createobject("adodb.recordset") 
  rs.open sql,conn,1,1
  if not rs.eof then
@@ -349,8 +349,8 @@ else
         <tr align='center' bgcolor='#FFFFFF' onmouseover='this.style.background="#F2FDFF"' onmouseout='this.style.background="#FFFFFF"'>
           <td><input type="checkbox" name="id" value="<%=rs("id")%>"></td>
           <td><%=rs("billno")%></td>
-		  <td><%=rs("billqyt")%></td>
-          <td><%=rs("billcash")%></td>
+		  <td><%=rs("数量")%></td>
+          <td><%=rs("金额")%></td>
 		  <td><%=rs("billdate")%></td>
 		  <td><%=rs("status")%></td>
 		  <td><%=rs("billway")%></td>
@@ -443,8 +443,9 @@ if viewaction="yes" then
   if is_sku("billno|goodsid","billdetail","'"&request("danno")&"'|'"&request("dname")&"'")=0 then 
   call dbdo(1,"billdetail","billno|goodsid|billqyt|cuser-'"&request("danno")&"'|'"&request("dname")&"'|"&request("dqyt")&"|'"&session("RealName")&"'")
   else 
-  sql="update billdetail set billqyt=billqyt +1 where billno='"&request("danno")&"' and goods='"&request("dname")&"' "
+  sql="update billdetail set billqyt=billqyt +"&request("dqyt")&" where billno='"&request("danno")&"' and goodsid='"&request("dname")&"' "
   call dbdo(2,sql,sql)
+  sc sql
   end if 
  else
  sc "该商品不存在！"
