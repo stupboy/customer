@@ -8,6 +8,8 @@ select case dz
   response.redirect "action/admin.asp?action=list"
  case "a003"
   response.redirect "action/bill.asp?action=list"
+ case "a005"
+  response.redirect "action/kehu.asp?action=list"
  case else
   response.redirect "action/error.asp"
 end select 
