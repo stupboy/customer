@@ -3,7 +3,6 @@
 <!--#include file="../lib/lib.all.asp"-->
 <%
 '-删除记录 is_ok='false'-
-sc Request("yqty")&"d"
 if Request("wor")="del" then
  id=request("id")
  idArr=split(id,",")
@@ -11,9 +10,18 @@ if Request("wor")="del" then
   sql="update billInfo set is_ok='false' where id="&trim(idArr(i))
   conn.execute(sql)
  next
-elseif Request("addon")="yes" then 
- sql="insert into billInfo (billno,status,cuser,billway) values ('"&Request("billno")&request("comment")&"',0,'"&session("RealName")&"','下单')"
+elseif Request("addon")="yes" then  
+ Tstr=replace(replace(Trim(Request("comment")),"<br>","#"),"_x_","|")
+ mY0=split(Tstr,"#")
+ for i= 1 to ubound(mY0)
+ mY1=split(mY0(i),"|")
+ sql="insert into Yuan_Store (Yname,yqty,ydanno,ystatus,ydancat) values ('"&mY1(0)&"',"&mY1(1)&",'"&Request("billno")&"',1,'采购入库')"
  conn.execute(sql)
+ 'sc sql
+ next 
+ 'sc gstr
+ sql="insert into Yuan_Store (billno,status,cuser,billway) values ('"&Request("billno")&"',0,'"&session("RealName")&"','下单')"
+ 'conn.execute(sql)
 end if
 '-添加和修改记录 id为空则为添加 否则为修改-
 '-获取传递变量-
@@ -275,7 +283,7 @@ else
 <!--增加订单 及 订单列表-->
 <%if action="list" then%>
         <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
-        <form name="add" method="post" action="bill.asp">
+        <form name="add" method="post" action="yuanS.asp">
         <tr align="center" bgcolor="#F2FDFF">
           <td colspan="6"  class="optiontitle"> 添加客户信息 </td>
         </tr>
@@ -316,7 +324,7 @@ else
 		</tr>
 		<tr bgcolor='#FFFFFF'>
 		  <td align='right' bgcolor="#FFFFFF"> 备注：</td>
-		  <td colspan="5"><textarea name="comment" cols="60" rows="5" id="comment" onKeyDown="next()"></textarea><span id="Yxx"></span></td>
+		  <td colspan="5"><INPUT TYPE="hidden" name="comment" id="comment" value="" ></textarea><span id="Yxx"></span></td>
 		</tr>
         <tr align="center" bgcolor="#ebf0f7">
           <td colspan="6" >
@@ -485,7 +493,7 @@ rs.open sql,conn,1,1
 if not rs.eof Then
 %>
 	  <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
-	    <form action="bill.asp?action=view&id=<%=id%>" method="POST" name="billd" id="billd">
+	    <form action="yuanS.asp?action=view&id=<%=id%>" method="POST" name="billd" id="billd">
 		<tr align="center" bgcolor="#F2FDFF">
 		  <td colspan=6  class="optiontitle"> 单号：<%=rs("billno")%> <input type="hidden" id="viewaction" name="viewaction" value="yes"> 
 		  <input type="hidden" id="danno" name="danno" value="<%=rs("billno")%>"></td>
