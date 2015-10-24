@@ -42,6 +42,20 @@ if id="" then
    rs.open sql,conn,3,3
    rs.addnew
 else
+   '-更新6个层级价格-
+   sql="update Goods_InPrice set InPrice="&Request("T1")&" where  CustomerType='1' and Gname='"&Request("cname")&"' "
+   conn.execute(sql)
+   sql="update Goods_InPrice set InPrice="&Request("T2")&" where  CustomerType='2' and Gname='"&Request("cname")&"' "
+   conn.execute(sql)
+   sql="update Goods_InPrice set InPrice="&Request("T3")&" where  CustomerType='3' and Gname='"&Request("cname")&"' "
+   conn.execute(sql)
+   sql="update Goods_InPrice set InPrice="&Request("T4")&" where  CustomerType='4' and Gname='"&Request("cname")&"' "
+   conn.execute(sql)
+   sql="update Goods_InPrice set InPrice="&Request("T5")&" where  CustomerType='5' and Gname='"&Request("cname")&"' "
+   conn.execute(sql)
+   sql="update Goods_InPrice set InPrice="&Request("T6")&" where  CustomerType='6' and Gname='"&Request("cname")&"' "
+   conn.execute(sql)
+   sql="select * from GoodsInfo " 
    sql="select * from GoodsInfo where id="&id&"" 
    rs.open sql,conn,1,2
 end if
@@ -272,7 +286,7 @@ else
 <%end if%>
 <%if action="edit" then
 set rs=server.createobject("adodb.recordset") 
-sql="select * from GoodsInfo where id="&Request("id")
+sql="select * from GoodsInfo_Price where id="&Request("id")
 rs.open sql,conn,1,1
 if not rs.eof Then
 %>
@@ -293,6 +307,22 @@ if not rs.eof Then
 		  <td><input name="pcode" type="text" id="pcode" value="<%=rs("gcost")%>" onKeyDown="next()"></td>
 		  <td align='right'>销售价格：</td>
 		  <td><input name="owner" type="text" id="owner" value="<%=rs("gsell")%>" onKeyDown="next()"></td>
+		</tr>
+		<tr bgcolor='#FFFFFF'>
+		  <td align='right' bgcolor="#FFFFFF"> 代销价格1：</td>
+		  <td><input name="T1" type="text" id="T1" onKeyDown="next()" value="<%=rs("InPrice1")%>"/></td>
+		  <td align='right'>代销价格2：</td>
+		  <td><input name="T2" type="text" id="T2" onKeyDown="next()" value="<%=rs("InPrice2")%>"/></td>
+		  <td align='right'>代销价格3：</td>
+		  <td><input name="T3" type="text" id="T3" onKeyDown="next()" value="<%=rs("InPrice3")%>"/></td>
+		</tr>
+		<tr bgcolor='#FFFFFF'>
+		  <td align='right' bgcolor="#FFFFFF"> 代销价格4：</td>
+		  <td><input name="T4" type="text" id="T4" onKeyDown="next()" value="<%=rs("InPrice4")%>"/></td>
+		  <td align='right'>代销价格5：</td>
+		  <td><input name="T5" type="text" id="T5" onKeyDown="next()" value="<%=rs("InPrice5")%>"/></td>
+		  <td align='right'>代销价格6：</td>
+		  <td><input name="T6" type="text" id="T6" onKeyDown="next()" value="<%=rs("InPrice6")%>"/></td>
 		</tr>
 		<tr align="center" bgcolor="#ebf0f7">
 		  <td colspan="6">
