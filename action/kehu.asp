@@ -198,7 +198,7 @@ sql="select * from Customer where is_ok='True' order by id desc"
  rs.open sql,conn,1,1
  if not rs.eof then
  proCount=rs.recordcount
-	rs.PageSize=15
+	rs.PageSize=10
      if not IsEmpty(Request("ToPage")) then
 	    ToPage=CInt(Request("ToPage"))
 		if ToPage>rs.PageCount then

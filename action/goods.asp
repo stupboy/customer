@@ -1,5 +1,6 @@
 <!--#include file="../inc/right.asp"--> 
 <!--#include file="../inc/conn.asp"-->
+<!--#include file="../lib/lib.all.asp"-->
 <%
 '-删除记录 is_ok='false'-
 if Request("wor")="del" then
@@ -24,6 +25,18 @@ if id="" then
       response.end
      end if
    set rsCheck=nothing
+   sql="insert into Goods_InPrice (CustomerType,Gname,InPrice) values ('1','"&Request("cname")&"',"&Request("T1")&") "
+   conn.execute(sql)
+   sql="insert into Goods_InPrice (CustomerType,Gname,InPrice) values ('2','"&Request("cname")&"',"&Request("T2")&") "
+   conn.execute(sql)
+   sql="insert into Goods_InPrice (CustomerType,Gname,InPrice) values ('3','"&Request("cname")&"',"&Request("T3")&") "
+   conn.execute(sql)
+   sql="insert into Goods_InPrice (CustomerType,Gname,InPrice) values ('4','"&Request("cname")&"',"&Request("T4")&") "
+   conn.execute(sql)
+   sql="insert into Goods_InPrice (CustomerType,Gname,InPrice) values ('5','"&Request("cname")&"',"&Request("T5")&") "
+   conn.execute(sql)
+   sql="insert into Goods_InPrice (CustomerType,Gname,InPrice) values ('6','"&Request("cname")&"',"&Request("T6")&") "
+   conn.execute(sql)
    sql="select * from GoodsInfo " 
    rs.open sql,conn,3,3
    rs.addnew
@@ -35,6 +48,7 @@ rs("Gname")=Request("cname")
 rs("Gcat")=Request("address")
 rs("Gcost")=Request("pcode")
 rs("Gsell")=Request("owner")
+'rs("Gnote")=ssql
 if id="" then 
 rs("adduser")=session("admin_name")
 end if 
@@ -131,9 +145,25 @@ function check()
 		  <td align='right' bgcolor="#FFFFFF"> 商品类别：</td>
 		  <td><input name="address" type="text" id="address" onKeyDown="next()"></td>
 		  <td align='right'>采购成本：</td>
-		  <td><input name="pcode" type="text" id="pcode" onKeyDown="next()"></td>
-		  <td align='right'>销售价格：</td>
-		  <td><input name="owner" type="text" id="owner" onKeyDown="next()"></td>
+		  <td><input name="pcode" type="text" id="pcode" onKeyDown="next()" value="0"/></td>
+		  <td align='right'>直营销售价格：</td>
+		  <td><input name="owner" type="text" id="owner" onKeyDown="next()" value="0"/></td>
+		</tr>
+		<tr bgcolor='#FFFFFF'>
+		  <td align='right' bgcolor="#FFFFFF"> 代销价格1：</td>
+		  <td><input name="T1" type="text" id="T1" onKeyDown="next()" value="0"/></td>
+		  <td align='right'>代销价格2：</td>
+		  <td><input name="T2" type="text" id="T2" onKeyDown="next()" value="0"/></td>
+		  <td align='right'>代销价格3：</td>
+		  <td><input name="T3" type="text" id="T3" onKeyDown="next()" value="0"/></td>
+		</tr>
+		<tr bgcolor='#FFFFFF'>
+		  <td align='right' bgcolor="#FFFFFF"> 代销价格4：</td>
+		  <td><input name="T4" type="text" id="T4" onKeyDown="next()" value="0"/></td>
+		  <td align='right'>代销价格5：</td>
+		  <td><input name="T5" type="text" id="T5" onKeyDown="next()" value="0"/></td>
+		  <td align='right'>代销价格6：</td>
+		  <td><input name="T6" type="text" id="T6" onKeyDown="next()" value="0"/></td>
 		</tr>
         <tr align="center" bgcolor="#ebf0f7">
           <td colspan="6" >
