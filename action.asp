@@ -12,6 +12,8 @@ select case dz
   response.redirect "action/kehu.asp?action=list"
  case "a006"
   response.redirect "action/yuan.asp?action=list"
+ case "a007"
+  response.redirect "action/yuanS.asp?action=list"
  case else
   response.redirect "action/error.asp"
 end select 
