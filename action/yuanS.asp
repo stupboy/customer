@@ -3,6 +3,7 @@
 <!--#include file="../lib/lib.all.asp"-->
 <%
 '-删除记录 is_ok='false'-
+sc Request("yqty")&"d"
 if Request("wor")="del" then
  id=request("id")
  idArr=split(id,",")
@@ -11,7 +12,7 @@ if Request("wor")="del" then
   conn.execute(sql)
  next
 elseif Request("addon")="yes" then 
- sql="insert into billInfo (billno,status,cuser,billway) values ('"&Request("billno")&"',0,'"&session("RealName")&"','下单')"
+ sql="insert into billInfo (billno,status,cuser,billway) values ('"&Request("billno")&request("comment")&"',0,'"&session("RealName")&"','下单')"
  conn.execute(sql)
 end if
 '-添加和修改记录 id为空则为添加 否则为修改-
@@ -116,6 +117,32 @@ function check()
   if(event.keyCode==13)event.keyCode=9;
  }
 -->
+</script>
+<script language=JavaScript type=text/JavaScript>
+ function yuanadd()
+{
+ var s1=document.getElementById("comment");
+ var s2=document.getElementById("rank");
+ var s3=document.getElementById("yqty");
+ var s0=document.getElementById("Yxx");
+ var ss=s1.value;
+ if (s2.value !="")
+ {
+  if (ss.indexOf(s2.value)>0)
+  {
+  //alert(ss.substr(ss.indexOf(s2.value)-4,10));
+  ss1=ss.substr(ss.indexOf(s2.value),999);
+  ss2=ss.substr(ss.indexOf(s2.value)-4,ss1.indexOf("<br>")+4)
+  s1.value=ss.replace(ss2,"") + "<br>" + s2.value + "_x_" + s3.value
+  s0.innerHTML=s1.value
+  //alert(ss1.indexOf("<br>"));
+  //alert(ss2);
+  }else{
+   s1.value=s1.value + "<br>" + s2.value + "_x_" + s3.value
+   s0.innerHTML=s1.value
+   }
+ }
+}
 </script>
 </head>
 <body>
@@ -265,19 +292,19 @@ else
  set rs_kehu=conn.execute(sql)
 %>
  <select name="rank" id="rank" selfvalue="客户级别">
- <option value="">请选择</option>
+ <option value="">请选44择</option>
 <%
  do while rs_kehu.eof=false
 %>
- <option value="<%=rs_kehu("Yname")%>"><%=rs_kehu("Yname")%></option>
+ <option value="<%=rs_kehu("Yname")%>"><%=rs_kehu("Yname")%>/<%=rs_kehu("Ydan")%></option>
 <%
  rs_kehu.movenext
  loop
  rs_kehu.close
  set rs_kehu=nothing 
 %>
- </select>
-		  </td>
+ </select><input type="text" value="1" name="yqty" id="yqty" size="5" /><input type="button" value="继续添加" name="SADD" id="SADD" onclick="return yuanadd()" />
+</td>
 		</tr>
 		<tr bgcolor='#FFFFFF'>
 		  <td align='right' bgcolor="#FFFFFF"> 地址：</td>
@@ -289,7 +316,7 @@ else
 		</tr>
 		<tr bgcolor='#FFFFFF'>
 		  <td align='right' bgcolor="#FFFFFF"> 备注：</td>
-		  <td colspan="5"><textarea name="comment" cols="60" rows="5" id="comment" onKeyDown="next()"></textarea></td>
+		  <td colspan="5"><textarea name="comment" cols="60" rows="5" id="comment" onKeyDown="next()"></textarea><span id="Yxx"></span></td>
 		</tr>
         <tr align="center" bgcolor="#ebf0f7">
           <td colspan="6" >
