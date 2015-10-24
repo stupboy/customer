@@ -66,7 +66,7 @@ body {
       d.add(11, 1, ' 客户档案', 'action.asp?dz=a002'); 
 	  d.add(12, 1, ' 销售档案', 'action.asp?dz=a002');
 	  d.add(13, 1, ' 商品档案', 'action.asp?dz=a001');
-	  d.add(14, 1, ' 原料档案', 'action.asp?dz=a004');
+	  d.add(14, 1, ' 原料档案', 'action.asp?dz=a006');
 	  <% end if %>
 	  d.add(2, 0, ' 运营中心', '');
 	  d.add(20, 2, ' 销售下单', 'action.asp?dz=a003');
