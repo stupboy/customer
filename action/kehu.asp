@@ -70,7 +70,7 @@ window.location = params ;
 
 function check()
 {
-
+//var molen=document.getElementByID("pcode")
   if (document.add.cname.value=="")
      {
       alert("请填写客户名称！")
@@ -94,11 +94,12 @@ function check()
       document.add.rank.select()
       return
      }
-  if (document.add.pcode.length !==11 )
+  var ss=document.add.pcode.value;
+  if (ss.length !=11 )
      {
-      alert("手机号码输入有误")
-      document.add.rank.focus()
-      document.add.rank.select()
+      alert(document.add.pcode.length)
+      document.add.pcode.focus()
+      document.add.pcode.select()
       return
      }
 
@@ -110,6 +111,19 @@ function check()
  {
   if(event.keyCode==13)event.keyCode=9;
  }
+ 
+ function checkRate(input)
+{
+     var re = /^[0-9]+.?[0-9]*$/;   //判断字符串是否为数字     //判断正整数 /^[1-9]+[0-9]*]*$/  
+    var nubmer = document.getElementById(input).value;
+    
+     if (!re.test(nubmer))
+    {
+        alert("请输入数字");
+        document.getElementById(input).value = "";
+        return false;
+     }
+}
 -->
 </script>
 </head>
@@ -149,7 +163,7 @@ function check()
 		  <td align='right' bgcolor="#FFFFFF"> 地址：</td>
 		  <td><input name="address" type="text" id="address" onKeyDown="next()" ></td>
 		  <td align='right'>手机：</td>
-		  <td><input name="pcode" type="text" id="pcode" onKeyDown="next()" maxlength="11"></td>
+		  <td><input name="pcode" type="text" id="pcode" onKeyDown="next()" maxlength="11" onkeyup="checkRate(this.id)"></td>
 		  <td align='right'>微信：</td>
 		  <td><input name="owner" type="text" id="owner" onKeyDown="next()"></td>
 		</tr>
