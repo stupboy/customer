@@ -25,6 +25,7 @@ if id="" then
       response.end
      end if
    set rsCheck=nothing
+   '-更新6个层级价格-
    sql="insert into Goods_InPrice (CustomerType,Gname,InPrice) values ('1','"&Request("cname")&"',"&Request("T1")&") "
    conn.execute(sql)
    sql="insert into Goods_InPrice (CustomerType,Gname,InPrice) values ('2','"&Request("cname")&"',"&Request("T2")&") "
@@ -308,7 +309,7 @@ end if
 %>  
 <%if action="view" then
 set rs=server.createobject("adodb.recordset") 
-sql="select * from GoodsInfo where id="&Request("id")
+sql="select * from GoodsInfo_Price where id="&Request("id")
 rs.open sql,conn,1,1
 if not rs.eof Then
 %>
@@ -327,6 +328,22 @@ if not rs.eof Then
 		  <td><%=rs("gcost")%></td>
 		  <td align='right'>销售价格：</td>
 		  <td><%=rs("gsell")%></td>
+		</tr>
+		<tr bgcolor='#FFFFFF'>
+		  <td align='right' bgcolor="#FFFFFF">代销价格1：</td>
+		  <td><%=rs("InPrice1")%></td>
+		  <td align='right'>代销价格2：</td>
+		  <td><%=rs("InPrice2")%></td>
+		  <td align='right'>代销价格3：</td>
+		  <td><%=rs("InPrice3")%></td>
+		</tr>
+		<tr bgcolor='#FFFFFF'>
+		  <td align='right' bgcolor="#FFFFFF">代销价格4：</td>
+		  <td><%=rs("InPrice4")%></td>
+		  <td align='right'>代销价格5：</td>
+		  <td><%=rs("InPrice5")%></td>
+		  <td align='right'>代销价格6：</td>
+		  <td><%=rs("InPrice6")%></td>
 		</tr>
 		<tr align="center" bgcolor="#ebf0f7">
 		  <td colspan="6">
