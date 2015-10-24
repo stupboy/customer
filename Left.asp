@@ -70,6 +70,7 @@ body {
 	  <% end if %>
 	  d.add(2, 0, ' 运营中心', '');
 	  d.add(20, 2, ' 销售下单', 'action.asp?dz=a003');
+	  d.add(20, 2, ' 原料入库', 'action.asp?dz=a007');
 	  d.add(21, 2, ' 客户档案', 'action.asp?dz=a005');
 	  d.add(22, 2, ' 添加客户信息', 'Information.asp?action=add');
 	  d.add(23, 2, ' 查询客户信息', 'Search.asp');
