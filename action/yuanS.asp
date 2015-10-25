@@ -352,7 +352,7 @@ else
           <td width="10%">操作</td>
         </tr>	
 <%
- sql=" select a.*,b.数量,b.金额 from billInfo a left join billdetail_sum b on a.billno=b.billno where a.is_ok='TRUE' order by billno desc "
+ sql=" select a.Ydanno,sum(a.yqty) TotalQty,sum(a.yqty*Yprice) TotalMoney from Yuan_store a LEFT JOIN Yuan_Info b  on a.Yname=b.Yname group by Ydanno "
  set rs=server.createobject("adodb.recordset") 
  rs.open sql,conn,1,1
  if not rs.eof then
@@ -382,15 +382,15 @@ else
 %>
        <form name="del" action="" method="post">
         <tr align='center' bgcolor='#FFFFFF' onmouseover='this.style.background="#F2FDFF"' onmouseout='this.style.background="#FFFFFF"'>
-          <td><input type="checkbox" name="id" value="<%=rs("id")%>"></td>
-          <td><%=rs("billno")%></td>
-		  <td><%=rs("数量")%></td>
-          <td><%=rs("金额")%></td>
-		  <td><%=rs("billdate")%></td>
-		  <td><%=rs("status")%></td>
-		  <td><%=rs("billway")%></td>
-		  <td><%=rs("cuser")%></td>
-          <td><IMG src="../images/view.gif" align="absmiddle"><a href="?action=view&id=<%=rs("id")%>">查看</a> | <IMG src="../images/drop.gif" align="absmiddle"><a href="javascript:DoEmpty('?wor=del&id=<%=rs("id")%>&action=list&ToPage=<%=intCurPage%>')">删除</a></td>
+          <td><input type="checkbox" name="id" value="<%=rs("Ydanno")%>"></td>
+		  <td><%=rs("Ydanno")%></td>
+          <td><%=rs("TotalQty")%></td>
+		  <td><%=rs("TotalMoney")%></td>
+		  <td></td>
+		  <td></td>
+		  <td></td>
+		  <td></td>
+          <td><IMG src="../images/view.gif" align="absmiddle"><a href="?action=view&id=<%=rs("Ydanno")%>">查看</a> | <IMG src="../images/drop.gif" align="absmiddle"><a href="javascript:DoEmpty('?wor=del&id=<%=rs("Ydanno")%>&action=list&ToPage=<%=intCurPage%>')">删除</a></td>
         </tr>
 <%
 rs.movenext 
