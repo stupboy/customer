@@ -63,7 +63,6 @@ body {
 	  <% if qx("C1",session("Limit")) then %>
 	  d.add(1, 0, ' 系统管理', '');
       d.add(10, 1, ' 用户档案', 'action.asp?dz=a002');
-      d.add(11, 1, ' 客户档案', 'action.asp?dz=a002'); 
 	  d.add(12, 1, ' 销售档案', 'action.asp?dz=a002');
 	  d.add(13, 1, ' 商品档案', 'action.asp?dz=a001');
 	  d.add(14, 1, ' 原料档案', 'action.asp?dz=a006');
@@ -72,8 +71,6 @@ body {
 	  d.add(20, 2, ' 销售下单', 'action.asp?dz=a003');
 	  d.add(20, 2, ' 原料入库', 'action.asp?dz=a007');
 	  d.add(21, 2, ' 客户档案', 'action.asp?dz=a005');
-	  d.add(22, 2, ' 添加客户信息', 'Information.asp?action=add');
-	  d.add(23, 2, ' 查询客户信息', 'Search.asp');
 	  d.add(3, 0, ' 仓库管理', '');
 	  d.add(30, 3, ' 生产订单', 'action.asp?dz=a003');
 	  d.add(34, 3, ' 原料库存', 'action.asp?dz=a010');

@@ -13,7 +13,7 @@ if Request("wor")="del" then
   'sc sql
  next
 elseif Request("addon")="yes" then 
- sql="insert into billInfo (billno,status,cuser,billway) values ('"&Request("billno")&"',0,'"&session("RealName")&"','下单')"
+ sql="insert into billInfo (billno,status,cuser,billway,customer_id,billnote) values ('"&Request("billno")&"',0,'"&session("RealName")&"','下单','"&Request("rank")&"','"&request("comment")&"')"
  conn.execute(sql)
 end if
 '-添加和修改记录 id为空则为添加 否则为修改-
@@ -271,7 +271,7 @@ else
 <%
  do while rs_kehu.eof=false
 %>
- <option value="1"><%=rs_kehu("RealName")%>,客户类型：<%=rs_kehu("CustomerType")%>类.</option>
+ <option value="<%=rs_kehu("ID")%>"><%=rs_kehu("RealName")%>,客户类型：<%=rs_kehu("CustomerType")%>类.</option>
 <%
  rs_kehu.movenext
  loop
@@ -280,15 +280,6 @@ else
 %>
  </select>
 		  </td>
-		</tr>
-		<tr bgcolor='#FFFFFF'>
-		  <td align='right' bgcolor="#FFFFFF"> 地址：</td>
-		  <td><input name="address" type="text" id="address" onKeyDown="next()" ></td>
-		  <td align='right'>邮编：</td>
-		  <td><input name="pcode" type="text" id="pcode" onKeyDown="next()"></td>
-		  <td align='right'>下单人：</td>
-		  <td><input name="owner" type="text" id="owner" onKeyDown="next()" value="<%=session("RealName")%>"></td>
-		</tr>
 		<tr bgcolor='#FFFFFF'>
 		  <td align='right' bgcolor="#FFFFFF"> 备注：</td>
 		  <td colspan="5"><textarea name="comment" cols="60" rows="5" id="comment" onKeyDown="next()"></textarea></td>
@@ -313,13 +304,13 @@ else
           <td width="5%">数量</td>
           <td width="8%">金额</td>
           <td width="10%">日期</td>
-          <td width="5%">状态</td>
+          <td width="5%">客户</td>
 		  <td width="5%">途径</td>
-          <td width="8%">人员</td>
+          <td width="8%">备注</td>
           <td width="10%">操作</td>
         </tr>	
 <%
- sql=" select a.*,b.数量,b.金额 from billInfo a left join billdetail_sum b on a.billno=b.billno where a.is_ok='TRUE' order by billno desc "
+ sql=" select a.*,b.数量,b.金额,c.RealName from billInfo a left join billdetail_sum b on a.billno=b.billno left join Customer c on a.customer_id=c.id where a.is_ok='TRUE' order by billno desc "
  set rs=server.createobject("adodb.recordset") 
  rs.open sql,conn,1,1
  if not rs.eof then
@@ -354,9 +345,9 @@ else
 		  <td><%=rs("数量")%></td>
           <td><%=rs("金额")%></td>
 		  <td><%=rs("billdate")%></td>
-		  <td><%=rs("status")%></td>
+		  <td><%=rs("RealName")%></td>
 		  <td><%=rs("billway")%></td>
-		  <td><%=rs("cuser")%></td>
+		  <td><%=rs("BillNote")%></td>
           <td><IMG src="../images/view.gif" align="absmiddle"><a href="?action=view&id=<%=rs("id")%>">查看</a> | <IMG src="../images/drop.gif" align="absmiddle"><a href="javascript:DoEmpty('?wor=del&id=<%=rs("id")%>&action=list&ToPage=<%=intCurPage%>')">删除</a></td>
         </tr>
 <%
