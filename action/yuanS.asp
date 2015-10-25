@@ -2,24 +2,39 @@
 <!--#include file="../inc/conn.asp"-->
 <!--#include file="../lib/lib.all.asp"-->
 <%
-'-删除记录 is_ok='false'-
-sc Request("yqty")&"d"
-if Request("wor")="del" then
- id=request("id")
- idArr=split(id,",")
- for i=0 to ubound(idArr)
-  sql="update billInfo set is_ok='false' where id="&trim(idArr(i))
-  conn.execute(sql)
- next
-elseif Request("addon")="yes" then 
- sql="insert into billInfo (billno,status,cuser,billway) values ('"&Request("billno")&request("comment")&"',0,'"&session("RealName")&"','下单')"
- conn.execute(sql)
-end if
 '-添加和修改记录 id为空则为添加 否则为修改-
 '-获取传递变量-
 action=Request("action")
 addon=Request("addon")
 id=Request("id")
+
+'-删除记录 is_ok='false'-
+if Request("wor")="del" then
+ id=request("id")
+  sql="delete from Yuan_Store  where Ydanno='"&id&"' "
+  conn.execute(sql)
+
+elseif Request("wor")="del2" then
+ id=request("id")
+ idArr=split(id,",")
+ for i=0 to ubound(idArr)
+  sql="delete from Yuan_Store where id="&trim(idArr(i))
+  conn.execute(sql)
+ next 
+  id=request("danno")
+elseif Request("addon")="yes" then  
+ Tstr=replace(replace(Trim(Request("comment")),"<br>","#"),"_x_","|")
+ mY0=split(Tstr,"#")
+ for i= 1 to ubound(mY0)
+ mY1=split(mY0(i),"|")
+ sql="insert into Yuan_Store (Yname,yqty,ydanno,ystatus,ydancat,CreateUser) values ('"&mY1(0)&"',"&mY1(1)&",'"&Request("billno")&"',1,'采购入库','"&session("RealName")&"')"
+ conn.execute(sql)
+ 'sc sql
+ next 
+ 'sc gstr
+ sql="insert into Yuan_Store (billno,status,cuser,billway) values ('"&Request("billno")&"',0,'"&session("RealName")&"','下单')"
+ 'conn.execute(sql)
+end if
 '--增加商品信息记录-
 if action="yes" Then
  set rs=server.createobject("adodb.recordset") 
@@ -275,7 +290,11 @@ else
 <!--增加订单 及 订单列表-->
 <%if action="list" then%>
         <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
+<<<<<<< HEAD
         <form name="add" method="post" action="bill.asp">
+=======
+        <form name="add" method="post" action="yuanS.asp">
+>>>>>>> dev
         <tr align="center" bgcolor="#F2FDFF">
           <td colspan="6"  class="optiontitle"> 添加客户信息 </td>
         </tr>
@@ -292,7 +311,11 @@ else
  set rs_kehu=conn.execute(sql)
 %>
  <select name="rank" id="rank" selfvalue="客户级别">
+<<<<<<< HEAD
  <option value="">请选44择</option>
+=======
+ <option value="">请选择</option>
+>>>>>>> dev
 <%
  do while rs_kehu.eof=false
 %>
@@ -307,6 +330,7 @@ else
 </td>
 		</tr>
 		<tr bgcolor='#FFFFFF'>
+<<<<<<< HEAD
 		  <td align='right' bgcolor="#FFFFFF"> 地址：</td>
 		  <td><input name="address" type="text" id="address" onKeyDown="next()" ></td>
 		  <td align='right'>邮编：</td>
@@ -317,6 +341,10 @@ else
 		<tr bgcolor='#FFFFFF'>
 		  <td align='right' bgcolor="#FFFFFF"> 备注：</td>
 		  <td colspan="5"><textarea name="comment" cols="60" rows="5" id="comment" onKeyDown="next()"></textarea><span id="Yxx"></span></td>
+=======
+		  <td align='right' bgcolor="#FFFFFF"> 入库信息：</td>
+		  <td colspan="5"><INPUT TYPE="hidden" name="comment" id="comment" value="" ></textarea><span id="Yxx"></span></td>
+>>>>>>> dev
 		</tr>
         <tr align="center" bgcolor="#ebf0f7">
           <td colspan="6" >
@@ -330,11 +358,16 @@ else
 <br>
   <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
         <tr align="center" bgcolor="#F2FDFF">
+<<<<<<< HEAD
           <td colspan="9"  class="optiontitle">商品信息</td>
+=======
+          <td colspan="5"  class="optiontitle">商品信息</td>
+>>>>>>> dev
         </tr>
         <tr align="center" bgcolor="#ebf0f7">
 		  <td width="5%">选中</td>
           <td width="10%">单号</td>
+<<<<<<< HEAD
           <td width="5%">数量</td>
           <td width="8%">金额</td>
           <td width="10%">日期</td>
@@ -345,6 +378,14 @@ else
         </tr>	
 <%
  sql=" select a.*,b.数量,b.金额 from billInfo a left join billdetail_sum b on a.billno=b.billno where a.is_ok='TRUE' order by billno desc "
+=======
+          <td width="10%">数量</td>
+          <td width="10%">金额</td>
+          <td width="10%">操作</td>
+        </tr>	
+<%
+ sql=" select a.Ydanno,sum(a.yqty) TotalQty,sum(a.yqty*Yprice) TotalMoney from Yuan_store a LEFT JOIN Yuan_Info b  on a.Yname=b.Yname group by Ydanno "
+>>>>>>> dev
  set rs=server.createobject("adodb.recordset") 
  rs.open sql,conn,1,1
  if not rs.eof then
@@ -374,6 +415,7 @@ else
 %>
        <form name="del" action="" method="post">
         <tr align='center' bgcolor='#FFFFFF' onmouseover='this.style.background="#F2FDFF"' onmouseout='this.style.background="#FFFFFF"'>
+<<<<<<< HEAD
           <td><input type="checkbox" name="id" value="<%=rs("id")%>"></td>
           <td><%=rs("billno")%></td>
 		  <td><%=rs("数量")%></td>
@@ -383,13 +425,24 @@ else
 		  <td><%=rs("billway")%></td>
 		  <td><%=rs("cuser")%></td>
           <td><IMG src="../images/view.gif" align="absmiddle"><a href="?action=view&id=<%=rs("id")%>">查看</a> | <IMG src="../images/drop.gif" align="absmiddle"><a href="javascript:DoEmpty('?wor=del&id=<%=rs("id")%>&action=list&ToPage=<%=intCurPage%>')">删除</a></td>
+=======
+          <td><input type="checkbox" name="id" value="<%=rs("Ydanno")%>"></td>
+		  <td><%=rs("Ydanno")%></td>
+          <td><%=rs("TotalQty")%></td>
+		  <td><%=rs("TotalMoney")%></td>
+          <td><IMG src="../images/view.gif" align="absmiddle"><a href="?action=view&id=<%=rs("Ydanno")%>">查看</a> | <IMG src="../images/drop.gif" align="absmiddle"><a href="javascript:DoEmpty('?wor=del&id=<%=rs("Ydanno")%>&action=list&ToPage=<%=intCurPage%>')">删除</a></td>
+>>>>>>> dev
         </tr>
 <%
 rs.movenext 
 next
 %>
 		<tr bgcolor="#F2FDFF">
+<<<<<<< HEAD
 		  <td colspan="9">&nbsp;&nbsp;
+=======
+		  <td colspan="5">&nbsp;&nbsp;
+>>>>>>> dev
 		   <input name="chkall" type="checkbox" id="chkall" value="select" onclick=CheckAll(this.form)> 全选
 		   <input name="wor" type="hidden" id="wor" value="del" />
 		   <input type="submit" name="Submit3" value="删除所选" onClick="{if(confirm('确定要删除记录吗？删除后将被无法恢复！')){return true;}return false;}" />
@@ -397,7 +450,11 @@ next
 		</tr>
 		</form>
         <tr align="center" bgcolor="#ebf0f7">
+<<<<<<< HEAD
           <td colspan="9">总共：
+=======
+          <td colspan="5">总共：
+>>>>>>> dev
 		  <font color="#ff0000"><%=rs.PageCount%></font>页, 
 		  <font color="#ff0000"><%=proCount%></font>条商品信息, 当前页：
 		  <font color="#ff0000"><%=intCurPage%> </font>
@@ -416,7 +473,11 @@ next
 else
 %>
         <tr align="center" bgcolor="#ffffff">
+<<<<<<< HEAD
           <td colspan="9">对不起！目前数据库中还没有添加商品信息！</td>
+=======
+          <td colspan="5">对不起！目前数据库中还没有添加商品信息！</td>
+>>>>>>> dev
         </tr>
         <%
           rs.close
@@ -465,6 +526,7 @@ end if
 <%if action="view" then
 viewaction=request("viewaction")
 if viewaction="yes" then 
+<<<<<<< HEAD
  if is_sku(request("dname"),"GoodsInfo","Gname")=1 then 
   'sc "有该款式！"
   if is_sku("billno|goodsid","billdetail","'"&request("danno")&"'|'"&request("dname")&"'")=0 then 
@@ -473,11 +535,21 @@ if viewaction="yes" then
   sql="update billdetail set billqyt=billqyt +"&request("dqyt")&" where billno='"&request("danno")&"' and goodsid='"&request("dname")&"' "
   call dbdo(2,sql,sql)
   sc sql
+=======
+ if is_sku("Yname","Yuan_Info","'"&request("dname")&"'")=1 then 
+  'sc "有该款式！"
+  if is_sku("Ydanno|Yname","Yuan_Store","'"&request("danno")&"'|'"&request("dname")&"'")=0 then 
+  call dbdo(1,"Yuan_Store","Ydanno|Yname|Yqty|CreateUser|Ydancat-'"&request("danno")&"'|'"&request("dname")&"'|"&request("dqyt")&"|'"&session("RealName")&"'|'采购入库'")
+  else 
+  sql="update Yuan_Store set Yqty=Yqty +"&request("dqyt")&" where Ydanno='"&request("danno")&"' and Yname='"&request("dname")&"' "
+  call dbdo(2,sql,sql)
+>>>>>>> dev
   end if 
  else
  sc "该商品不存在！"
  end if 
 end if 
+<<<<<<< HEAD
 set rs=server.createobject("adodb.recordset") 
 'sql="select * from billInfo where id="&Request("id")
 sql="select * from billInfo where id="&Request("id")
@@ -489,6 +561,19 @@ if not rs.eof Then
 		<tr align="center" bgcolor="#F2FDFF">
 		  <td colspan=6  class="optiontitle"> 单号：<%=rs("billno")%> <input type="hidden" id="viewaction" name="viewaction" value="yes"> 
 		  <input type="hidden" id="danno" name="danno" value="<%=rs("billno")%>"></td>
+=======
+if request.querystring("danno")<>"" then 
+Cdanhao=request.querystring("danno")
+end if 
+set rs=server.createobject("adodb.recordset") 
+sql="select a.*,b.Yprice from Yuan_Store a left join Yuan_Info b on a.Yname=b.Yname where a.Ydanno='"&ID&"' "
+%>
+	  <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
+	    <form action="yuanS.asp?action=view&id=<%=id%>" method="POST" name="billd" id="billd">
+		<tr align="center" bgcolor="#F2FDFF">
+		  <td colspan=6  class="optiontitle"> 单号： <input type="hidden" id="viewaction" name="viewaction" value="yes"> 
+		  <input type="hidden" id="danno" name="danno" value="<%=ID%>"></td>
+>>>>>>> dev
 		</tr>
 	    <tr bgcolor='#EBF0F7' align='center'>
 		  <td>选中</td>
@@ -499,6 +584,7 @@ if not rs.eof Then
 		  <td>操作</td>
 		</tr>
 <%
+<<<<<<< HEAD
    sql2="select * from billdetail where billno='"&rs("billno")&"'  "
    set rs2=server.createobject("adodb.recordset") 
    rs2.open sql2,conn,1,1
@@ -522,6 +608,23 @@ if not rs.eof Then
    rs2.close
    set rs2=nothing
    end if
+=======
+rs.open sql,conn,1,1
+if not rs.eof Then
+for i = 1 to rs.recordcount
+%>
+	    <tr bgcolor='#FFFFFF' align='center'>
+		  <td><input type="checkbox" name="id" value="<%=rs("id")%>"></td>
+		  <td><%=rs("Ydanno")%></td>
+		  <td><%=rs("Yname")%></td>
+		  <td><%=rs("Yqty")%></td>
+		  <td><%=rs("Yprice")*rs("Yqty")%></td>
+		  <td><IMG src="../images/drop.gif" align="absmiddle"><a href="javascript:DoEmpty('?wor=del2&id=<%=rs("id")%>&danno=<%=request("id")%>&action=view')">删除</a></td>
+		</tr>
+<%
+rs.movenext 
+next 
+>>>>>>> dev
 %>
 	    <tr bgcolor='#FFFFFF' align='center'>
 		  <td colspan=2>输入商品：</td>

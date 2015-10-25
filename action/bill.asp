@@ -5,10 +5,12 @@
 '-删除记录 is_ok='false'-
 if Request("wor")="del" then
  id=request("id")
+ 'sc id
  idArr=split(id,",")
  for i=0 to ubound(idArr)
   sql="update billInfo set is_ok='false' where id="&trim(idArr(i))
   conn.execute(sql)
+  'sc sql
  next
 elseif Request("addon")="yes" then 
  sql="insert into billInfo (billno,status,cuser,billway) values ('"&Request("billno")&"',0,'"&session("RealName")&"','下单')"
@@ -261,7 +263,8 @@ else
 		  <td align='right' bgcolor="#FFFFFF"> 客户：</td>
 		  <td colspan="5" >
 <%
- sql="select * from Information "
+
+ sql="select * from Customer where is_ok='true' order by CustomerType "
  set rs_kehu=conn.execute(sql)
 %>
  <select name="rank" id="rank" selfvalue="客户级别">
@@ -269,7 +272,7 @@ else
 <%
  do while rs_kehu.eof=false
 %>
- <option value="1"><%=rs_kehu("cname")%></option>
+ <option value="1"><%=rs_kehu("RealName")%>,客户类型：<%=rs_kehu("CustomerType")%>类.</option>
 <%
  rs_kehu.movenext
  loop
@@ -438,7 +441,7 @@ end if
 <%if action="view" then
 viewaction=request("viewaction")
 if viewaction="yes" then 
- if is_sku(request("dname"),"GoodsInfo","Gname")=1 then 
+ if is_sku("Gname","GoodsInfo","'"&request("dname")&"'")=1 then 
   'sc "有该款式！"
   if is_sku("billno|goodsid","billdetail","'"&request("danno")&"'|'"&request("dname")&"'")=0 then 
   call dbdo(1,"billdetail","billno|goodsid|billqyt|cuser-'"&request("danno")&"'|'"&request("dname")&"'|"&request("dqyt")&"|'"&session("RealName")&"'")
