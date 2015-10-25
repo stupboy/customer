@@ -486,7 +486,7 @@ sql="select a.*,b.Yprice from Yuan_Store a left join Yuan_Info b on a.Yname=b.Yn
 	  <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
 	    <form action="yuanS.asp?action=view&id=<%=id%>" method="POST" name="billd" id="billd">
 		<tr align="center" bgcolor="#F2FDFF">
-		  <td colspan=6  class="optiontitle"> µ¥ºÅ£º <input type="hidden" id="viewaction" name="viewaction" value="yes"> 
+		  <td colspan=6  class="optiontitle"> µ¥ºÅ£º<%=id%> <input type="hidden" id="viewaction" name="viewaction" value="yes"> 
 		  <input type="hidden" id="danno" name="danno" value="<%=ID%>"></td>
 		</tr>
 	    <tr bgcolor='#EBF0F7' align='center'>
@@ -508,7 +508,7 @@ for i = 1 to rs.recordcount
 		  <td><%=rs("Yname")%></td>
 		  <td><%=rs("Yqty")%></td>
 		  <td><%=rs("Yprice")*rs("Yqty")%></td>
-		  <td><IMG src="../images/drop.gif" align="absmiddle"><a href="javascript:DoEmpty('?wor=del2&id=<%=rs("id")%>&danno=<%=request("id")%>&action=view')">É¾³ý</a></td>
+		  <td><IMG src="../images/drop.gif" align="absmiddle"><a href="javascript:DoEmpty('?wor=del2&id=<%=rs("id")%>&danno=<%=id%>&action=view')">É¾³ý</a></td>
 		</tr>
 <%
 rs.movenext 
