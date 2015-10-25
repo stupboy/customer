@@ -76,6 +76,7 @@ body {
 	  d.add(23, 2, ' 查询客户信息', 'Search.asp');
 	  d.add(3, 0, ' 仓库管理', '');
 	  d.add(30, 3, ' 生产订单', 'action.asp?dz=a003');
+	  d.add(34, 3, ' 原料库存', 'action.asp?dz=a010');
 	  d.add(31, 3, ' 商品库存', 'Information.asp?action=list');
 	  d.add(32, 3, ' 原料库存', 'Information.asp?action=add');
 	  d.add(33, 3, ' 生产进度', 'Information.asp?action=add');
