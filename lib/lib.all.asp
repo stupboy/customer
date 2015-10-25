@@ -140,7 +140,7 @@ function re_char(x,y,z)
  end if
 end function
 '-查找数据库是否包含值-
-function is_sku(a,b,c)
+Function is_sku(a,b,c)
 temp=0
 TiaoJian=""
 mxa=split(a,"|")
@@ -166,9 +166,10 @@ if not rs.eof Then
  end if
  Rs.close
 set Rs=nothing
-is_sku=Temp
-end function 
-'response.write is_sku("abc|edf","table","ffff|ggg")
+is_sku=temp
+End Function 
+
+'response.write is_sku("Yname","Yuan_Info","'过滤网'")
 '-数据库操作函数无返回值-
 sub dbdo(x,y,z) '--
 set conn=server.CreateObject("adodb.connection")
@@ -189,6 +190,7 @@ if x= 1 then
   nr=trim(mid(nr,2,999))
  sql="insert into "&y&" ("&zd&") values ("&nr&") "
  conn.execute(sql)
+ 'sc sql
 elseif x=2 then 
  sql=y
  conn.execute(sql)
