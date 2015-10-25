@@ -12,6 +12,14 @@ if Request("wor")="del" then
   conn.execute(sql)
   'sc sql
  next
+elseif Request("wor")="del2" then
+ id=request("id")
+ idArr=split(id,",")
+ for i=0 to ubound(idArr)
+  sql="delete from billdetail where id="&trim(idArr(i))
+  conn.execute(sql)
+ next 
+  id=request("danno")
 elseif Request("addon")="yes" then 
  sql="insert into billInfo (billno,status,cuser,billway,customer_id,billnote) values ('"&Request("billno")&"',0,'"&session("RealName")&"','下单','"&Request("rank")&"','"&request("comment")&"')"
  conn.execute(sql)
@@ -438,7 +446,7 @@ if viewaction="yes" then
   else 
   sql="update billdetail set billqyt=billqyt +"&request("dqyt")&" where billno='"&request("danno")&"' and goodsid='"&request("dname")&"' "
   call dbdo(2,sql,sql)
-  sc sql
+  'sc sql
   end if 
  else
  sc "该商品不存在！"
@@ -453,15 +461,13 @@ if not rs.eof Then
 	  <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
 	    <form action="bill.asp?action=view&id=<%=id%>" method="POST" name="billd" id="billd">
 		<tr align="center" bgcolor="#F2FDFF">
-		  <td colspan=6  class="optiontitle"> 单号：<%=rs("billno")%> <input type="hidden" id="viewaction" name="viewaction" value="yes"> 
-		  <input type="hidden" id="danno" name="danno" value="<%=rs("billno")%>"></td>
+		  <td colspan=4  class="optiontitle"> 单号：<%=id%> <input type="hidden" id="viewaction" name="viewaction" value="yes"> 
+		  <input type="hidden" id="danno" name="danno" value="<%=id%>"></td>
 		</tr>
 	    <tr bgcolor='#EBF0F7' align='center'>
 		  <td>选中</td>
 		  <td>商品</td>
-		  <td>类别</td>
 		  <td>数量</td>
-		  <td>金额</td>
 		  <td>操作</td>
 		</tr>
 <%
@@ -475,12 +481,10 @@ if not rs.eof Then
 	 end if
 %>
 	    <tr bgcolor='#FFFFFF' align='center'>
-		  <td><%=rs2("id")%></td>
+		  <td><input type="checkbox" name="id" value="<%=rs2("id")%>"></td>
 		  <td><%=rs2("goodsid")%></td>
 		  <td><%=rs2("billqyt")%></td>
-		  <td></td>
-		  <td></td>
-		  <td></td>
+		  <td><IMG src="../images/drop.gif" align="absmiddle"><a href="javascript:DoEmpty('?wor=del2&id=<%=rs2("id")%>&danno=<%=id%>&action=view')">删除</a></td>
 		</tr>
 <%
    rs2.movenext 
@@ -490,13 +494,16 @@ if not rs.eof Then
    end if
 %>
 	    <tr bgcolor='#FFFFFF' align='center'>
-		  <td colspan=2>输入商品：</td>
+		  <td >输入商品：</td>
 		  <td>数量:<input id="dqyt" name="dqyt" size="4" value="1"></td>
-		  <td colspan=2><input id="dname" name="dname" style="width:100%" /></td>
+		  <td ><input id="dname" name="dname" style="width:100%" /></td>
 		  <td><input type="Submit" name="Submit3" value="提交" ></td>
 		</tr>
+		<tr align="center" bgcolor="#F2FDFF">
+		  <td colspan=6 > 订单备注：<%=rs("BillNote")%></td>
+		</tr>
 		<tr align="center" bgcolor="#ebf0f7">
-		  <td colspan="6">
+		  <td colspan="4">
           <input type="button" name="Submit2" value="返回" onClick="history.back(-1)"></td>
 		</tr>
 		</form>
