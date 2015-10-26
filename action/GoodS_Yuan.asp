@@ -27,12 +27,12 @@ elseif Request("addon")="yes" then
  mY0=split(Tstr,"#")
  for i= 1 to ubound(mY0)
  mY1=split(mY0(i),"|")
- sql="insert into Yuan_Store (Yname,yqty,ydanno,ystatus,ydancat,CreateUser) values ('"&mY1(0)&"',"&mY1(1)&",'"&Request("billno")&"',1,'采购入库','"&session("RealName")&"')"
+ sql="insert into Goods_Yuan (GnameYuan,GnameYuanQty,Gname,CreateUser) values ('"&mY1(0)&"',"&mY1(1)&",'"&Request("billno")&"','"&session("RealName")&"')"
  conn.execute(sql)
  'sc sql
  next 
  'sc gstr
- sql="insert into Yuan_Store (billno,status,cuser,billway) values ('"&Request("billno")&"',0,'"&session("RealName")&"','下单')"
+ 'sql="insert into Yuan_Store (billno,status,cuser,billway) values ('"&Request("billno")&"',0,'"&session("RealName")&"','下单')"
  'conn.execute(sql)
 end if
 
@@ -291,17 +291,34 @@ else
 <!--增加订单 及 订单列表-->
 <%if action="list" then%>
         <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
-        <form name="add" method="post" action="yuanS.asp">
+        <form name="add" method="post" action="Goods_Yuan.asp">
         <tr align="center" bgcolor="#F2FDFF">
           <td colspan="6"  class="optiontitle"> 添加客户信息 </td>
-        </tr>
-        <tr bgcolor='#F2FDFF'>
-          <td align='right' bgcolor="#F2FDFF"> 单号：</td>
-          <td colspan="5" bgcolor="#F2FDFF"><input name="billno" type="text" id="billno" value="<%=danhao("Y")%>" size="30" maxlength="50" readonly="readonly" > 
-            按回车\TAB键即可输入下一选项</td>
         </tr>		
+<tr bgcolor='#FFFFFF'>
+<td align='right' bgcolor="#FFFFFF"> 商品：</td>
+<td colspan="5" >
+<%
+ sql="select * from GoodsInfo where is_ok='True' "
+ set rs_kehu=conn.execute(sql)
+%>
+ <select name="billno" id="billno" selfvalue="商品类别">
+ <option value="">请选择</option>
+<%
+ do while rs_kehu.eof=false
+%>
+ <option value="<%=rs_kehu("Gname")%>"><%=rs_kehu("Gname")%></option>
+<%
+ rs_kehu.movenext
+ loop
+ rs_kehu.close
+ set rs_kehu=nothing 
+%>
+ </select>
+</td>
+</tr>
 		<tr bgcolor='#FFFFFF'>
-		  <td align='right' bgcolor="#FFFFFF"> 客户：</td>
+		  <td align='right' bgcolor="#FFFFFF"> 原料：</td>
 		  <td colspan="5" >
 <%
  sql="select * from Yuan_Info where is_ok='True' "
@@ -321,9 +338,9 @@ else
 %>
  </select><input type="text" value="1" name="yqty" id="yqty" size="5" /><input type="button" value="继续添加" name="SADD" id="SADD" onclick="return yuanadd()" />
 </td>
-		</tr>
+</tr>
 		<tr bgcolor='#FFFFFF'>
-		  <td align='right' bgcolor="#FFFFFF"> 入库信息：</td>
+		  <td align='right' bgcolor="#FFFFFF"> 组成信息：</td>
 		  <td colspan="5"><INPUT TYPE="hidden" name="comment" id="comment" value="" ></textarea><span id="Yxx"></span></td>
 		</tr>
         <tr align="center" bgcolor="#ebf0f7">
@@ -348,7 +365,7 @@ else
           <td width="10%">操作</td>
         </tr>	
 <%
- sql=" select a.Ydanno,sum(a.yqty) TotalQty,sum(a.yqty*Yprice) TotalMoney from Yuan_store a LEFT JOIN Yuan_Info b  on a.Yname=b.Yname group by Ydanno "
+ sql=" select Gname,Count(distinct GnameYuan) 种类,sum(GnameYuanQty*Yprice) GoodsPrice from Goods_Yuan a left join Yuan_Info b on a.GnameYuan=b.Yname group by Gname "
  set rs=server.createobject("adodb.recordset") 
  rs.open sql,conn,1,1
  if not rs.eof then
@@ -378,11 +395,11 @@ else
 %>
        <form name="del" action="" method="post">
         <tr align='center' bgcolor='#FFFFFF' onmouseover='this.style.background="#F2FDFF"' onmouseout='this.style.background="#FFFFFF"'>
-          <td><input type="checkbox" name="id" value="<%=rs("Ydanno")%>"></td>
-		  <td><%=rs("Ydanno")%></td>
-          <td><%=rs("TotalQty")%></td>
-		  <td><%=rs("TotalMoney")%></td>
-          <td><IMG src="../images/view.gif" align="absmiddle"><a href="?action=view&id=<%=rs("Ydanno")%>">查看</a> | <IMG src="../images/drop.gif" align="absmiddle"><a href="javascript:DoEmpty('?wor=del&id=<%=rs("Ydanno")%>&action=list&ToPage=<%=intCurPage%>')">删除</a></td>
+          <td><input type="checkbox" name="id" value="<%=rs("Gname")%>"></td>
+		  <td><%=rs("Gname")%></td>
+          <td><%=rs("种类")%></td>
+		  <td><%=rs("GoodsPrice")%></td>
+          <td><IMG src="../images/view.gif" align="absmiddle"><a href="?action=view&id=<%=rs("Gname")%>">查看</a> | <IMG src="../images/drop.gif" align="absmiddle"><a href="javascript:DoEmpty('?wor=del&id=<%=rs("Gname")%>&action=list&ToPage=<%=intCurPage%>')">删除</a></td>
         </tr>
 <%
 rs.movenext 
@@ -467,10 +484,10 @@ viewaction=request("viewaction")
 if viewaction="yes" then 
  if is_sku("Yname","Yuan_Info","'"&request("dname")&"'")=1 then 
   'sc "有该款式！"
-  if is_sku("Ydanno|Yname","Yuan_Store","'"&request("danno")&"'|'"&request("dname")&"'")=0 then 
+  if is_sku("Gname|GnameYuan","Goods_Yuan","'"&request("danno")&"'|'"&request("dname")&"'")=0 then 
   call dbdo(1,"Yuan_Store","Ydanno|Yname|Yqty|CreateUser|Ydancat-'"&request("danno")&"'|'"&request("dname")&"'|"&request("dqyt")&"|'"&session("RealName")&"'|'采购入库'")
   else 
-  sql="update Yuan_Store set Yqty=Yqty +"&request("dqyt")&" where Ydanno='"&request("danno")&"' and Yname='"&request("dname")&"' "
+  sql="update Goods_yuan set GnameYuanQty=GnameYuanQty +"&request("dqyt")&" where Gname='"&request("danno")&"' and GnameYuan='"&request("dname")&"' "
   call dbdo(2,sql,sql)
   end if 
  else
@@ -481,7 +498,7 @@ if request.querystring("danno")<>"" then
 Cdanhao=request.querystring("danno")
 end if 
 set rs=server.createobject("adodb.recordset") 
-sql="select a.*,b.Yprice from Yuan_Store a left join Yuan_Info b on a.Yname=b.Yname where a.Ydanno='"&ID&"' "
+sql="select * from Goods_Yuan where Gname='"&ID&"' "
 %>
 	  <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
 	    <form action="yuanS.asp?action=view&id=<%=id%>" method="POST" name="billd" id="billd">
@@ -504,10 +521,10 @@ for i = 1 to rs.recordcount
 %>
 	    <tr bgcolor='#FFFFFF' align='center'>
 		  <td><input type="checkbox" name="id" value="<%=rs("id")%>"></td>
-		  <td><%=rs("Ydanno")%></td>
-		  <td><%=rs("Yname")%></td>
-		  <td><%=rs("Yqty")%></td>
-		  <td><%=rs("Yprice")*rs("Yqty")%></td>
+		  <td><%=rs("Gname")%></td>
+		  <td><%=rs("GnameYuan")%></td>
+		  <td><%=rs("GnameYuanQty")%></td>
+		  <td></td>
 		  <td><IMG src="../images/drop.gif" align="absmiddle"><a href="javascript:DoEmpty('?wor=del2&id=<%=rs("id")%>&danno=<%=id%>&action=view')">删除</a></td>
 		</tr>
 <%
