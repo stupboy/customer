@@ -11,29 +11,27 @@ id=Request("id")
 '-删除记录 is_ok='false'-
 if Request("wor")="del" then
  id=request("id")
-  sql="delete from Yuan_Store  where Ydanno='"&id&"' "
+  sql="delete from Goods_Yuan  where Gname='"&id&"' "
   conn.execute(sql)
 
 elseif Request("wor")="del2" then
  id=request("id")
  idArr=split(id,",")
  for i=0 to ubound(idArr)
-  sql="delete from Yuan_Store where id="&trim(idArr(i))
+  sql="delete from Goods_Yuan where id="&trim(idArr(i))
   conn.execute(sql)
  next 
   id=request("danno")
 elseif Request("addon")="yes" then  
+ sql="delete from Goods_Yuan  where Gname='"&Request("billno")&"' "
+ conn.execute(sql)
  Tstr=replace(replace(Trim(Request("comment")),"<br>","#"),"_x_","|")
  mY0=split(Tstr,"#")
  for i= 1 to ubound(mY0)
  mY1=split(mY0(i),"|")
  sql="insert into Goods_Yuan (GnameYuan,GnameYuanQty,Gname,CreateUser) values ('"&mY1(0)&"',"&mY1(1)&",'"&Request("billno")&"','"&session("RealName")&"')"
  conn.execute(sql)
- 'sc sql
  next 
- 'sc gstr
- 'sql="insert into Yuan_Store (billno,status,cuser,billway) values ('"&Request("billno")&"',0,'"&session("RealName")&"','下单')"
- 'conn.execute(sql)
 end if
 
 '--增加商品信息记录-
@@ -485,7 +483,7 @@ if viewaction="yes" then
  if is_sku("Yname","Yuan_Info","'"&request("dname")&"'")=1 then 
   'sc "有该款式！"
   if is_sku("Gname|GnameYuan","Goods_Yuan","'"&request("danno")&"'|'"&request("dname")&"'")=0 then 
-  call dbdo(1,"Yuan_Store","Ydanno|Yname|Yqty|CreateUser|Ydancat-'"&request("danno")&"'|'"&request("dname")&"'|"&request("dqyt")&"|'"&session("RealName")&"'|'采购入库'")
+  call dbdo(1,"Goods_Yuan","Gname|GnameYuan|GnameYuanQty|CreateUser-'"&request("danno")&"'|'"&request("dname")&"'|"&request("dqyt")&"|'"&session("RealName")&"'")
   else 
   sql="update Goods_yuan set GnameYuanQty=GnameYuanQty +"&request("dqyt")&" where Gname='"&request("danno")&"' and GnameYuan='"&request("dname")&"' "
   call dbdo(2,sql,sql)
@@ -501,7 +499,7 @@ set rs=server.createobject("adodb.recordset")
 sql="select * from Goods_Yuan where Gname='"&ID&"' "
 %>
 	  <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
-	    <form action="yuanS.asp?action=view&id=<%=id%>" method="POST" name="billd" id="billd">
+	    <form action="Goods_Yuan.asp?action=view&id=<%=id%>" method="POST" name="billd" id="billd">
 		<tr align="center" bgcolor="#F2FDFF">
 		  <td colspan=6  class="optiontitle"> 单号：<%=id%> <input type="hidden" id="viewaction" name="viewaction" value="yes"> 
 		  <input type="hidden" id="danno" name="danno" value="<%=ID%>"></td>

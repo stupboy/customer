@@ -16,6 +16,10 @@ select case dz
   response.redirect "action/yuanS.asp?action=list"
  case "a009"
   response.redirect "action/Goods_yuan.asp?action=list"
+ case "a010"
+  response.redirect "action/Store.asp?action=Yuan"
+ case "a011"
+  response.redirect "action/product.asp?action=list"
  case else
   response.redirect "action/error.asp"
 end select 

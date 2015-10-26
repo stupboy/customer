@@ -1,5 +1,5 @@
 <!--#include file="inc/right.asp"-->
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
@@ -73,7 +73,7 @@ body {
 	  d.add(22, 2, ' 原料入库', 'action.asp?dz=a007');
 	  d.add(23, 2, ' 客户档案', 'action.asp?dz=a005');
 	  d.add(3, 0, ' 仓库管理', '');
-	  d.add(30, 3, ' 生产订单', 'action.asp?dz=a003');
+	  d.add(30, 3, ' 生产订单', 'action.asp?dz=a011');
 	  d.add(34, 3, ' 原料库存', 'action.asp?dz=a010');
 	  d.add(31, 3, ' 商品库存', 'Information.asp?action=list');
 	  d.add(32, 3, ' 原料库存', 'Information.asp?action=add');
