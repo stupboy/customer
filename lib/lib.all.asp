@@ -17,6 +17,7 @@
 '-13. is_sku(a.b.c)   查找b表中是否包含字段c=a的值返回1和0-
 '-14. dbdo(x,y,z)     [s]数据库操作函数 x=1 为-
 '-15. aspTips(x)      [s]弹窗警告 -
+'-16. sctd(x)         [s]输出表格td-
 '-待增加-
 '-函数明细列表-
 '-输出函数SC -
@@ -200,6 +201,9 @@ end sub
 sub aspTips(x)
 response.write "<script>alert("&x&");</script>"
 end sub 
+Sub sctd(x)
+response.write "<td>"&x&"</td>"
+End Sub
 '-测试函数语句-
 'sc esql("UserInfo","Username:stupboy|password:123456")
 %>

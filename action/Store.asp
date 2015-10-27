@@ -145,51 +145,6 @@ function check()
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr valign="top">
     <td bgcolor="#FFFFFF">
-<%if action="list" then%><BR>
-        <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
-        <form name="add" method="post" action="goods.asp">
-        <tr align="center" bgcolor="#F2FDFF">
-          <td colspan="6"  class="optiontitle"> 添加商品信息 </td>
-        </tr>
-        <tr bgcolor='#F2FDFF'>
-          <td align='right' bgcolor="#FFFFFF"> 商品名称：</td>
-          <td colspan="5" bgcolor="#FFFFFF"><input name="cname" type="text" id="cname" onKeyDown="next()" size="15" maxlength="50" > 
-            按回车\TAB键即可输入下一选项</td>
-        </tr>		
-		<tr bgcolor='#FFFFFF'>
-		  <td align='right' bgcolor="#FFFFFF"> 商品类别：</td>
-		  <td><input name="address" type="text" id="address" onKeyDown="next()"></td>
-		  <td align='right'>采购成本：</td>
-		  <td><input name="pcode" type="text" id="pcode" onKeyDown="next()" value="0"/></td>
-		  <td align='right'>直营销售价格：</td>
-		  <td><input name="owner" type="text" id="owner" onKeyDown="next()" value="0"/></td>
-		</tr>
-		<tr bgcolor='#FFFFFF'>
-		  <td align='right' bgcolor="#FFFFFF"> 代销价格1：</td>
-		  <td><input name="T1" type="text" id="T1" onKeyDown="next()" value="0"/></td>
-		  <td align='right'>代销价格2：</td>
-		  <td><input name="T2" type="text" id="T2" onKeyDown="next()" value="0"/></td>
-		  <td align='right'>代销价格3：</td>
-		  <td><input name="T3" type="text" id="T3" onKeyDown="next()" value="0"/></td>
-		</tr>
-		<tr bgcolor='#FFFFFF'>
-		  <td align='right' bgcolor="#FFFFFF"> 代销价格4：</td>
-		  <td><input name="T4" type="text" id="T4" onKeyDown="next()" value="0"/></td>
-		  <td align='right'>代销价格5：</td>
-		  <td><input name="T5" type="text" id="T5" onKeyDown="next()" value="0"/></td>
-		  <td align='right'>代销价格6：</td>
-		  <td><input name="T6" type="text" id="T6" onKeyDown="next()" value="0"/></td>
-		</tr>
-        <tr align="center" bgcolor="#ebf0f7">
-          <td colspan="6" >
-		     <INPUT TYPE="hidden" name="action" value="yes">
-            <input type="button" name="Submit" value="提交" onClick="check()">
-          	<input type="button" name="Submit2" value="返回" onClick="history.back(-1)"></td>
-        </tr>
-		</FORM>
-      </table> 
-<br>
-<% end if %>
 <%if action="Yuan" then%>
       <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
         <tr align="center" bgcolor="#F2FDFF">
@@ -238,6 +193,87 @@ function check()
           <td><%=rs("money")%></td>
         </tr>
 <%
+rs.movenext 
+next
+%>
+		</form>
+        <tr align="center" bgcolor="#ebf0f7">
+          <td colspan="4">总共：
+		  <font color="#ff0000"><%=rs.PageCount%></font>页, 
+		  <font color="#ff0000"><%=proCount%></font>条商品信息, 当前页：
+		  <font color="#ff0000"><%=intCurPage%> </font>
+		  <%if intCurPage<>1 then%>
+		  <a href="?action=list">首页</a> | 
+		  <a href="?action=list&ToPage=<%=intCurPage-1%>">上一页</a> | 
+		  <% end if
+             if intCurPage<>rs.PageCount then %>
+          <a href="?action=list&ToPage=<%=intCurPage+1%>">下一页</a> | 
+		  <a href="?action=list&ToPage=<%=rs.PageCount%>"> 最后页</a>
+		  <% end if%>
+		  </span>
+		  </td>
+        </tr>
+<%
+else
+%>
+        <tr align="center" bgcolor="#ffffff">
+          <td colspan="4">对不起！目前数据库中还没有添加商品信息！</td>
+        </tr>
+        <%
+          rs.close
+          set rs=nothing
+          end if
+        %>
+      </table><br>
+<%end if%>
+<%
+if action="goods" then
+sc "<table width='96%'  border='0' align='center' cellpadding='4' cellspacing='1' bgcolor='#aec3de'>"
+sc "<tr align='center' bgcolor='#F2FDFF'>"
+sc "<td colspan='4'  class='optiontitle'>原料库存数量信息</td>"
+sc "</tr>"
+sc "<tr align='center' bgcolor='#ebf0f7'>"
+sc "<td width='10%'>序号</td>"
+sc "<td width='10%'>类别</td>"
+sc "<td width='10%'>数量</td>"
+sc "<td width='10%'>成本</td>"
+sc "</tr>"	
+'-数据查询-
+sql="select * from storedetail_sum order by customer,goodsid "
+set rs=server.createobject("adodb.recordset") 
+rs.open sql,conn,1,1
+if not rs.eof then
+ proCount=rs.recordcount
+ rs.PageSize=8
+ if not IsEmpty(Request("ToPage")) then
+  ToPage=CInt(Request("ToPage"))
+  if ToPage>rs.PageCount then
+	rs.AbsolutePage=rs.PageCount
+	intCurPage=rs.PageCount
+  elseif ToPage<=0 then
+	rs.AbsolutePage=1
+	intCurPage=1
+  else
+	rs.AbsolutePage=ToPage
+	intCurPage=ToPage
+  end if
+ else
+  rs.AbsolutePage=1
+  intCurPage=1
+ end if
+ intCurPage=CInt(intCurPage)
+ For i = 1 to rs.PageSize
+ if rs.eof then     
+ Exit For 
+ end if
+
+sc "<form name='del' action='' method='post'>"
+sc "<tr align='center' bgcolor='#FFFFFF' onmouseover=""this.style.background='#F2FDFF'"" onmouseout=""this.style.background='#FFFFFF'"">"
+sctd rs("Customer")
+sctd rs("Goodsid")
+sctd rs("数量1")
+sctd rs("金额1")
+sc "</tr>"
 rs.movenext 
 next
 %>

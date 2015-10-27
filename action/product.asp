@@ -193,30 +193,54 @@ function check()
 	 if rs.eof then     
 	 Exit For 
 	 end if
+	      '-数据循环输出 start-
+		  sc "<form name='del' action='' method='post'>"
+		  sc "<tr align='center' bgcolor='#FFFFFF' onmouseover=""this.style.background='#F2FDFF'"" onmouseout=""this.style.background='#FFFFFF'"">"
+		  if rs("status")=0 then 
+		  sctd "<input type='checkbox' name='id' value='"&rs("id")&"'>"
+		  elseif rs("status")=1 then 
+		  sctd "生产中"
+		  elseif rs("status")=2 then 
+		  sctd "待入库"
+		  elseif rs("status")=3 then 
+		  sctd "<strong><span style='color:#009900;background-color:#FFE500;'>已入库</span></strong>"
+		  end if 
+		  sctd rs("billno")
+		  sctd rs("数量")&"|"&rs("数量1")
+		  sctd rs("金额")
+		  sctd rs("billdate")
+		  sctd rs("RealName")
+		  sctd rs("billway")
+		  sctd rs("billnote")
+		  sc "<td>"
+		  sc "<IMG src='../images/view.gif' align='absmiddle'><a href='?action=view&id="&rs("id")&"'>生产</a>"
+          if rs("status")= 1 then 
+		  sc "| <IMG src='../images/edit.gif' align='absmiddle'><a href='?action=list&tj=yes&id="&rs("id")&"'>发货</a>"&_
+		  " | <IMG src='../images/drop.gif' align='absmiddle'>"&_
+		  "<a href='?action=list&tj=sb&id="&rs("id")&"danno="&rs("billno")&"'>取消</a>"
+          elseif rs("status")=2 then 
+		  sc "| 待收货"
+		  elseif rs("status")=3 then 
+		  sc "| 已入库"
+		  end if
+		  sc "</td>"		  
 %>
-       <form name="del" action="" method="post">
-        <tr align='center' bgcolor='#FFFFFF' onmouseover='this.style.background="#F2FDFF"' onmouseout='this.style.background="#FFFFFF"'>
-          <td><input type="checkbox" name="id" value="<%=rs("id")%>"></td>
-          <td><%=rs("billno")%></td>
-		  <td><%=rs("数量")%>|<%=rs("数量1")%></td>
-          <td><%=rs("金额")%></td>
-		  <td><%=rs("billdate")%></td>
-		  <td><%=rs("RealName")%></td>
-		  <td><%=rs("billway")%></td>
-		  <td><%=rs("BillNote")%></td>
-          <td><IMG src="../images/view.gif" align="absmiddle"><a href="?action=view&id=<%=rs("id")%>">生产</a><% if rs("status")= 1 then %>| <IMG src="../images/edit.gif" align="absmiddle"><a href="?action=list&tj=yes&id=<%=rs("id")%>">发货</a> | <IMG src="../images/drop.gif" align="absmiddle"><a href="?action=list&tj=sb&id=<%=rs("id")%>&danno=<%=rs("billno")%>">取消</a><% else %> | 已发货 <% end if %></td>
+          <!--<td><IMG src="../images/view.gif" align="absmiddle"><a href="?action=view&id=<%=rs("id")%>">生产</a><% if rs("status")= 1 then %>| <IMG src="../images/edit.gif" align="absmiddle"><a href="?action=list&tj=yes&id=<%=rs("id")%>">发货</a> | <IMG src="../images/drop.gif" align="absmiddle"><a href="?action=list&tj=sb&id=<%=rs("id")%>&danno=<%=rs("billno")%>">取消</a><% else %> | 已发货 <% end if %></td>-->
         </tr>
 <%
 rs.movenext 
 next
 %>
+<!--
 		<tr bgcolor="#F2FDFF">
 		  <td colspan="9">&nbsp;&nbsp;
 		   <input name="chkall" type="checkbox" id="chkall" value="select" onclick=CheckAll(this.form)> 全选
 		   <input name="wor" type="hidden" id="wor" value="del" />
-		   <input type="submit" name="Submit3" value="删除所选" onClick="{if(confirm('确定要删除记录吗？删除后将被无法恢复！')){return true;}return false;}" />
+		   <input name="tj" type="hidden" id="tj" value="yes" />
+		   <input type="submit" name="Submit3" value="删除所选" onClick="{if(confirm('确定发货？发货后无法修改数量！')){return true;}return false;}" />
 		  </td>
 		</tr>
+-->
 		</form>
         <tr align="center" bgcolor="#ebf0f7">
           <td colspan="9">总共：
