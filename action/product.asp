@@ -166,7 +166,7 @@ function check()
           <td width="10%">操作</td>
         </tr>	
 <%
- sql=" select a.*,b.数量,b.金额,c.RealName,b.数量1,b.金额1 from billInfo a left join billdetail_sum b on a.billno=b.billno left join Customer c on a.customer_id=c.id where a.is_ok='TRUE' and a.status>0 order by billno desc "
+ sql=" select a.*,b.数量,b.金额,c.RealName,b.数量1,b.金额1 from billInfo a left join billdetail_sum b on a.billno=b.billno left join Customer c on a.customer_id=c.id where a.is_ok='TRUE' and a.status>0 and a.billway='下单' order by billno desc "
  set rs=server.createobject("adodb.recordset") 
  rs.open sql,conn,1,1
  if not rs.eof then
@@ -221,7 +221,7 @@ function check()
           elseif rs("status")=2 then 
 		  sc "| 待收货"
 		  elseif rs("status")=3 then 
-		  sc "| 已入库"
+		  sc "| 已入库|<IMG src='../images/view.gif' align='absmiddle'><a href='?action=list'>原料扣减</a>"
 		  end if
 		  sc "</td>"		  
 %>
@@ -380,8 +380,7 @@ end if
 		  <td colspan=6 > 订单备注：<%=rs("BillNote")%></td>
 		</tr>
 		<tr align="center" bgcolor="#ebf0f7">
-		  <td colspan="4">
-          <input type="button" name="Submit2" value="返回" onClick="history.back(-1)"></td>
+		  <td colspan="4"><a href='?action=list'><u><strong><em>返回</em></strong></u></a></td>
 		</tr>
 		</form>
   	</table>
