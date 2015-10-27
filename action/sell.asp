@@ -367,7 +367,7 @@ viewaction=request("viewaction")
 if viewaction="yes" then 
  if is_sku("Gname","GoodsInfo","'"&request("dname")&"'")=1 then 
   'sc "有该款式！"
-  if is_skux("goodsid|customer|数量1","storedetail_sum","'"&request("dname")&"'|'"&request("cuname")&"'|"&request("dqyt"),"1|1|2")=1 then 
+  if is_skux("goodsid|customer|数量1","WT_storedetail_sum","'"&request("dname")&"'|'"&request("cuname")&"'|"&request("dqyt"),"1|1|2")=1 then 
    if is_sku("goodsid|billno","billdetail_info","'"&request("dname")&"'|'"&request("danno")&"'")=0 then 
     call dbdo(1,"billdetail","billno|goodsid|billqyt|cuser-'"&request("danno")&"'|'"&request("dname")&"'|"&request("dqyt")&"|'"&session("RealName")&"'")
    else
@@ -375,7 +375,10 @@ if viewaction="yes" then
     call dbdo(2,sql,sql)
    end if
   else
-  sc "该商品无库存!"  
+  'sql="select 数量1 from WT_storedetail_sum where Customer='' and goodsid='' "
+  'call dbdo(3,"WT_storedetail_sum","customer|goodsid-'"&request("cuname")&"'|'"&request("dname")&"'")
+  SL=look_db("数量1","WT_storedetail_sum","customer|goodsid",request("cuname")&"|"&request("dname"))
+  sc "该商品无库存或库存不足!现有库存"&SL&"件！"  
   end if 
  else
  sc "该商品不存在！"

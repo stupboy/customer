@@ -39,6 +39,39 @@ sql="update BillInfo set status=0 where id="&Request("id")
 conn.execute(sql)
 sql="update billdetail set ProductQty=0 where billno='"&Request("danno")&"'"
 conn.execute(sql)
+'-原料扣减-
+elseif Request("tj")="yuan" then 
+'-扣减标注-
+sql="update BillInfo set YuanCut=1 where id="&Request("id")
+conn.execute(sql)
+'sc sql
+'-获取关联数值-
+on error resume next 
+sql="select * from Billdetail where billno='"&Request("danno")&"'"
+set rs=conn.execute(sql)
+Tmpx=Rs.GetRows()
+Tmp1s=ubound(Tmpx,2)
+rs.close
+set rs=nothing
+
+for i = 0 to tmp1s
+'sc tmpx(2,0)
+'sc tmpx(3,0)
+Ydanhao=danhao("Y")
+sql="select * from Goods_Yuan where Gname='"&tmpx(2,i)&"'"
+set rs=conn.execute(sql)
+Tmp2=Rs.GetRows()
+Tmp2s=ubound(Tmp2,2)
+rs.close
+set rs=nothing
+next 
+for j = 0 to tmp2s
+kk=0
+KK=Cdbl(tmp2(3,j))*Cdbl(tmpX(3,0))*-1
+sql="insert into Yuan_store (Yname,yqty,yway,ydancat,ydanno,ynote,CreateUser) values ('"&tmp2(2,j)&"',"&kk&",'生产','生产扣减','"&Ydanhao&"','"&Request("danno")&"','"&session("RealName")&"')"
+conn.execute(sql)
+'sc sql
+next 
 end if 
 '-添加和修改记录 id为空则为添加 否则为修改-
 '-获取传递变量-
@@ -221,7 +254,10 @@ function check()
           elseif rs("status")=2 then 
 		  sc "| 待收货"
 		  elseif rs("status")=3 then 
-		  sc "| 已入库|<IMG src='../images/view.gif' align='absmiddle'><a href='?action=list'>原料扣减</a>"
+		  sc "| "&ztgs("已入库",1)
+		  if rs("YuanCut")=0 then 
+		  sc "|<IMG src='../images/view.gif' align='absmiddle'><a href='?action=list&tj=yuan&id="&rs("id")&"&danno="&rs("billno")&"'>原料</a>"
+		  end if 
 		  end if
 		  sc "</td>"		  
 %>

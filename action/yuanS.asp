@@ -13,7 +13,9 @@ if Request("wor")="del" then
  id=request("id")
   sql="delete from Yuan_Store  where Ydanno='"&id&"' "
   conn.execute(sql)
-
+elseif Request("wor")="sh" then 
+  sql="update Yuan_Store set Ystatus=1  where Ydanno='"&id&"' "
+  conn.execute(sql)
 elseif Request("wor")="del2" then
  id=request("id")
  idArr=split(id,",")
@@ -27,7 +29,7 @@ elseif Request("addon")="yes" then
  mY0=split(Tstr,"#")
  for i= 1 to ubound(mY0)
  mY1=split(mY0(i),"|")
- sql="insert into Yuan_Store (Yname,yqty,ydanno,ystatus,ydancat,CreateUser) values ('"&mY1(0)&"',"&mY1(1)&",'"&Request("billno")&"',1,'采购入库','"&session("RealName")&"')"
+ sql="insert into Yuan_Store (Yname,yqty,ydanno,ystatus,ydancat,CreateUser) values ('"&mY1(0)&"',"&mY1(1)&",'"&Request("billno")&"',0,'采购入库','"&session("RealName")&"')"
  conn.execute(sql)
  'sc sql
  next 
@@ -165,129 +167,6 @@ function check()
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr valign="top">
     <td bgcolor="#FFFFFF">
-	<%if action="list1" then%><BR>
-        <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
-        <form name="add" method="post" action="goods.asp">
-        <tr align="center" bgcolor="#F2FDFF">
-          <td colspan="6"  class="optiontitle"> 添加商品订单 </td>
-        </tr>
-        <tr bgcolor='#F2FDFF'>
-          <td align='right' bgcolor="#FFFFFF"> 商品名称：</td>
-          <td colspan="5" bgcolor="#FFFFFF"><input name="cname" type="text" id="cname" onKeyDown="next()" size="15" maxlength="50" value="<%=danhao("Y")%>" > 
-            按回车\TAB键即可输入下一选项</td>
-        </tr>		
-		<tr bgcolor='#FFFFFF'>
-		  <td align='right' bgcolor="#FFFFFF"> 商品类别：</td>
-		  <td><input name="address" type="text" id="address" onKeyDown="next()"></td>
-		  <td align='right'>采购成本：</td>
-		  <td><input name="pcode" type="text" id="pcode" onKeyDown="next()"></td>
-		  <td align='right'>销售价格：</td>
-		  <td><input name="owner" type="text" id="owner" onKeyDown="next()"></td>
-		</tr>
-        <tr align="center" bgcolor="#ebf0f7">
-          <td colspan="6" >
-		     <INPUT TYPE="hidden" name="action" value="yes">
-            <input type="button" name="Submit" value="提交" onClick="check()">
-          	<input type="button" name="Submit2" value="返回" onClick="history.back(-1)"></td>
-        </tr>
-		</FORM>
-      </table> 
-<br>
-      <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
-        <tr align="center" bgcolor="#F2FDFF">
-          <td colspan="8"  class="optiontitle">商品信息</td>
-        </tr>
-        <tr align="center" bgcolor="#ebf0f7">
-		  <td width="5%">选中</td>
-          <td width="10%">商品名称</td>
-          <td width="10%">商品类别</td>
-          <td width="10%">采购成本</td>
-          <td width="10%">销售价格</td>
-          <td width="10%">修改时间</td>
-          <td width="10%">修改人员</td>
-          <td width="10%">执行操作</td>
-        </tr>	
-<%
- sql="select * from GoodsInfo where is_ok='true' order by id desc"
- set rs=server.createobject("adodb.recordset") 
- rs.open sql,conn,1,1
- if not rs.eof then
- proCount=rs.recordcount
-	rs.PageSize=3
-     if not IsEmpty(Request("ToPage")) then
-	    ToPage=CInt(Request("ToPage"))
-		if ToPage>rs.PageCount then
-		   rs.AbsolutePage=rs.PageCount
-		   intCurPage=rs.PageCount
-		elseif ToPage<=0 then
-		   rs.AbsolutePage=1
-		   intCurPage=1
-		else
-		   rs.AbsolutePage=ToPage
-		   intCurPage=ToPage
-		end if
-	 else
-		rs.AbsolutePage=1
-		intCurPage=1
-	 end if
-	 intCurPage=CInt(intCurPage)
-	 For i = 1 to rs.PageSize
-	 if rs.eof then     
-	 Exit For 
-	 end if
-%>
-       <form name="del" action="" method="post">
-        <tr align='center' bgcolor='#FFFFFF' onmouseover='this.style.background="#F2FDFF"' onmouseout='this.style.background="#FFFFFF"'>
-          <td><input type="checkbox" name="id" value="<%=rs("id")%>"></td>
-          <td><%=rs("Gname")%></td>
-		  <td><%=rs("Gcat")%></td>
-          <td><%=rs("Gcost")%></td>
-		  <td><%=rs("Gsell")%></td>
-		  <td><%=rs("addtime")%></td>
-		  <td><%=rs("adduser")%></td>
-          <td><IMG src="../images/view.gif" align="absmiddle"><a href="?action=view&id=<%=rs("id")%>">查看</a> | <IMG src="../images/edit.gif" align="absmiddle"><a href="?action=edit&id=<%=rs("id")%>">修改</a> | <IMG src="../images/drop.gif" align="absmiddle"><a href="javascript:DoEmpty('?wor=del&id=<%=rs("id")%>&action=list&ToPage=<%=intCurPage%>')">删除</a></td>
-        </tr>
-<%
-rs.movenext 
-next
-%>
-		<tr bgcolor="#F2FDFF">
-		  <td colspan="8">&nbsp;&nbsp;
-		   <input name="chkall" type="checkbox" id="chkall" value="select" onclick=CheckAll(this.form)> 全选
-		   <input name="wor" type="hidden" id="wor" value="del" />
-		   <input type="submit" name="Submit3" value="删除所选" onClick="{if(confirm('确定要删除记录吗？删除后将被无法恢复！')){return true;}return false;}" />
-		  </td>
-		</tr>
-		</form>
-        <tr align="center" bgcolor="#ebf0f7">
-          <td colspan="8">总共：
-		  <font color="#ff0000"><%=rs.PageCount%></font>页, 
-		  <font color="#ff0000"><%=proCount%></font>条商品信息, 当前页：
-		  <font color="#ff0000"><%=intCurPage%> </font>
-		  <%if intCurPage<>1 then%>
-		  <a href="?action=list">首页</a> | 
-		  <a href="?action=list&ToPage=<%=intCurPage-1%>">上一页</a> | 
-		  <% end if
-             if intCurPage<>rs.PageCount then %>
-          <a href="?action=list&ToPage=<%=intCurPage+1%>">下一页</a> | 
-		  <a href="?action=list&ToPage=<%=rs.PageCount%>"> 最后页</a>
-		  <% end if%>
-		  </span>
-		  </td>
-        </tr>
-<%
-else
-%>
-        <tr align="center" bgcolor="#ffffff">
-          <td colspan="8">对不起！目前数据库中还没有添加商品信息！</td>
-        </tr>
-        <%
-          rs.close
-          set rs=nothing
-          end if
-        %>
-      </table><br>
-<%end if%>
 <!--增加订单 及 订单列表-->
 <%if action="list" then%>
         <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
@@ -341,14 +220,14 @@ else
           <td colspan="5"  class="optiontitle">商品信息</td>
         </tr>
         <tr align="center" bgcolor="#ebf0f7">
-		  <td width="5%">选中</td>
+		  <td width="5%">状态</td>
           <td width="10%">单号</td>
           <td width="10%">数量</td>
           <td width="10%">金额</td>
           <td width="10%">操作</td>
         </tr>	
 <%
- sql=" select a.Ydanno,sum(a.yqty) TotalQty,sum(a.yqty*Yprice) TotalMoney from Yuan_store a LEFT JOIN Yuan_Info b  on a.Yname=b.Yname group by Ydanno "
+ sql=" select a.yway,a.Ystatus,a.Ydanno,sum(a.yqty) TotalQty,sum(a.yqty*Yprice) TotalMoney from Yuan_store a LEFT JOIN Yuan_Info b  on a.Yname=b.Yname group by yway,Ystatus,Ydanno "
  set rs=server.createobject("adodb.recordset") 
  rs.open sql,conn,1,1
  if not rs.eof then
@@ -375,26 +254,44 @@ else
 	 if rs.eof then     
 	 Exit For 
 	 end if
+	 YSH="<span style='color:#FFFFFF;background-color:#009900;'><strong>已审核</strong></span>"
+SX="<strong>|</strong>"
+RK="<span style='background-color:#B8D100;'><strong>入库</strong></span>"
+WSH="<span style='color:#FFFFFF;background-color:#E53333;'><strong>未审核</strong></span>"
+HX="<span style='background-color:#FF9900;'><strong>生产</strong></span>"
 %>
        <form name="del" action="" method="post">
         <tr align='center' bgcolor='#FFFFFF' onmouseover='this.style.background="#F2FDFF"' onmouseout='this.style.background="#FFFFFF"'>
-          <td><input type="checkbox" name="id" value="<%=rs("Ydanno")%>"></td>
+          <td>
+		  <%
+		  if rs("Ystatus") = 0 then 
+		  sc ztgs("未审核",2)&ztgs("|",9)&ztgs(rs("Yway"),2)
+		  else 
+		  sc ztgs("已审核",1)&ztgs("|",9)&ztgs(rs("Yway"),2)
+		  end if 
+		  %>
+		  </td>
 		  <td><%=rs("Ydanno")%></td>
           <td><%=rs("TotalQty")%></td>
 		  <td><%=rs("TotalMoney")%></td>
-          <td><IMG src="../images/view.gif" align="absmiddle"><a href="?action=view&id=<%=rs("Ydanno")%>">查看</a> | <IMG src="../images/drop.gif" align="absmiddle"><a href="javascript:DoEmpty('?wor=del&id=<%=rs("Ydanno")%>&action=list&ToPage=<%=intCurPage%>')">删除</a></td>
+          <td><IMG src="../images/view.gif" align="absmiddle"><a href="?action=view&id=<%=rs("Ydanno")%>">查看</a> 
+		  <% if rs("Ystatus") = 0 then %>
+		  | <IMG src="../images/drop.gif" align="absmiddle"><a href="?wor=sh&id=<%=rs("Ydanno")%>&action=list&ToPage=<%=intCurPage%>">审核</a>
+		  <% end if %>
+		  </td>
         </tr>
 <%
 rs.movenext 
 next
 %>
+<!--
 		<tr bgcolor="#F2FDFF">
 		  <td colspan="5">&nbsp;&nbsp;
 		   <input name="chkall" type="checkbox" id="chkall" value="select" onclick=CheckAll(this.form)> 全选
 		   <input name="wor" type="hidden" id="wor" value="del" />
 		   <input type="submit" name="Submit3" value="删除所选" onClick="{if(confirm('确定要删除记录吗？删除后将被无法恢复！')){return true;}return false;}" />
 		  </td>
-		</tr>
+		</tr>-->
 		</form>
         <tr align="center" bgcolor="#ebf0f7">
           <td colspan="5">总共：
@@ -508,11 +405,24 @@ for i = 1 to rs.recordcount
 		  <td><%=rs("Yname")%></td>
 		  <td><%=rs("Yqty")%></td>
 		  <td><%=rs("Yprice")*rs("Yqty")%></td>
-		  <td><IMG src="../images/drop.gif" align="absmiddle"><a href="javascript:DoEmpty('?wor=del2&id=<%=rs("id")%>&danno=<%=id%>&action=view')">删除</a></td>
+		  <td>
+		  <%
+		  if rs("Ystatus")=0 then 
+		  %>
+		  <IMG src="../images/drop.gif" align="absmiddle">
+		  <a href="javascript:DoEmpty('?wor=del2&id=<%=rs("id")%>&danno=<%=id%>&action=view')">删除</a>
+		  <%
+		  else 
+		  sc ztgs("已审核",1)
+		  end if  
+		  %>
+		  </td>
 		</tr>
 <%
+kk=rs("ystatus")
 rs.movenext 
 next 
+if kk=0 then 
 %>
 	    <tr bgcolor='#FFFFFF' align='center'>
 		  <td colspan=2>输入商品：</td>
@@ -520,6 +430,9 @@ next
 		  <td colspan=2><input id="dname" name="dname" style="width:100%" /></td>
 		  <td><input type="Submit" name="Submit3" value="提交" ></td>
 		</tr>
+<%
+end if
+%>
 		<tr align="center" bgcolor="#ebf0f7">
 		  <td colspan="6">
           <input type="button" name="Submit2" value="返回" onClick="history.back(-1)"></td>

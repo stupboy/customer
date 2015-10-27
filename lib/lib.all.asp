@@ -19,6 +19,7 @@
 '-14. dbdo(x,y,z)     [s]数据库操作函数 x=1 待完善说明-
 '-15. aspTips(x)      [s]弹窗警告 -
 '-16. sctd(x)         [s]输出表格td-
+'-17. ztgs(x,y)       小标签格式输出x为内容y为格式-
 '-待增加-
 '-函数明细列表-
 '-输出函数SC -
@@ -236,7 +237,32 @@ if x= 1 then
 elseif x=2 then 
  sql=y
  conn.execute(sql)
- 'sc sql
+elseif x=3 then 
+ mx=split(z,"-")
+ mxa=split(mx(0),"|")
+ mxb=split(mx(1),"|")
+ mxs=ubound(mxa)
+   Tiaojian=""
+ for i = 0 to mxs
+  Tiaojian=TiaoJian&" and "&mxa(i)&" = "&mxb(i)
+  'zd=zd&","&mxa(i)
+  'nr=nr&","&mxb(i)
+ next 
+TiaoJian=Trim(Mid(TiaoJian,5,99))
+
+set rs = Server.CreateObject("ADODB.recordset")
+rs.Open "SELECT * FROM "&y&" where "&Tiaojian, conn
+do until rs.EOF
+  'for each x in rs.Fields
+    'Response.Write(x.name)
+    'Response.Write(" = ")
+    Response.Write rs("数量1") 
+  'next
+  'Response.Write("<br />")
+  rs.MoveNext
+loop
+rs.close
+
 end if 
 end sub 
 sub aspTips(x)
@@ -245,6 +271,45 @@ end sub
 Sub sctd(x)
 response.write "<td>"&x&"</td>"
 End Sub
+Function look_db(x,y,z,w)
+'mx=split(z,"-")
+ mxa=split(z,"|")
+ mxb=split(w,"|")
+ mxs=ubound(mxa)
+   Tiaojian=""
+ for i = 0 to mxs
+  Tiaojian=TiaoJian&" and "&mxa(i)&" = '"&mxb(i)&"'"
+  'zd=zd&","&mxa(i)
+  'nr=nr&","&mxb(i)
+ next 
+TiaoJian=Trim(Mid(TiaoJian,5,99))
+
+set rs = Server.CreateObject("ADODB.recordset")
+rs.Open "SELECT * FROM "&y&" where "&Tiaojian, conn
+do until rs.EOF
+  'for each x in rs.Fields
+  'Response.Write(x.name)
+  'Response.Write(" = ")
+  look_db=rs(x) 
+  'next
+  'Response.Write("<br />")
+  rs.MoveNext
+loop
+rs.close
+end function 
+function ztgs(x,y)
+if y=1 then '绿底白字粗体
+ztgs="<span style='color:#FFFFFF;background-color:#009900;'><strong>"&x&"</strong></span>"
+elseif y=2 then '红底白字粗体
+ztgs="<span style='color:#FFFFFF;background-color:#E53333;'><strong>"&x&"</strong></span>"
+elseif y=3 then '浅绿黑字粗体
+ztgs="<span style='background-color:#B8D100;'><strong>"&x&"</strong></span>"
+elseif y=4 then '橙色黑字粗体
+ztgs="<span style='background-color:#FF9900;'><strong>"&x&"</strong></span>"
+else 
+ztgs="<strong>"&x&"</strong>"
+end if 
+end function 
 '-娴嬭瘯鍑芥暟璇彞-
 'sc esql("UserInfo","Username:stupboy|password:123456")
 %>
