@@ -252,7 +252,7 @@ function check()
           if rs("status")= 0 then 
 		  sc "| <IMG src='../images/edit.gif' align='absmiddle'><a href='?action=list&tj=yes&id="&rs("id")&"'>提交</a>"&_
 		  " | <IMG src='../images/drop.gif' align='absmiddle'>"&_
-		  "<a href='javascript:DoEmpty('?wor=del&id="&rs("id")&"&action=list&ToPage="&intCurPage&"')'>删除</a>"
+		  "<a href=""javascript:DoEmpty('?wor=del&id="&rs("id")&"&action=list&ToPage="&intCurPage&"')"">删除</a>"
           elseif rs("status")=1 then 
 		  sc "| 已提交"
 		  elseif rs("status")=2 then 

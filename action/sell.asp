@@ -272,7 +272,7 @@ sc "</tr>"
           if rs("status")= 0 then 
 		  sc "| <IMG src='../images/edit.gif' align='absmiddle'><a href='?action=list&tj=yes&id="&rs("id")&"'>Ìá½»</a>"&_
 		  " | <IMG src='../images/drop.gif' align='absmiddle'>"&_
-		  "<a href='javascript:DoEmpty('?wor=del&id="&rs("id")&"&action=list&ToPage="&intCurPage&"')'>É¾³ı</a>"
+		  "<a href=""javascript:DoEmpty('?wor=del&id="&rs("id")&"&action=list&ToPage="&intCurPage&"')"">É¾³ı</a>"
           elseif rs("status")=1 then 
 		  sc "| ´ıÈë¿â"
 		  elseif rs("status")=2 then 

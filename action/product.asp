@@ -34,8 +34,9 @@ end if
 if Request("tj")="yes" then 
 sql="update BillInfo set status=2 where id="&Request("id")
 conn.execute(sql)
+'-取消生产订单-
 elseif Request("tj")="sb" then 
-sql="update BillInfo set status=0 where id="&Request("id")
+sql="update BillInfo set status=0,billnote='订单退回！' where id="&Request("id")
 conn.execute(sql)
 sql="update billdetail set ProductQty=0 where billno='"&Request("danno")&"'"
 conn.execute(sql)
@@ -253,7 +254,7 @@ function check()
           if rs("status")= 1 then 
 		  sc "| <IMG src='../images/edit.gif' align='absmiddle'><a href='?action=list&tj=yes&id="&rs("id")&"'>发货</a>"&_
 		  " | <IMG src='../images/drop.gif' align='absmiddle'>"&_
-		  "<a href='?action=list&tj=sb&id="&rs("id")&"danno="&rs("billno")&"'>取消</a>"
+		  "<a href='?action=list&tj=sb&id="&rs("id")&"&danno="&rs("billno")&"'>取消</a>"
           elseif rs("status")=2 then 
 		  sc "|"&ztgs("待入库",2)
 		  elseif rs("status")=3 then 
@@ -414,6 +415,7 @@ if not rs.eof Then
 		</tr>
 <%
 end if 
+end if 
 %>
 		<tr align="center" bgcolor="#F2FDFF">
 		  <td colspan=6 > 订单备注：<%=rs("BillNote")%></td>
@@ -424,7 +426,6 @@ end if
 		</form>
   	</table>
 <%
-end if
 end if
 %>
 </td>

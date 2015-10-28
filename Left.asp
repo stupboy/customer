@@ -67,6 +67,7 @@ body {
 	  d.add(14, 1, ' 原料档案', 'action.asp?dz=a006');
 	  d.add(15, 1, ' 商品配方', 'action.asp?dz=a009');
 	  d.add(16, 1, ' 微信配置', 'action.asp?dz=a014');
+	  d.add(17, 1, ' 数据清空', 'action.asp?dz=a018');
 	  <% end if %>
 	  <% if qx("C1",session("Limit")) then %>
 	  d.add(2, 0, ' 运营中心', '');
