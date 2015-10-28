@@ -26,13 +26,13 @@
 Sub sc(str)
 Response.write str
 End Sub
-'-鑿滃崟涓嬫媺鏄剧ず鍑芥暟,a涓鸿彍鍗曞悕绉?b涓鸿彍鈥滃崟鍚?閾炬帴鈥濈殑鏍煎紡-
+'-菜单下拉显示函数,a为菜单名称,b为菜“单名$链接”的格式-
 function caidan(a,b)
- mx=split(b,"|")     '-b涓鸿彍鍗曞悕绉板強閾炬帴锛屽涓彍鍗曠敤鈥渱鈥濆尯鍒嗗紑锛岀敤SPLIT鍑芥暟鎷嗕负鏁扮粍-
+ mx=split(b,"|")     '-b为菜单名称及链接，多个菜单用“|”区分开，用SPLIT函数拆为数组-'-b为菜单名称及链接，多个菜单用“|”区分开，用SPLIT函数拆为数组-
  ms=ubound(mx,1)     
  caidan1="<ul class='nav navbar-nav'>"&_  
         "<!--<li class='active'><a href='#'>Link <span class='sr-only'>(current)</span></a></li>-->"&_
-        "<!--<li><a href='#'>鍒锋柊</a></li>-->"&_
+        "<!--<li><a href='#'>刷新</a></li>-->"&_
         "<li class='dropdown'>"&_
         "<a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false'>"&a&"<span class='caret'></span></a>"&_
         "<ul class='dropdown-menu'>"

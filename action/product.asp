@@ -46,38 +46,41 @@ sql="update BillInfo set YuanCut=1 where id="&Request("id")
 conn.execute(sql)
 'sc sql
 '-获取关联数值-
-on error resume next 
+'-查询对应生产订单中的商品及数量,将结果集转二维数组-
 sql="select * from Billdetail where billno='"&Request("danno")&"'"
 set rs=conn.execute(sql)
 Tmpx=Rs.GetRows()
 Tmp1s=ubound(Tmpx,2)
 rs.close
 set rs=nothing
-
-for i = 0 to tmp1s
-'sc tmpx(2,0)
-'sc tmpx(3,0)
-Ydanhao=danhao("Y")
-sql="select * from Goods_Yuan where Gname='"&tmpx(2,i)&"'"
-set rs=conn.execute(sql)
-Tmp2=Rs.GetRows()
-Tmp2s=ubound(Tmp2,2)
-rs.close
-set rs=nothing
-next 
-for j = 0 to tmp2s
-kk=0
-KK=Cdbl(tmp2(3,j))*Cdbl(tmpX(3,0))*-1
-sql="insert into Yuan_store (Yname,yqty,yway,ydancat,ydanno,ynote,CreateUser) values ('"&tmp2(2,j)&"',"&kk&",'生产','生产扣减','"&Ydanhao&"','"&Request("danno")&"','"&session("RealName")&"')"
-conn.execute(sql)
-'sc sql
+'-生成原料单号-
+Ydanhao=danhao("Y") '-避免变量i的冲突-
+for ii = 0 to tmp1s '-循环计算该单据消耗原料-
+ sql="select * from Goods_Yuan where Gname='"&tmpx(2,ii)&"'"
+ set rs=conn.execute(sql)
+ Tmp2=Rs.GetRows()
+ Tmp2s=ubound(Tmp2,2)
+ rs.close
+ set rs=nothing
+ for jj = 0 to tmp2s
+  KK=0 '-初始化原料数量-
+  '-订单数量乘以配发数量-
+  KK=Cdbl(tmp2(3,jj))*Cdbl(tmpX(3,ii))*-1
+  '-判断原单据是否存在记录,无则insert有则update-
+  if is_sku("Yname|Ydanno","Yuan_store","'"&tmp2(2,jj)&"'|'"&Ydanhao&"'")=0 then 
+  sql="insert into Yuan_store (Yname,yqty,yway,ydancat,ydanno,ynote,CreateUser) values ('"&tmp2(2,jj)&"',"&kk&",'生产','生产扣减','"&Ydanhao&"','"&Request("danno")&"','"&session("RealName")&"')"
+  conn.execute(sql)
+  else 
+  sql="update Yuan_Store set Yqty=Yqty+"&kk&" where Yname='"&tmp2(2,jj)&"' and Ydanno='"&Ydanhao&"' "
+  conn.execute(sql)
+  end if 
+ next
 next 
 end if 
 '-添加和修改记录 id为空则为添加 否则为修改-
 '-获取传递变量-
 action=Request("action")
 addon=Request("addon")
-
 '--增加商品信息记录-
 if action="yes" Then
  set rs=server.createobject("adodb.recordset") 
@@ -232,11 +235,11 @@ function check()
 		  if rs("status")=0 then 
 		  sctd "<input type='checkbox' name='id' value='"&rs("id")&"'>"
 		  elseif rs("status")=1 then 
-		  sctd "生产中"
+		  sctd ztgs("生产中",4)
 		  elseif rs("status")=2 then 
-		  sctd "待入库"
+		  sctd ztgs("待入库",2)
 		  elseif rs("status")=3 then 
-		  sctd "<strong><span style='color:#009900;background-color:#FFE500;'>已入库</span></strong>"
+		  sctd ztgs("已入库",1)
 		  end if 
 		  sctd rs("billno")
 		  sctd rs("数量")&"|"&rs("数量1")
@@ -252,7 +255,7 @@ function check()
 		  " | <IMG src='../images/drop.gif' align='absmiddle'>"&_
 		  "<a href='?action=list&tj=sb&id="&rs("id")&"danno="&rs("billno")&"'>取消</a>"
           elseif rs("status")=2 then 
-		  sc "| 待收货"
+		  sc "|"&ztgs("待入库",2)
 		  elseif rs("status")=3 then 
 		  sc "| "&ztgs("已入库",1)
 		  if rs("YuanCut")=0 then 

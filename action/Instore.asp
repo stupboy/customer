@@ -201,11 +201,11 @@ function check()
 		  if rs("status")=0 then 
 		  sctd "<input type='checkbox' name='id' value='"&rs("id")&"'>"
 		  elseif rs("status")=1 then 
-		  sctd "待入库"
+		  sctd ztgs("待入库",2)
 		  elseif rs("status")=2 then 
-		  sctd "已入库"
+		  sctd ztgs("已入库",1)
 		  elseif rs("status")=3 then 
-		  sctd "<strong><span style='color:#009900;background-color:#FFE500;'>已入库</span></strong>"
+		  sctd ztgs("已入库",1)
 		  end if 
 		  sctd rs("billno")
 		  sctd rs("数量")&"|"&rs("数量1")

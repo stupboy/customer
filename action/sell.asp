@@ -254,11 +254,11 @@ sc "</tr>"
 	 if rs("status")=0 then 
 	 sctd "<input type='checkbox' name='id' value='"&rs("id")&"'>"
 	 elseif rs("status")=1 then 
-	 sctd "待入库"
+	 sctd ztgs("待入库",2)
 	 elseif rs("status")=2 then 
-	 sctd "待入库"
+	 sctd ztgs("待入库",2)
 	 elseif rs("status")=3 then 
-	 sctd "<IMG src='../images/rk.png' align='absmiddle'><strong><span style='color:#009900;background-color:#FFE500;'>已入库</span></strong>"
+	 sctd ztgs("已入库",1)
 	 end if 
 	 sctd rs("billno")
 	 sctd rs("数量")&"|"&rs("数量1")
@@ -276,7 +276,7 @@ sc "</tr>"
           elseif rs("status")=1 then 
 		  sc "| 待入库"
 		  elseif rs("status")=2 then 
-		  sc "| <IMG src='../images/rk.png' align='absmiddle'>已入库"
+		  sc "| "&ztgs("已入库",1)
 		  elseif rs("status")=3 then 
 		  sc "| 已入库"
 		  'sc "| <IMG src='../images/edit.gif' align='absmiddle'><a href='?action=list&tj=shou&id="&rs("id")&"'>收货</a>"
