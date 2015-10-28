@@ -104,7 +104,7 @@ function check()
         <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
         <form name="add" method="post" action="yuan.asp">
         <tr align="center" bgcolor="#F2FDFF">
-          <td colspan="6"  class="optiontitle"> 添加客户信息 </td>
+          <td colspan="6"  class="optiontitle"> 添加原料信息 </td>
         </tr>
         <tr bgcolor='#F2FDFF'>
           <td align='right' bgcolor="#FFFFFF"> 名称：</td>

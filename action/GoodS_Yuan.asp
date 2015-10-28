@@ -11,31 +11,27 @@ id=Request("id")
 '-删除记录 is_ok='false'-
 if Request("wor")="del" then
  id=request("id")
-  sql="delete from Yuan_Store  where Ydanno='"&id&"' "
+  sql="delete from Goods_Yuan  where Gname='"&id&"' "
   conn.execute(sql)
-elseif Request("wor")="sh" then 
-  sql="update Yuan_Store set Ystatus=1  where Ydanno='"&id&"' "
-  conn.execute(sql)
+
 elseif Request("wor")="del2" then
  id=request("id")
  idArr=split(id,",")
  for i=0 to ubound(idArr)
-  sql="delete from Yuan_Store where id="&trim(idArr(i))
+  sql="delete from Goods_Yuan where id="&trim(idArr(i))
   conn.execute(sql)
  next 
   id=request("danno")
 elseif Request("addon")="yes" then  
+ sql="delete from Goods_Yuan  where Gname='"&Request("billno")&"' "
+ conn.execute(sql)
  Tstr=replace(replace(Trim(Request("comment")),"<br>","#"),"_x_","|")
  mY0=split(Tstr,"#")
  for i= 1 to ubound(mY0)
  mY1=split(mY0(i),"|")
- sql="insert into Yuan_Store (Yname,yqty,ydanno,ystatus,ydancat,CreateUser) values ('"&mY1(0)&"',"&mY1(1)&",'"&Request("billno")&"',0,'采购入库','"&session("RealName")&"')"
+ sql="insert into Goods_Yuan (GnameYuan,GnameYuanQty,Gname,CreateUser) values ('"&mY1(0)&"',"&mY1(1)&",'"&Request("billno")&"','"&session("RealName")&"')"
  conn.execute(sql)
- 'sc sql
  next 
- 'sc gstr
- sql="insert into Yuan_Store (billno,status,cuser,billway) values ('"&Request("billno")&"',0,'"&session("RealName")&"','下单')"
- 'conn.execute(sql)
 end if
 
 '--增加商品信息记录-
@@ -167,20 +163,160 @@ function check()
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
   <tr valign="top">
     <td bgcolor="#FFFFFF">
-<!--增加订单 及 订单列表-->
-<%if action="list" then%>
+	<%if action="list1" then%><BR>
         <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
-        <form name="add" method="post" action="yuanS.asp">
+        <form name="add" method="post" action="goods.asp">
         <tr align="center" bgcolor="#F2FDFF">
-          <td colspan="6"  class="optiontitle"> 添加客户信息 </td>
+          <td colspan="6"  class="optiontitle"> 添加商品订单 </td>
         </tr>
         <tr bgcolor='#F2FDFF'>
-          <td align='right' bgcolor="#F2FDFF"> 单号：</td>
-          <td colspan="5" bgcolor="#F2FDFF"><input name="billno" type="text" id="billno" value="<%=danhao("Y")%>" size="30" maxlength="50" readonly="readonly" > 
+          <td align='right' bgcolor="#FFFFFF"> 商品名称：</td>
+          <td colspan="5" bgcolor="#FFFFFF"><input name="cname" type="text" id="cname" onKeyDown="next()" size="15" maxlength="50" value="<%=danhao("Y")%>" > 
             按回车\TAB键即可输入下一选项</td>
         </tr>		
 		<tr bgcolor='#FFFFFF'>
-		  <td align='right' bgcolor="#FFFFFF"> 客户：</td>
+		  <td align='right' bgcolor="#FFFFFF"> 商品类别：</td>
+		  <td><input name="address" type="text" id="address" onKeyDown="next()"></td>
+		  <td align='right'>采购成本：</td>
+		  <td><input name="pcode" type="text" id="pcode" onKeyDown="next()"></td>
+		  <td align='right'>销售价格：</td>
+		  <td><input name="owner" type="text" id="owner" onKeyDown="next()"></td>
+		</tr>
+        <tr align="center" bgcolor="#ebf0f7">
+          <td colspan="6" >
+		     <INPUT TYPE="hidden" name="action" value="yes">
+            <input type="button" name="Submit" value="提交" onClick="check()">
+          	<input type="button" name="Submit2" value="返回" onClick="history.back(-1)"></td>
+        </tr>
+		</FORM>
+      </table> 
+<br>
+      <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
+        <tr align="center" bgcolor="#F2FDFF">
+          <td colspan="8"  class="optiontitle">商品信息</td>
+        </tr>
+        <tr align="center" bgcolor="#ebf0f7">
+		  <td width="5%">选中</td>
+          <td width="10%">商品名称</td>
+          <td width="10%">商品类别</td>
+          <td width="10%">采购成本</td>
+          <td width="10%">销售价格</td>
+          <td width="10%">修改时间</td>
+          <td width="10%">修改人员</td>
+          <td width="10%">执行操作</td>
+        </tr>	
+<%
+ sql="select * from GoodsInfo where is_ok='true' order by id desc"
+ set rs=server.createobject("adodb.recordset") 
+ rs.open sql,conn,1,1
+ if not rs.eof then
+ proCount=rs.recordcount
+	rs.PageSize=3
+     if not IsEmpty(Request("ToPage")) then
+	    ToPage=CInt(Request("ToPage"))
+		if ToPage>rs.PageCount then
+		   rs.AbsolutePage=rs.PageCount
+		   intCurPage=rs.PageCount
+		elseif ToPage<=0 then
+		   rs.AbsolutePage=1
+		   intCurPage=1
+		else
+		   rs.AbsolutePage=ToPage
+		   intCurPage=ToPage
+		end if
+	 else
+		rs.AbsolutePage=1
+		intCurPage=1
+	 end if
+	 intCurPage=CInt(intCurPage)
+	 For i = 1 to rs.PageSize
+	 if rs.eof then     
+	 Exit For 
+	 end if
+%>
+       <form name="del" action="" method="post">
+        <tr align='center' bgcolor='#FFFFFF' onmouseover='this.style.background="#F2FDFF"' onmouseout='this.style.background="#FFFFFF"'>
+          <td><input type="checkbox" name="id" value="<%=rs("id")%>"></td>
+          <td><%=rs("Gname")%></td>
+		  <td><%=rs("Gcat")%></td>
+          <td><%=rs("Gcost")%></td>
+		  <td><%=rs("Gsell")%></td>
+		  <td><%=rs("addtime")%></td>
+		  <td><%=rs("adduser")%></td>
+          <td><IMG src="../images/view.gif" align="absmiddle"><a href="?action=view&id=<%=rs("id")%>">查看</a> | <IMG src="../images/edit.gif" align="absmiddle"><a href="?action=edit&id=<%=rs("id")%>">修改</a> | <IMG src="../images/drop.gif" align="absmiddle"><a href="javascript:DoEmpty('?wor=del&id=<%=rs("id")%>&action=list&ToPage=<%=intCurPage%>')">删除</a></td>
+        </tr>
+<%
+rs.movenext 
+next
+%>
+		<tr bgcolor="#F2FDFF">
+		  <td colspan="8">&nbsp;&nbsp;
+		   <input name="chkall" type="checkbox" id="chkall" value="select" onclick=CheckAll(this.form)> 全选
+		   <input name="wor" type="hidden" id="wor" value="del" />
+		   <input type="submit" name="Submit3" value="删除所选" onClick="{if(confirm('确定要删除记录吗？删除后将被无法恢复！')){return true;}return false;}" />
+		  </td>
+		</tr>
+		</form>
+        <tr align="center" bgcolor="#ebf0f7">
+          <td colspan="8">总共：
+		  <font color="#ff0000"><%=rs.PageCount%></font>页, 
+		  <font color="#ff0000"><%=proCount%></font>条商品信息, 当前页：
+		  <font color="#ff0000"><%=intCurPage%> </font>
+		  <%if intCurPage<>1 then%>
+		  <a href="?action=list">首页</a> | 
+		  <a href="?action=list&ToPage=<%=intCurPage-1%>">上一页</a> | 
+		  <% end if
+             if intCurPage<>rs.PageCount then %>
+          <a href="?action=list&ToPage=<%=intCurPage+1%>">下一页</a> | 
+		  <a href="?action=list&ToPage=<%=rs.PageCount%>"> 最后页</a>
+		  <% end if%>
+		  </span>
+		  </td>
+        </tr>
+<%
+else
+%>
+        <tr align="center" bgcolor="#ffffff">
+          <td colspan="8">对不起！目前数据库中还没有添加商品信息！</td>
+        </tr>
+        <%
+          rs.close
+          set rs=nothing
+          end if
+        %>
+      </table><br>
+<%end if%>
+<!--增加订单 及 订单列表-->
+<%if action="list" then%>
+        <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
+        <form name="add" method="post" action="Goods_Yuan.asp">
+        <tr align="center" bgcolor="#F2FDFF">
+          <td colspan="6"  class="optiontitle"> 添加客户信息 </td>
+        </tr>		
+<tr bgcolor='#FFFFFF'>
+<td align='right' bgcolor="#FFFFFF"> 商品：</td>
+<td colspan="5" >
+<%
+ sql="select * from GoodsInfo where is_ok='True' "
+ set rs_kehu=conn.execute(sql)
+%>
+ <select name="billno" id="billno" selfvalue="商品类别">
+ <option value="">请选择</option>
+<%
+ do while rs_kehu.eof=false
+%>
+ <option value="<%=rs_kehu("Gname")%>"><%=rs_kehu("Gname")%></option>
+<%
+ rs_kehu.movenext
+ loop
+ rs_kehu.close
+ set rs_kehu=nothing 
+%>
+ </select>
+</td>
+</tr>
+		<tr bgcolor='#FFFFFF'>
+		  <td align='right' bgcolor="#FFFFFF"> 原料：</td>
 		  <td colspan="5" >
 <%
  sql="select * from Yuan_Info where is_ok='True' "
@@ -200,9 +336,9 @@ function check()
 %>
  </select><input type="text" value="1" name="yqty" id="yqty" size="5" /><input type="button" value="继续添加" name="SADD" id="SADD" onclick="return yuanadd()" />
 </td>
-		</tr>
+</tr>
 		<tr bgcolor='#FFFFFF'>
-		  <td align='right' bgcolor="#FFFFFF"> 入库信息：</td>
+		  <td align='right' bgcolor="#FFFFFF"> 组成信息：</td>
 		  <td colspan="5"><INPUT TYPE="hidden" name="comment" id="comment" value="" ></textarea><span id="Yxx"></span></td>
 		</tr>
         <tr align="center" bgcolor="#ebf0f7">
@@ -220,14 +356,14 @@ function check()
           <td colspan="5"  class="optiontitle">商品信息</td>
         </tr>
         <tr align="center" bgcolor="#ebf0f7">
-		  <td width="5%">状态</td>
+		  <td width="5%">选中</td>
           <td width="10%">单号</td>
           <td width="10%">数量</td>
           <td width="10%">金额</td>
           <td width="10%">操作</td>
         </tr>	
 <%
- sql=" select a.yway,a.Ystatus,a.Ydanno,sum(a.yqty) TotalQty,sum(a.yqty*Yprice) TotalMoney from Yuan_store a LEFT JOIN Yuan_Info b  on a.Yname=b.Yname group by yway,Ystatus,Ydanno "
+ sql=" select Gname,Count(distinct GnameYuan) 种类,sum(GnameYuanQty*Yprice) GoodsPrice from Goods_Yuan a left join Yuan_Info b on a.GnameYuan=b.Yname group by Gname "
  set rs=server.createobject("adodb.recordset") 
  rs.open sql,conn,1,1
  if not rs.eof then
@@ -254,44 +390,26 @@ function check()
 	 if rs.eof then     
 	 Exit For 
 	 end if
-	 YSH="<span style='color:#FFFFFF;background-color:#009900;'><strong>已审核</strong></span>"
-SX="<strong>|</strong>"
-RK="<span style='background-color:#B8D100;'><strong>入库</strong></span>"
-WSH="<span style='color:#FFFFFF;background-color:#E53333;'><strong>未审核</strong></span>"
-HX="<span style='background-color:#FF9900;'><strong>生产</strong></span>"
 %>
        <form name="del" action="" method="post">
         <tr align='center' bgcolor='#FFFFFF' onmouseover='this.style.background="#F2FDFF"' onmouseout='this.style.background="#FFFFFF"'>
-          <td>
-		  <%
-		  if rs("Ystatus") = 0 then 
-		  sc ztgs("未审核",2)&ztgs("|",9)&ztgs(rs("Yway"),2)
-		  else 
-		  sc ztgs("已审核",1)&ztgs("|",9)&ztgs(rs("Yway"),2)
-		  end if 
-		  %>
-		  </td>
-		  <td><%=rs("Ydanno")%></td>
-          <td><%=rs("TotalQty")%></td>
-		  <td><%=rs("TotalMoney")%></td>
-          <td><IMG src="../images/view.gif" align="absmiddle"><a href="?action=view&id=<%=rs("Ydanno")%>">查看</a> 
-		  <% if rs("Ystatus") = 0 then %>
-		  | <IMG src="../images/drop.gif" align="absmiddle"><a href="?wor=sh&id=<%=rs("Ydanno")%>&action=list&ToPage=<%=intCurPage%>">审核</a>
-		  <% end if %>
-		  </td>
+          <td><input type="checkbox" name="id" value="<%=rs("Gname")%>"></td>
+		  <td><%=rs("Gname")%></td>
+          <td><%=rs("种类")%></td>
+		  <td><%=rs("GoodsPrice")%></td>
+          <td><IMG src="../images/view.gif" align="absmiddle"><a href="?action=view&id=<%=rs("Gname")%>">查看</a> | <IMG src="../images/drop.gif" align="absmiddle"><a href="javascript:DoEmpty('?wor=del&id=<%=rs("Gname")%>&action=list&ToPage=<%=intCurPage%>')">删除</a></td>
         </tr>
 <%
 rs.movenext 
 next
 %>
-<!--
 		<tr bgcolor="#F2FDFF">
 		  <td colspan="5">&nbsp;&nbsp;
 		   <input name="chkall" type="checkbox" id="chkall" value="select" onclick=CheckAll(this.form)> 全选
 		   <input name="wor" type="hidden" id="wor" value="del" />
 		   <input type="submit" name="Submit3" value="删除所选" onClick="{if(confirm('确定要删除记录吗？删除后将被无法恢复！')){return true;}return false;}" />
 		  </td>
-		</tr>-->
+		</tr>
 		</form>
         <tr align="center" bgcolor="#ebf0f7">
           <td colspan="5">总共：
@@ -364,10 +482,10 @@ viewaction=request("viewaction")
 if viewaction="yes" then 
  if is_sku("Yname","Yuan_Info","'"&request("dname")&"'")=1 then 
   'sc "有该款式！"
-  if is_sku("Ydanno|Yname","Yuan_Store","'"&request("danno")&"'|'"&request("dname")&"'")=0 then 
-  call dbdo(1,"Yuan_Store","Ydanno|Yname|Yqty|CreateUser|Ydancat-'"&request("danno")&"'|'"&request("dname")&"'|"&request("dqyt")&"|'"&session("RealName")&"'|'采购入库'")
+  if is_sku("Gname|GnameYuan","Goods_Yuan","'"&request("danno")&"'|'"&request("dname")&"'")=0 then 
+  call dbdo(1,"Goods_Yuan","Gname|GnameYuan|GnameYuanQty|CreateUser-'"&request("danno")&"'|'"&request("dname")&"'|"&request("dqyt")&"|'"&session("RealName")&"'")
   else 
-  sql="update Yuan_Store set Yqty=Yqty +"&request("dqyt")&" where Ydanno='"&request("danno")&"' and Yname='"&request("dname")&"' "
+  sql="update Goods_yuan set GnameYuanQty=GnameYuanQty +"&request("dqyt")&" where Gname='"&request("danno")&"' and GnameYuan='"&request("dname")&"' "
   call dbdo(2,sql,sql)
   end if 
  else
@@ -378,10 +496,10 @@ if request.querystring("danno")<>"" then
 Cdanhao=request.querystring("danno")
 end if 
 set rs=server.createobject("adodb.recordset") 
-sql="select a.*,b.Yprice from Yuan_Store a left join Yuan_Info b on a.Yname=b.Yname where a.Ydanno='"&ID&"' "
+sql="select * from Goods_Yuan where Gname='"&ID&"' "
 %>
 	  <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
-	    <form action="yuanS.asp?action=view&id=<%=id%>" method="POST" name="billd" id="billd">
+	    <form action="Goods_Yuan.asp?action=view&id=<%=id%>" method="POST" name="billd" id="billd">
 		<tr align="center" bgcolor="#F2FDFF">
 		  <td colspan=6  class="optiontitle"> 单号：<%=id%> <input type="hidden" id="viewaction" name="viewaction" value="yes"> 
 		  <input type="hidden" id="danno" name="danno" value="<%=ID%>"></td>
@@ -401,28 +519,15 @@ for i = 1 to rs.recordcount
 %>
 	    <tr bgcolor='#FFFFFF' align='center'>
 		  <td><input type="checkbox" name="id" value="<%=rs("id")%>"></td>
-		  <td><%=rs("Ydanno")%></td>
-		  <td><%=rs("Yname")%></td>
-		  <td><%=rs("Yqty")%></td>
-		  <td><%=rs("Yprice")*rs("Yqty")%></td>
-		  <td>
-		  <%
-		  if rs("Ystatus")=0 then 
-		  %>
-		  <IMG src="../images/drop.gif" align="absmiddle">
-		  <a href="javascript:DoEmpty('?wor=del2&id=<%=rs("id")%>&danno=<%=id%>&action=view')">删除</a>
-		  <%
-		  else 
-		  sc ztgs("已审核",1)
-		  end if  
-		  %>
-		  </td>
+		  <td><%=rs("Gname")%></td>
+		  <td><%=rs("GnameYuan")%></td>
+		  <td><%=rs("GnameYuanQty")%></td>
+		  <td></td>
+		  <td><IMG src="../images/drop.gif" align="absmiddle"><a href="javascript:DoEmpty('?wor=del2&id=<%=rs("id")%>&danno=<%=id%>&action=view')">删除</a></td>
 		</tr>
 <%
-kk=rs("ystatus")
 rs.movenext 
 next 
-if kk=0 then 
 %>
 	    <tr bgcolor='#FFFFFF' align='center'>
 		  <td colspan=2>输入商品：</td>
@@ -430,9 +535,6 @@ if kk=0 then
 		  <td colspan=2><input id="dname" name="dname" style="width:100%" /></td>
 		  <td><input type="Submit" name="Submit3" value="提交" ></td>
 		</tr>
-<%
-end if
-%>
 		<tr align="center" bgcolor="#ebf0f7">
 		  <td colspan="6">
           <input type="button" name="Submit2" value="返回" onClick="history.back(-1)"></td>

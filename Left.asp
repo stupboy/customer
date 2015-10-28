@@ -1,5 +1,5 @@
 <!--#include file="inc/right.asp"-->
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
@@ -48,7 +48,7 @@ body {
 <table width="96%"  border="0" cellpadding="10" cellspacing="0" align=center >
   <tr>
    <td valign="top" >
-   <div class=menu>
+   <div class=menu style="overflow:auto;">
     <table width="100%"  border="0" cellpadding="0" cellspacing="0">
      <tr>
       <td height=25><a href="javascript: d.openAll();"><img src="images/view_detailed.gif" width="15" height="15" border="0" align="absmiddle" alt="展开列表"></a> <a href="javascript: d.closeAll();"><img src="images/view_tree.gif" width="15" height="15" border="0" align="absmiddle" alt="收缩列表"></a> |  <a href="main.asp" target="mainFrame">系统首页</a> | </td>
@@ -63,22 +63,30 @@ body {
 	  <% if qx("C1",session("Limit")) then %>
 	  d.add(1, 0, ' 系统管理', '');
       d.add(10, 1, ' 用户档案', 'action.asp?dz=a002');
-      d.add(11, 1, ' 客户档案', 'action.asp?dz=a002'); 
-	  d.add(12, 1, ' 销售档案', 'action.asp?dz=a002');
 	  d.add(13, 1, ' 商品档案', 'action.asp?dz=a001');
 	  d.add(14, 1, ' 原料档案', 'action.asp?dz=a006');
+	  d.add(15, 1, ' 商品配方', 'action.asp?dz=a009');
+	  d.add(16, 1, ' 微信配置', 'action.asp?dz=a014');
 	  <% end if %>
+	  <% if qx("C1",session("Limit")) then %>
 	  d.add(2, 0, ' 运营中心', '');
 	  d.add(20, 2, ' 销售下单', 'action.asp?dz=a003');
-	  d.add(20, 2, ' 原料入库', 'action.asp?dz=a007');
-	  d.add(21, 2, ' 客户档案', 'action.asp?dz=a005');
-	  d.add(22, 2, ' 添加客户信息', 'Information.asp?action=add');
-	  d.add(23, 2, ' 查询客户信息', 'Search.asp');
+	  d.add(24, 2, ' 销售单据', 'action.asp?dz=a013');
+	  d.add(21, 2, ' 商品零售', 'action.asp?dz=a016');
+	  d.add(22, 2, ' 原料入库', 'action.asp?dz=a007');
+	  d.add(23, 2, ' 客户档案', 'action.asp?dz=a005');
+	  <% end if %>
+	  <% if qx("C1",session("Limit")) or qx("K1",session("Limit")) then %>
 	  d.add(3, 0, ' 仓库管理', '');
-	  d.add(30, 3, ' 生产订单', 'action.asp?dz=a003');
-	  d.add(31, 3, ' 商品库存', 'Information.asp?action=list');
-	  d.add(32, 3, ' 原料库存', 'Information.asp?action=add');
-	  d.add(33, 3, ' 生产进度', 'Information.asp?action=add');
+	  d.add(30, 3, ' 生产订单', 'action.asp?dz=a011');
+	  d.add(35, 3, ' 销售入库', 'action.asp?dz=a015');
+	  d.add(34, 3, ' 原料库存', 'action.asp?dz=a010');
+	  d.add(31, 3, ' 商品库存', 'action.asp?dz=a012');
+	  <% end if %>
+	  <% if qx("C1",session("Limit")) then %>
+	  d.add(4, 0, ' 报表查询', '');
+	  d.add(40, 4, ' 财务报表', 'action.asp?dz=a017');
+	  <% end if %>
 	  d.add(9, 0, ' 个人管理', '');
 	  d.add(91, 9, ' 退出登入', 'logout.asp');		
 	  document.write(d);

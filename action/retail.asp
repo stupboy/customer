@@ -20,7 +20,7 @@ elseif Request("wor")="del2" then
  next 
   id=request("danno")
 elseif Request("addon")="yes" then 
- sql="insert into billInfo (billno,status,cuser,billway,customer_id,billnote) values ('"&Request("billno")&"',0,'"&session("RealName")&"','下单','"&Request("rank")&"','"&request("comment")&"')"
+ sql="insert into billInfo (billno,status,cuser,billway,customer_id,billnote) values ('"&Request("billno")&"',0,'"&session("RealName")&"','零售','"&Request("rank")&"','"&request("comment")&"')"
  conn.execute(sql)
 end if
 if Request("tj")="yes" then 
@@ -135,73 +135,74 @@ function check()
 </script>
 </head>
 <body>
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
-  <tr valign="top">
-    <td bgcolor="#FFFFFF">
-<!--增加订单 及 订单列表-->
-<%if action="list" then%>
-        <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
-        <form name="add" method="post" action="bill.asp">
-        <tr align="center" bgcolor="#F2FDFF">
-          <td colspan="6"  class="optiontitle"> 添加客户信息 </td>
-        </tr>
-        <tr bgcolor='#F2FDFF'>
-          <td align='right' bgcolor="#F2FDFF"> 单号：</td>
-          <td colspan="5" bgcolor="#F2FDFF"><input name="billno" type="text" id="billno" value="<%=danhao("D")%>" size="30" maxlength="50" readonly="readonly" > 
-            按回车\TAB键即可输入下一选项</td>
-        </tr>		
-		<tr bgcolor='#FFFFFF'>
-		  <td align='right' bgcolor="#FFFFFF"> 客户：</td>
-		  <td colspan="5" >
 <%
- sql="select * from Customer where is_ok='true' order by CustomerType "
- set rs_kehu=conn.execute(sql)
-%>
- <select name="rank" id="rank" selfvalue="客户级别">
- <option value="">请选择</option>
-<%
- do while rs_kehu.eof=false
-%>
- <option value="<%=rs_kehu("ID")%>"><%=rs_kehu("RealName")%>,客户类型：<%=rs_kehu("CustomerType")%>类.</option>
-<%
- rs_kehu.movenext
- loop
- rs_kehu.close
- set rs_kehu=nothing 
-%>
- </select>
-		  </td>
-		<tr bgcolor='#FFFFFF'>
-		  <td align='right' bgcolor="#FFFFFF"> 备注：</td>
-		  <td colspan="5"><textarea name="comment" cols="60" rows="5" id="comment" onKeyDown="next()"></textarea></td>
-		</tr>
-        <tr align="center" bgcolor="#ebf0f7">
-          <td colspan="6" >
-		    <INPUT TYPE="hidden" name="action" id="action" value="list" >
-	        <INPUT TYPE="hidden" name="addon" id="addon" value="yes" >
-            <input type="submit" name="Submit" value="提交" onClick="check()">
-          	<input type="button" name="Submit2" value="返回" onClick="history.back(-1)"></td>
-        </tr>
-		</FORM>
-      </table> 
-<br>
-  <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
-        <tr align="center" bgcolor="#F2FDFF">
-          <td colspan="9"  class="optiontitle">商品信息</td>
-        </tr>
-        <tr align="center" bgcolor="#ebf0f7">
-		  <td width="5%">选中</td>
-          <td width="10%">单号</td>
-          <td width="5%">下单|入库</td>
-          <td width="8%">金额</td>
-          <td width="10%">日期</td>
-          <td width="5%">客户</td>
-		  <td width="5%">途径</td>
-          <td width="8%">备注</td>
-          <td width="10%">操作</td>
-        </tr>	
-<%
- sql=" select a.*,b.数量,b.金额,c.RealName,b.数量1,b.金额1 from billInfo a left join billdetail_sum b on a.billno=b.billno left join Customer c on a.customer_id=c.id where a.is_ok='TRUE' and a.billway='下单' order by a.status,billno desc "
+sc "<table width='100%' border='0' cellpadding='0' cellspacing='0'>"
+sc "<tr valign='top'>"
+sc "<td bgcolor='#FFFFFF'>"
+
+if action="list" then
+
+sc "<table width='96%'  border='0' align='center' cellpadding='4' cellspacing='1' bgcolor='#aec3de'>"
+sc "<form name='add' method='post' action='retail.asp'>"
+sc "<tr align='center' bgcolor='#F2FDFF'>"
+sc "<td colspan='6'  class='optiontitle'> 客户销售单据 </td>"
+sc "</tr>"
+sc "<tr bgcolor='#F2FDFF'>"
+sc "<td align='right' bgcolor='#F2FDFF'> 单号：</td>"
+sc "<td colspan='5' bgcolor='#F2FDFF'><input name='billno' type='text' id='billno' value='"&danhao("L")&"' size='30' maxlength='50' readonly='readonly' >按回车\TAB键即可输入下一选项</td>"
+sc "</tr>"	
+sc "<tr bgcolor='#FFFFFF'>"
+sc "<td align='right' bgcolor='#FFFFFF'> 零售客户：</td>"
+sc "<td colspan='5' >"
+'-数据查询-
+sql="select * from Customer where is_ok='true' order by CustomerType "
+set rs_kehu=conn.execute(sql)
+'-select-
+sc "<select name='rank' id='rank' selfvalue='客户级别'>"
+sc "<option value=''>请选择</option>"
+do while rs_kehu.eof=false
+sc "<option value='"&rs_kehu("ID")&"'>"&rs_kehu("RealName")&",客户类型："&rs_kehu("CustomerType")&"类.</option>"
+rs_kehu.movenext
+loop
+rs_kehu.close
+set rs_kehu=nothing 
+sc "</select>"
+sc "</td>"
+sc "</tr>"
+
+sc "<tr bgcolor='#FFFFFF'>"
+sc "<td align='right' bgcolor='#FFFFFF'> 备注：</td>"
+sc "<td colspan='5'><textarea name='comment' cols='60' rows='5' id='comment' onKeyDown='next()'></textarea></td>"
+sc "</tr>"
+sc "<tr align='center' bgcolor='#ebf0f7'>"
+sc "<td colspan='6' >"
+sc "<INPUT TYPE='hidden' name='action' id='action' value='list' >"
+sc "<INPUT TYPE='hidden' name='addon' id='addon' value='yes' >"
+sc "<input type='submit' name='Submit' value='提交' onClick='check()'>"
+sc "<input type='button' name='Submit2' value='返回' onClick='history.back(-1)'></td>"
+sc "</tr>"
+sc "</FORM>"
+sc "</table>"
+sc "<br>"
+
+
+sc "<table width='96%'  border='0' align='center' cellpadding='4' cellspacing='1' bgcolor='#aec3de'>"
+sc "<tr align='center' bgcolor='#F2FDFF'>"
+sc "<td colspan='9'  class='optiontitle'>商品信息</td>"
+sc "</tr>"
+sc "<tr align='center' bgcolor='#ebf0f7'>"
+sc "<td width='5%'>选中</td>"
+sc "<td width='10%'>单号</td>"
+sc "<td width='5%'>数量</td>"
+sc "<td width='8%'>金额</td>"
+sc "<td width='10%'>日期</td>"
+sc "<td width='5%'>客户</td>"
+sc "<td width='5%'>途径</td>"
+sc "<td width='8%'>备注</td>"
+sc "<td width='10%'>操作</td>"
+sc "</tr>"	
+
+ sql=" select a.*,b.数量,b.金额,c.RealName,b.数量1,b.金额1 from billInfo a left join billdetail_sum b on a.billno=b.billno left join Customer c on a.customer_id=c.id where a.is_ok='TRUE' and a.billway='零售' order by a.status,billno desc "
  set rs=server.createobject("adodb.recordset") 
  rs.open sql,conn,1,1
  if not rs.eof then
@@ -234,14 +235,14 @@ function check()
 	 if rs("status")=0 then 
 	 sctd "<input type='checkbox' name='id' value='"&rs("id")&"'>"
 	 elseif rs("status")=1 then 
-	 sctd ztgs("生产中",4)
+	 sctd "待入库"
 	 elseif rs("status")=2 then 
-	 sctd ztgs("待入库",2)
+	 sctd "待入库"
 	 elseif rs("status")=3 then 
-	 sctd ztgs("已入库",1)
+	 sctd "<IMG src='../images/rk.png' align='absmiddle'><strong><span style='color:#009900;background-color:#FFE500;'>已入库</span></strong>"
 	 end if 
 	 sctd rs("billno")
-	 sctd rs("数量")&"|"&rs("数量1")
+	 sctd rs("数量")
 	 sctd rs("金额")
 	 sctd rs("billdate")
 	 sctd rs("RealName")
@@ -254,11 +255,12 @@ function check()
 		  " | <IMG src='../images/drop.gif' align='absmiddle'>"&_
 		  "<a href='javascript:DoEmpty('?wor=del&id="&rs("id")&"&action=list&ToPage="&intCurPage&"')'>删除</a>"
           elseif rs("status")=1 then 
-		  sc "| 已提交"
+		  sc "| 待入库"
 		  elseif rs("status")=2 then 
-		  sc "| <IMG src='../images/edit.gif' align='absmiddle'><a href='?action=list&tj=shou&id="&rs("id")&"'>收货</a>"
+		  sc "| <IMG src='../images/rk.png' align='absmiddle'>已入库"
 		  elseif rs("status")=3 then 
-		  sc "|"&ztgs("已入库",1)
+		  sc "| 已入库"
+		  'sc "| <IMG src='../images/edit.gif' align='absmiddle'><a href='?action=list&tj=shou&id="&rs("id")&"'>收货</a>"
 		  end if
 		  sc "</td>"
 		  sc "</tr>"
@@ -346,25 +348,28 @@ viewaction=request("viewaction")
 if viewaction="yes" then 
  if is_sku("Gname","GoodsInfo","'"&request("dname")&"'")=1 then 
   'sc "有该款式！"
-  if is_sku("billno|goodsid","billdetail","'"&request("danno")&"'|'"&request("dname")&"'")=0 then 
-  call dbdo(1,"billdetail","billno|goodsid|billqyt|cuser-'"&request("danno")&"'|'"&request("dname")&"'|"&request("dqyt")&"|'"&session("RealName")&"'")
-  else 
-  sql="update billdetail set billqyt=billqyt +"&request("dqyt")&" where billno='"&request("danno")&"' and goodsid='"&request("dname")&"' "
-  call dbdo(2,sql,sql)
-  'sc sql
+  if is_sku("goodsid|customer","storedetail_sum","'"&request("dname")&"'|'"&request("cuname")&"'")=1 then 
+   if is_sku("goodsid|billno","billdetail_info","'"&request("dname")&"'|'"&request("danno")&"'")=0 then 
+    call dbdo(1,"billdetail","billno|goodsid|billqyt|cuser-'"&request("danno")&"'|'"&request("dname")&"'|"&request("dqyt")&"|'"&session("RealName")&"'")
+   else
+    sql="update billdetail set billqyt=billqyt +"&request("dqyt")&" where billno='"&request("danno")&"' and goodsid='"&request("dname")&"' "
+    call dbdo(2,sql,sql)
+   end if
+  else
+  sc "该商品无库存!"  
   end if 
  else
  sc "该商品不存在！"
  end if 
 end if 
 set rs=server.createobject("adodb.recordset") 
-'sql="select * from billInfo where id="&Request("id")
-sql="select * from billInfo where id="&id
+sql="select a.*,b.Realname,c.RealName Realname1 from billInfo a left join Customer b on a.customer_id=b.id left join Customer c on a.customer_id1=c.id where a.id="&id
+'sql="select * from billInfo where id="&id
 rs.open sql,conn,1,1
 if not rs.eof Then
 %>
 	  <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
-	    <form action="bill.asp?action=view&id=<%=id%>" method="POST" name="billd" id="billd">
+	    <form action="retail.asp?action=view&id=<%=id%>" method="POST" name="billd" id="billd">
 		<tr align="center" bgcolor="#F2FDFF">
 		  <td colspan=4  class="optiontitle"> 单号：<%=rs("billno")%> <input type="hidden" id="viewaction" name="viewaction" value="yes"> 
 		  <input type="hidden" id="danno" name="danno" value="<%=rs("billno")%>"></td>
@@ -388,7 +393,7 @@ if not rs.eof Then
 	    <tr bgcolor='#FFFFFF' align='center'>
 		  <td><input type="checkbox" name="id" value="<%=rs2("id")%>"></td>
 		  <td><%=rs2("goodsid")%></td>
-		  <td><%=rs2("billqyt")%>|<%=rs2("ProductQty")%></td>
+		  <td><%=rs2("billqyt")%></td>
 		  <td><% if rs("status")= 0 then %><IMG src="../images/drop.gif" align="absmiddle"><a href="javascript:DoEmpty('?wor=del2&id=<%=rs2("id")%>&danno=<%=id%>&action=view')">删除</a><% end if %></td>
 		</tr>
 <%
@@ -403,7 +408,7 @@ if not rs.eof Then
 		  <td >输入商品：</td>
 		  <td>数量:<input id="dqyt" name="dqyt" size="4" value="1"></td>
 		  <td ><input id="dname" name="dname" style="width:100%" /></td>
-		  <td><input type="Submit" name="Submit3" value="提交" ></td>
+		  <td><input type="hidden" name="cuname" value="<%=rs("RealName")%>"><input type="Submit" name="Submit3" value="提交" ></td>
 		</tr>
 <%
 end if 
@@ -412,7 +417,8 @@ end if
 		  <td colspan=6 > 订单备注：<%=rs("BillNote")%></td>
 		</tr>
 		<tr align="center" bgcolor="#ebf0f7">
-		  <td colspan="4"><a href='?action=list'><u><strong><em>返回</em></strong></u></a>
+		  <td colspan="4">
+          <a href='?action=list'><u><strong><em>返回</em></strong></u></a>
           <!--<input type="button" name="Submit2" value="返回" onClick="history.back(-1)">--></td>
 		</tr>
 		</form>

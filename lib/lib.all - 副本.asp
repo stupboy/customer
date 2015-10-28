@@ -1,43 +1,42 @@
 <%
-'########## Stupboy ¸öÈË×Ô¶¨Òåº¯Êı¿â       #########
+'########## Stupboy ä¸ªäººè‡ªå®šä¹‰å‡½æ•°åº“       #########
 '########## UPDATE 2015.08.18              #########
-'--º¯Êı»ã×Ü ¼°¹¦ÄÜËµÃ÷ [s]Îª¹ı³Ì--
-'-01. SC              [s]Êä³öº¯Êı-
-'-02. caidan(a,b)     ²Ëµ¥Êä³öº¯Êı,aÎª²Ëµ¥Ãû,bÎª"×Ó²Ëµ¥Ãû$Á´½Ó|×Ó²Ëµ¥$Á´½Ó"µÄ¸ñÊ½-
-'-03. LimitCheck(a)   [s]È¨ÏŞ¼ì²âº¯Êı£¬ÈôÎŞÈ¨ÏŞÔòÖÕ¶ËÊä³ö-
-'-04. qx(a,b)         ÅĞ¶ÏÊÇ·ñÓĞÈ¨ÏŞ£¬·µ»ØboolenÖµ TRUE OR FALSE¡¾bÖĞÊÇ·ñ°üº¬a¡¿-
-'-05. str_x(x,y)      ×Ö·û²¹Î»º¯ÊıxÎªÔ­×Ö·û,yÎªÎ»Êı²»×ãÓÃ0²¹Æë-
-'-06. date2str(x,y)   ÈÕÆÚ×ª×Ö·ûº¯Êı£¬xÎªÈÕÆÚ£¬yÎªÀàĞÍ£¬yÎª1Ôòµ½ÈÕ150801£¬yÎª2Ôòµ½Ãë150801120025,3Ôò·µ»Ø8Î»ÈÕÆÚÈç20150801-
-'-07. DanHao(x)       µ¥ºÅÉú³Éº¯Êı£¬xÎªµ¥ºÅÇ°×º£¬ºóÁ¬½Óµ±ÆÚÈÕÆÚ¡¾ÀàĞÍ2¡¿-
-'-08. getip()         [s]»ñÈ¡IPº¯Êı-
-'-09. date2week(x)    ÈÕÆÚ×ªĞÇÆÚ1-7-
-'-10. date_thisweek(x)»ñÈ¡µ±ÆÚÈÕÆÚËùÔÚÖÜµÄÖÜÒ»ÈÕÆÚ-
-'-11. date_preweek(x) »ñÈ¡µ±ÆÚÈÕÆÚËùÔÚÖÜÉÏÖÜÖÜÒ»ÈÕÆÚ-
-'-12. re_char(x,y,z)  rechar(a,b,c)Èôa=bÔòÊä³öc£¬·ñÔòÊä³öa-
-'-13. is_sku(a.b.c)   ²éÕÒb±íÖĞÊÇ·ñ°üº¬×Ö¶Îc=aµÄÖµ·µ»Ø1ºÍ0-
-'-13. is_skux(a,b,c,d)   ²éÕÒb±íÖĞÊÇ·ñ°üº¬×Ö¶Îc=aµÄÖµ·µ»Ø1ºÍ0-
-'-14. dbdo(x,y,z)     [s]Êı¾İ¿â²Ù×÷º¯Êı x=1 ´ıÍêÉÆËµÃ÷-
-'-15. aspTips(x)      [s]µ¯´°¾¯¸æ -
-'-16. sctd(x)         [s]Êä³ö±í¸ñtd-
-'-17. ztgs(x,y)       Ğ¡±êÇ©¸ñÊ½Êä³öxÎªÄÚÈİyÎª¸ñÊ½-
-'-´ıÔö¼Ó-
-'-º¯ÊıÃ÷Ï¸ÁĞ±í-
-'-Êä³öº¯ÊıSC -
+'--å‡½æ•°æ±‡æ€» åŠåŠŸèƒ½è¯´æ˜ [s]ä¸ºè¿‡ç¨‹--
+'-01. SC              [s]è¾“å‡ºå‡½æ•°-
+'-02. caidan(a,b)     èœå•è¾“å‡ºå‡½æ•°,aä¸ºèœå•å,bä¸º"å­èœå•å$é“¾æ¥|å­èœå•$é“¾æ¥"çš„æ ¼å¼-
+'-03. LimitCheck(a)   [s]æƒé™æ£€æµ‹å‡½æ•°ï¼Œè‹¥æ— æƒé™åˆ™ç»ˆç«¯è¾“å‡º-
+'-04. qx(a,b)         åˆ¤æ–­æ˜¯å¦æœ‰æƒé™ï¼Œè¿”å›boolenå€¼ TRUE OR FALSEã€bä¸­æ˜¯å¦åŒ…å«aã€‘-
+'-05. str_x(x,y)      å­—ç¬¦è¡¥ä½å‡½æ•°xä¸ºåŸå­—ç¬¦,yä¸ºä½æ•°ä¸è¶³ç”¨0è¡¥é½-
+'-06. date2str(x,y)   æ—¥æœŸè½¬å­—ç¬¦å‡½æ•°ï¼Œxä¸ºæ—¥æœŸï¼Œyä¸ºç±»å‹ï¼Œyä¸º1åˆ™åˆ°æ—¥150801ï¼Œyä¸º2åˆ™åˆ°ç§’150801120025,3åˆ™è¿”å›8ä½æ—¥æœŸå¦‚20150801-
+'-07. DanHao(x)       å•å·ç”Ÿæˆå‡½æ•°ï¼Œxä¸ºå•å·å‰ç¼€ï¼Œåè¿æ¥å½“æœŸæ—¥æœŸã€ç±»å‹2ã€‘-
+'-08. getip()         [s]è·å–IPå‡½æ•°-
+'-09. date2week(x)    æ—¥æœŸè½¬æ˜ŸæœŸ1-7-
+'-10. date_thisweek(x)è·å–å½“æœŸæ—¥æœŸæ‰€åœ¨å‘¨çš„å‘¨ä¸€æ—¥æœŸ-
+'-11. date_preweek(x) è·å–å½“æœŸæ—¥æœŸæ‰€åœ¨å‘¨ä¸Šå‘¨å‘¨ä¸€æ—¥æœŸ-
+'-12. re_char(x,y,z)  rechar(a,b,c)è‹¥a=båˆ™è¾“å‡ºcï¼Œå¦åˆ™è¾“å‡ºa-
+'-13. is_sku(a.b.c)   æŸ¥æ‰¾bè¡¨ä¸­æ˜¯å¦åŒ…å«å­—æ®µc=açš„å€¼è¿”å›1å’Œ0-
+'-13. is_skux(a,b,c,d)   æŸ¥æ‰¾bè¡¨ä¸­æ˜¯å¦åŒ…å«å­—æ®µc=açš„å€¼è¿”å›1å’Œ0-
+'-14. dbdo(x,y,z)     [s]æ•°æ®åº“æ“ä½œå‡½æ•° x=1 å¾…å®Œå–„è¯´æ˜-
+'-15. aspTips(x)      [s]å¼¹çª—è­¦å‘Š -
+'-16. sctd(x)         [s]è¾“å‡ºè¡¨æ ¼td-
+'-å¾…å¢åŠ -
+'-å‡½æ•°æ˜ç»†åˆ—è¡¨-
+'-è¾“å‡ºå‡½æ•°SC -
 Sub sc(str)
 Response.write str
 End Sub
-'-²Ëµ¥ÏÂÀ­ÏÔÊ¾º¯Êı,aÎª²Ëµ¥Ãû³Æ,bÎª²Ë¡°µ¥Ãû$Á´½Ó¡±µÄ¸ñÊ½-
+'-èœå•ä¸‹æ‹‰æ˜¾ç¤ºå‡½æ•°,aä¸ºèœå•åç§°,bä¸ºèœâ€œå•å$é“¾æ¥â€çš„æ ¼å¼-
 function caidan(a,b)
- mx=split(b,"|")     '-bÎª²Ëµ¥Ãû³Æ¼°Á´½Ó£¬¶à¸ö²Ëµ¥ÓÃ¡°|¡±Çø·Ö¿ª£¬ÓÃSPLITº¯Êı²ğÎªÊı×é-'-bÎª²Ëµ¥Ãû³Æ¼°Á´½Ó£¬¶à¸ö²Ëµ¥ÓÃ¡°|¡±Çø·Ö¿ª£¬ÓÃSPLITº¯Êı²ğÎªÊı×é-
+ mx=split(b,"|")     '-bä¸ºèœå•åç§°åŠé“¾æ¥ï¼Œå¤šä¸ªèœå•ç”¨â€œ|â€åŒºåˆ†å¼€ï¼Œç”¨SPLITå‡½æ•°æ‹†ä¸ºæ•°ç»„-
  ms=ubound(mx,1)     
  caidan1="<ul class='nav navbar-nav'>"&_  
         "<!--<li class='active'><a href='#'>Link <span class='sr-only'>(current)</span></a></li>-->"&_
-        "<!--<li><a href='#'>Ë¢ĞÂ</a></li>-->"&_
+        "<!--<li><a href='#'>åˆ·æ–°</a></li>-->"&_
         "<li class='dropdown'>"&_
         "<a href='#' class='dropdown-toggle' data-toggle='dropdown' role='button' aria-haspopup='true' aria-expanded='false'>"&a&"<span class='caret'></span></a>"&_
         "<ul class='dropdown-menu'>"
  for i = 0 to ms            '-å¾ªç¯è¾“å‡ºæ•°ç»„ä¸­çš„èœå• Forå¾ªç¯-
-    mt=split(mx(i),"$")     '-ç”?åŒºåˆ†èœå•åå’Œé“¾æ¥-
+    mt=split(mx(i),"$")     '-ç”¨$åŒºåˆ†èœå•åå’Œé“¾æ¥-
     caidan3=caidan3&"<li><a href='"&mt(1)&"' target='MainF'>"&mt(0)&"</a></li>"    '-èœå•å­—ç¬¦ä¸²çš„æ‹¼æ¥-
  next                       '-å¾ªç¯è¾“å‡ºç»“æŸ-
  caidan2="<!--<li role='separator' class='divider'></li>-->"&_                     
@@ -54,7 +53,7 @@ sub LimitCheck(a)
   response.end                                            
  end if                                                   
 end sub  
-'-æƒé™æ£€æµ‹å‡½æ•°[è¾“å‡ºè¿”å›å€?ä¸ºæ˜¯0ä¸ºå¦]                                                '-å‡½æ•°ç»“æŸ-
+'-æƒé™æ£€æµ‹å‡½æ•°[è¾“å‡ºè¿”å›å€¼1ä¸ºæ˜¯0ä¸ºå¦]                                                '-å‡½æ•°ç»“æŸ-
 function qx(a,b)
 if trim(b)="" then 
 qx=false
@@ -79,14 +78,14 @@ function str_x(x,y)
   str_x=x
  end if 
 end function
-'-æ—¥æœŸè½¬å­—ç¬¦å‡½æ•?1ä¸ºåˆ°æ—?2ä¸ºåˆ°ç§?
+'-æ—¥æœŸè½¬å­—ç¬¦å‡½æ•° 1ä¸ºåˆ°æ—¥ 2ä¸ºåˆ°ç§’-
 function date2str(x,y) 
  a=right(year(x),2)
  if y=1 then 
  date2str=a&str_x(month(x),2)&str_x(day(x),2)
  elseif y=2 then 
  date2str=a&str_x(month(x),2)&str_x(day(x),2)&str_x(hour(x),2)&str_x(minute(x),2)&str_x(second(x),2)
- elseif y=3 then '-å¦‚æœç­‰äº3åˆ™è½¬ä¸?ä½æ•°æ—¥æœŸæ ¼å¼å¹´æœˆæ—?
+ elseif y=3 then '-å¦‚æœç­‰äº3åˆ™è½¬ä¸º8ä½æ•°æ—¥æœŸæ ¼å¼å¹´æœˆæ—¥-
  date2str=year(x)&str_x(month(x),2)&str_x(day(x),2)
  end if 
 end function
@@ -109,7 +108,7 @@ End If
 getIP = Trim(Mid(strIPAddr, 1, 30))   
 End Function
 '-æ—¥æœŸå‡½æ•°-
-'-æ—¥æœŸè½¬æ˜Ÿæœ?
+'-æ—¥æœŸè½¬æ˜ŸæœŸ-
 Function date2week(a)
 If weekday(a,1)=1 Then
 xq=7
@@ -126,7 +125,7 @@ yy=a-date2week(a)+1
 End If 
 date_thisweek=date2str(yy,3)
 End Function 
-'-ä¸Šå‘¨å¼€å§‹æ—¥æœ?
+'-ä¸Šå‘¨å¼€å§‹æ—¥æœŸ-
 Function date_preweek(a)
 If weekday(a,1)=2 Then
 gg=a
@@ -135,7 +134,7 @@ gg=a-date2week(a)+1
 End If 
 date_preweek=date2str(gg-7,3)
 End Function 
-'-åˆ¤æ–­å€¼æ˜¯å¦ç­‰äºåˆ¶å®šå€¼ï¼Œè¾“å‡ºæŒ‡å®šæ•°å€?
+'-åˆ¤æ–­å€¼æ˜¯å¦ç­‰äºåˆ¶å®šå€¼ï¼Œè¾“å‡ºæŒ‡å®šæ•°å€¼-
 function re_char(x,y,z)
  dim a,b
  a=cstr(x)
@@ -146,7 +145,7 @@ function re_char(x,y,z)
   re_char=x
  end if
 end function
-'-æŸ¥æ‰¾æ•°æ®åº“æ˜¯å¦åŒ…å«å€?
+'-æŸ¥æ‰¾æ•°æ®åº“æ˜¯å¦åŒ…å«å€¼-
 Function is_sku(a,b,c)
 temp=0
 TiaoJian=""
@@ -160,7 +159,7 @@ next
 TiaoJian=Trim(Mid(TiaoJian,5,99))
 SQL="select * from "&b&" WHERE "&TiaoJian
 set conn=server.CreateObject("adodb.connection")
-'â€?â€ä¸ºæœåŠ¡å™¨åœ°å€ã€STä¸ºè¿æ¥æ•°æ®åº“åç§°ã€saä¸ºæ•°æ®åº“ç”¨æˆ·åã€PWDä¸ºæ•°æ®åº“å¯†ç -
+'â€œ.â€ä¸ºæœåŠ¡å™¨åœ°å€ã€STä¸ºè¿æ¥æ•°æ®åº“åç§°ã€saä¸ºæ•°æ®åº“ç”¨æˆ·åã€PWDä¸ºæ•°æ®åº“å¯†ç -
 ConnStr="server=113.10.138.110;driver={sql server};database=cha;uid=sa;pwd=!@#$%asdfg"
 conn.Open connstr
 on error resume next 
@@ -196,27 +195,27 @@ next
 TiaoJian=Trim(Mid(TiaoJian,5,99))
 SQL="select * from "&b&" WHERE "&TiaoJian
 set conn=server.CreateObject("adodb.connection")
-'â€?â€ä¸ºæœåŠ¡å™¨åœ°å€ã€STä¸ºè¿æ¥æ•°æ®åº“åç§°ã€saä¸ºæ•°æ®åº“ç”¨æˆ·åã€PWDä¸ºæ•°æ®åº“å¯†ç -
+'â€œ.â€ä¸ºæœåŠ¡å™¨åœ°å€ã€STä¸ºè¿æ¥æ•°æ®åº“åç§°ã€saä¸ºæ•°æ®åº“ç”¨æˆ·åã€PWDä¸ºæ•°æ®åº“å¯†ç -
 ConnStr="server=113.10.138.110;driver={sql server};database=cha;uid=sa;pwd=!@#$%asdfg"
 conn.Open connstr
-on error resume next 
-set rs=server.createobject("adodb.recordset") 
-rs.open sql,conn,1,1
-if not rs.eof Then
-  temp=1
- else
-  temp=0
- end if
- Rs.close
-set Rs=nothing
-is_skux=temp
+'on error resume next 
+'set rs=server.createobject("adodb.recordset") 
+'rs.open sql,conn,1,1
+'if not rs.eof Then
+'  temp=1
+' else
+'  temp=0
+' end if
+' Rs.close
+'set Rs=nothing
+is_skux=sql
 End Function
-'response.write is_skux("goodsid|customer|ÊıÁ¿1","storedetail_sum","'ÂÌ²è'|'ÕÅÈı'|601","1|1|2")
-'response.write is_sku("Yname","Yuan_Info","'è¿‡æ»¤ç½?")
-'-æ•°æ®åº“æ“ä½œå‡½æ•°æ— è¿”å›å€?
+response.write is_skux("goodsid|customer|æ•°é‡1","storedetail_sum","'çº¢èŒ¶'|'å¼ ä¸‰'|1","1|1|2")&"s"
+'response.write is_sku("Yname","Yuan_Info","'è¿‡æ»¤ç½‘'")
+'-æ•°æ®åº“æ“ä½œå‡½æ•°æ— è¿”å›å€¼-
 sub dbdo(x,y,z) '--
 set conn=server.CreateObject("adodb.connection")
-'â€?â€ä¸ºæœåŠ¡å™¨åœ°å€ã€STä¸ºè¿æ¥æ•°æ®åº“åç§°ã€saä¸ºæ•°æ®åº“ç”¨æˆ·åã€PWDä¸ºæ•°æ®åº“å¯†ç -
+'â€œ.â€ä¸ºæœåŠ¡å™¨åœ°å€ã€STä¸ºè¿æ¥æ•°æ®åº“åç§°ã€saä¸ºæ•°æ®åº“ç”¨æˆ·åã€PWDä¸ºæ•°æ®åº“å¯†ç -
 ConnStr="server=113.10.138.110;driver={sql server};database=cha;uid=sa;pwd=!@#$%asdfg"
 conn.Open connstr
 'on error resume next 
@@ -237,32 +236,7 @@ if x= 1 then
 elseif x=2 then 
  sql=y
  conn.execute(sql)
-elseif x=3 then 
- mx=split(z,"-")
- mxa=split(mx(0),"|")
- mxb=split(mx(1),"|")
- mxs=ubound(mxa)
-   Tiaojian=""
- for i = 0 to mxs
-  Tiaojian=TiaoJian&" and "&mxa(i)&" = "&mxb(i)
-  'zd=zd&","&mxa(i)
-  'nr=nr&","&mxb(i)
- next 
-TiaoJian=Trim(Mid(TiaoJian,5,99))
-
-set rs = Server.CreateObject("ADODB.recordset")
-rs.Open "SELECT * FROM "&y&" where "&Tiaojian, conn
-do until rs.EOF
-  'for each x in rs.Fields
-    'Response.Write(x.name)
-    'Response.Write(" = ")
-    Response.Write rs("ÊıÁ¿1") 
-  'next
-  'Response.Write("<br />")
-  rs.MoveNext
-loop
-rs.close
-
+ 'sc sql
 end if 
 end sub 
 sub aspTips(x)
@@ -271,45 +245,6 @@ end sub
 Sub sctd(x)
 response.write "<td>"&x&"</td>"
 End Sub
-Function look_db(x,y,z,w)
-'mx=split(z,"-")
- mxa=split(z,"|")
- mxb=split(w,"|")
- mxs=ubound(mxa)
-   Tiaojian=""
- for i = 0 to mxs
-  Tiaojian=TiaoJian&" and "&mxa(i)&" = '"&mxb(i)&"'"
-  'zd=zd&","&mxa(i)
-  'nr=nr&","&mxb(i)
- next 
-TiaoJian=Trim(Mid(TiaoJian,5,99))
-
-set rs = Server.CreateObject("ADODB.recordset")
-rs.Open "SELECT * FROM "&y&" where "&Tiaojian, conn
-do until rs.EOF
-  'for each x in rs.Fields
-  'Response.Write(x.name)
-  'Response.Write(" = ")
-  look_db=rs(x) 
-  'next
-  'Response.Write("<br />")
-  rs.MoveNext
-loop
-rs.close
-end function 
-function ztgs(x,y)
-if y=1 then 'ÂÌµ×°××Ö´ÖÌå
-ztgs="<span style='color:#FFFFFF;background-color:#009900;'><strong>"&x&"</strong></span>"
-elseif y=2 then 'ºìµ×°××Ö´ÖÌå
-ztgs="<span style='color:#FFFFFF;background-color:#E53333;'><strong>"&x&"</strong></span>"
-elseif y=3 then 'Ç³ÂÌºÚ×Ö´ÖÌå
-ztgs="<span style='background-color:#B8D100;'><strong>"&x&"</strong></span>"
-elseif y=4 then '³ÈÉ«ºÚ×Ö´ÖÌå
-ztgs="<span style='background-color:#FF9900;'><strong>"&x&"</strong></span>"
-else 
-ztgs="<strong>"&x&"</strong>"
-end if 
-end function 
 '-æµ‹è¯•å‡½æ•°è¯­å¥-
 'sc esql("UserInfo","Username:stupboy|password:123456")
 %>

@@ -58,6 +58,8 @@ function check()
 </script>
 </head>
 <body>
-无权限！
+<h1>
+	<span><b><span style="color:#E53333;">ERROR001:无对应权限或功能未开通！</span></b></span>
+</h1>
 </body>
 </html>
