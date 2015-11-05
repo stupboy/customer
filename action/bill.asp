@@ -171,6 +171,11 @@ function check()
 %>
  </select>
 		  </td>
+		</tr>
+		<tr bgcolor='#FFFFFF'>
+          <td align='right' bgcolor="#FFFFFF"> 交货日期：</td>
+          <td colspan="5" bgcolor="#FFFFFF"><input name="Gdate" type="text" id="Gdate" value="<%=danhao("D")%>" size="30" ></td>
+        </tr>
 		<tr bgcolor='#FFFFFF'>
 		  <td align='right' bgcolor="#FFFFFF"> 备注：</td>
 		  <td colspan="5"><textarea name="comment" cols="60" rows="5" id="comment" onKeyDown="next()"></textarea></td>

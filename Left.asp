@@ -63,9 +63,7 @@ body {
 	  <% if qx("C1",session("Limit")) then %>
 	  d.add(1, 0, ' 系统管理', '');
       d.add(10, 1, ' 用户档案', 'action.asp?dz=a002');
-	  d.add(16, 1, ' 微信配置', 'action.asp?dz=a014');
-	  d.add(17, 1, ' 数据清空', 'action.asp?dz=a018');
-	  d.add(17, 1, ' 数据清空', 'action.asp?dz=a018');
+	  //d.add(16, 1, ' 微信配置', 'action.asp?dz=a014');
 	  <% end if %>
 	  <% if qx("C1",session("Limit")) then %>
 	  d.add(2, 0, ' 运营中心', '');
