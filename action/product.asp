@@ -198,19 +198,20 @@ function check()
           <td width="8%">金额</td>
           <td width="10%">日期</td>
           <td width="5%">客户</td>
-		  <td width="5%">途径</td>
+		  <td width="5%">交货日期</td>
           <td width="8%">备注</td>
           <td width="10%">操作</td>
         </tr>	
 <%
- sql=" select a.*,b.数量,b.金额,c.RealName,b.数量1,b.金额1 from billInfo a left join billdetail_sum b on a.billno=b.billno left join Customer c on a.customer_id=c.id where a.is_ok='TRUE' and a.status>0 and a.billway='下单' order by billno desc "
- set rs=server.createobject("adodb.recordset") 
- rs.open sql,conn,1,1
- if not rs.eof then
- proCount=rs.recordcount
-	rs.PageSize=8
-     if not IsEmpty(Request("ToPage")) then
-	    ToPage=CInt(Request("ToPage"))
+         '数据查询
+         sql=" select a.*,b.数量,b.金额,c.RealName,b.数量1,b.金额1 from billInfo a left join billdetail_sum b on a.billno=b.billno left join Customer c on a.customer_id=c.id where a.is_ok='TRUE' and a.status>0 and a.billway='下单' order by billno desc "
+         set rs=server.createobject("adodb.recordset") 
+         rs.open sql,conn,1,1
+         if not rs.eof then
+         proCount=rs.recordcount
+         rs.PageSize=8
+         if not IsEmpty(Request("ToPage")) then
+         ToPage=CInt(Request("ToPage"))
 		if ToPage>rs.PageCount then
 		   rs.AbsolutePage=rs.PageCount
 		   intCurPage=rs.PageCount
@@ -235,7 +236,11 @@ function check()
 		  sc "<tr align='center' bgcolor='#FFFFFF' onmouseover=""this.style.background='#F2FDFF'"" onmouseout=""this.style.background='#FFFFFF'"">"
 		  if rs("status")=0 then 
 		  sctd "<input type='checkbox' name='id' value='"&rs("id")&"'>"
-		  elseif rs("status")=1 then 
+		  elseif rs("status")=1 and rs("数量1")=0 then 
+		  sctd ztgs("已提交",4)
+		  elseif rs("status")=1 and rs("数量1")=rs("数量") then 
+	      sctd ztgs("生产完",4)
+		  elseif rs("status")=1 and rs("数量1")>0 then 
 		  sctd ztgs("生产中",4)
 		  elseif rs("status")=2 then 
 		  sctd ztgs("待入库",2)
@@ -247,7 +252,7 @@ function check()
 		  sctd rs("金额")
 		  sctd rs("billdate")
 		  sctd rs("RealName")
-		  sctd rs("billway")
+		  sctd rs("Gdate")
 		  sctd rs("billnote")
 		  sc "<td>"
 		  sc "<IMG src='../images/view.gif' align='absmiddle'><a href='?action=view&id="&rs("id")&"'>生产</a>"

@@ -1,6 +1,7 @@
 <!--#include file="../inc/right.asp"--> 
 <!--#include file="../inc/conn.asp"-->
 <!--#include file="../lib/lib.all.asp"-->
+<script language="javascript" type="text/javascript" src="../date/WdatePicker.js"></script>
 <%
 id=Request("id")
 '-删除记录 is_ok='false'-
@@ -20,7 +21,7 @@ elseif Request("wor")="del2" then
  next 
   id=request("danno")
 elseif Request("addon")="yes" then 
- sql="insert into billInfo (billno,status,cuser,billway,customer_id,billnote) values ('"&Request("billno")&"',0,'"&session("RealName")&"','下单','"&Request("rank")&"','"&request("comment")&"')"
+ sql="insert into billInfo (billno,status,cuser,billway,customer_id,billnote,Gdate) values ('"&Request("billno")&"',0,'"&session("RealName")&"','下单','"&Request("rank")&"','"&request("comment")&"','"&request("Gdate")&"')"
  conn.execute(sql)
 end if
 if Request("tj")="yes" then 
@@ -174,7 +175,7 @@ function check()
 		</tr>
 		<tr bgcolor='#FFFFFF'>
           <td align='right' bgcolor="#FFFFFF"> 交货日期：</td>
-          <td colspan="5" bgcolor="#FFFFFF"><input name="Gdate" type="text" id="Gdate" value="<%=danhao("D")%>" size="30" ></td>
+          <td colspan="5" bgcolor="#FFFFFF"><input name="Gdate" type="text" id="Gdate" value="" onClick="WdatePicker()"></td>
         </tr>
 		<tr bgcolor='#FFFFFF'>
 		  <td align='right' bgcolor="#FFFFFF"> 备注：</td>
@@ -199,9 +200,9 @@ function check()
           <td width="10%">单号</td>
           <td width="5%">下单|入库</td>
           <td width="8%">金额</td>
-          <td width="10%">日期</td>
+          <td width="10%">交货日期</td>
           <td width="5%">客户</td>
-		  <td width="5%">途径</td>
+		  <td width="5%">下单日期</td>
           <td width="8%">备注</td>
           <td width="10%">操作</td>
         </tr>	
@@ -238,8 +239,12 @@ function check()
 	 sc "<tr align='center' bgcolor='#FFFFFF' onmouseover=""this.style.background='#F2FDFF'"" onmouseout=""this.style.background='#FFFFFF'"">"
 	 if rs("status")=0 then 
 	 sctd "<input type='checkbox' name='id' value='"&rs("id")&"'>"
-	 elseif rs("status")=1 then 
+	 elseif rs("status")=1 and rs("数量1")=rs("数量") then 
+	 sctd ztgs("生产完",4)
+	 elseif rs("status")=1 and rs("数量1")>0 then 
 	 sctd ztgs("生产中",4)
+	 elseif rs("status")=1 and rs("数量1")=0 then 
+	 sctd ztgs("已提交",4)
 	 elseif rs("status")=2 then 
 	 sctd ztgs("待入库",2)
 	 elseif rs("status")=3 then 
@@ -248,9 +253,9 @@ function check()
 	 sctd rs("billno")
 	 sctd rs("数量")&"|"&rs("数量1")
 	 sctd rs("金额")
-	 sctd rs("billdate")
+	 sctd rs("GDATE")
 	 sctd rs("RealName")
-	 sctd rs("billway")
+	 sctd rs("billdate")
 	 sctd rs("billnote")
 	 sc "<td>"
 	 sc "<IMG src='../images/view.gif' align='absmiddle'><a href='?action=view&id="&rs("id")&"'>查看</a>"
@@ -415,6 +420,9 @@ end if
 %>
 		<tr align="center" bgcolor="#F2FDFF">
 		  <td colspan=6 > 订单备注：<%=rs("BillNote")%></td>
+		</tr>
+		<tr align="center" bgcolor="#F2FDFF">
+		  <td colspan=6 > 交货日期：<%=rs("Gdate")%></td>
 		</tr>
 		<tr align="center" bgcolor="#ebf0f7">
 		  <td colspan="4"><a href='?action=list'><u><strong><em>返回</em></strong></u></a>
