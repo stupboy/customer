@@ -1,6 +1,17 @@
 <!--#include file="../inc/right.asp"--> 
 <!--#include file="../inc/conn.asp"-->
 <!--#include file="../lib/lib.all.asp"-->
+<script src="../inc/jquery-1.11.3.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+  $("#hide").click(function(){
+  $("div.YLQK").hide();
+  });
+  $("#show").click(function(){
+  $("div.YLQK").show();
+  });
+});
+</script>
 <%
 id=Request("id")
 '-删除记录 is_ok='false'-
@@ -410,6 +421,8 @@ if not rs.eof Then
    rs2.close
    set rs2=nothing
    end if
+%>
+<%
    if rs("status")= 1 then 
 %>
 	    <tr bgcolor='#FFFFFF' align='center'>
@@ -429,6 +442,47 @@ end if
 		  <td colspan="4"><a href='?action=list'><u><strong><em>返回</em></strong></u></a></td>
 		</tr>
 		</form>
+		<tr bgcolor='#EBF0F7' align='center'>
+		  <td>原料名称</td>
+		  <td>需求数量</td>
+		  <td>库存数量</td>
+		  <td>需求情况</td>
+		</tr>
+		<%
+   sql2="select aa.GnameYuan,aa.Yuanqty,qty Storeqty from (select sum(b.GnameYuanQty*(billqyt-ProductQty)) Yuanqty,b.GnameYuan from BillDetail_Info a left join Goods_Yuan b on a.goodsid=b.Gname where status=1 and billway='下单' group by b.GnameYuan) aa left join (select a.Yname,sum(Yqty) qty from Yuan_Store a left join Yuan_Info b on a.Yname=b.Yname group by a.Yname) bb on aa.GnameYuan=bb.Yname "
+   set rs2=server.createobject("adodb.recordset") 
+   rs2.open sql2,conn,1,1
+   if not rs.eof then
+	 For i = 0 to rs2.recordcount
+	 if rs2.eof then     
+	 Exit For 
+	 end if
+	 
+	 dim cysl
+	 cysl=cdbl(rs2("Storeqty"))-cdbl(rs2("Yuanqty"))
+%>
+	    <tr bgcolor='#FFFFFF' align='center' class='YLQK'>
+		  <td><%=rs2("GnameYuan")%></td>
+		  <td><%=rs2("Yuanqty")%></td>
+		  <td><%=rs2("Storeqty")%></td>
+		  <td>
+		  <% 
+		  
+		  if cysl>=0 then 
+		  sc ztgs("库存充足",1)
+		  else
+		  sc cysl*-1
+		  end if 
+		  %>
+		  </td>
+		</tr>
+<%
+   rs2.movenext 
+   next
+   rs2.close
+   set rs2=nothing
+   end if
+%>
   	</table>
 <%
 end if
