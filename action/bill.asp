@@ -148,7 +148,7 @@ function check()
         </tr>
         <tr bgcolor='#F2FDFF'>
           <td align='right' bgcolor="#F2FDFF"> 单号：</td>
-          <td colspan="5" bgcolor="#F2FDFF"><input name="billno" type="text" id="billno" value="<%=danhao("D")%>" size="30" maxlength="50" readonly="readonly" > 
+          <td colspan="5" bgcolor="#F2FDFF"><input name="billno" type="text" id="billno" value="<%=danhao("DB")%>" size="30" maxlength="50" readonly="readonly" > 
             按回车\TAB键即可输入下一选项</td>
         </tr>		
 		<tr bgcolor='#FFFFFF'>
@@ -200,11 +200,11 @@ function check()
           <td width="10%">单号</td>
           <td width="5%">下单|入库</td>
           <td width="8%">金额</td>
-          <td width="10%">交货日期</td>
+          <td width="8%">交货日期</td>
           <td width="5%">客户</td>
 		  <td width="5%">下单日期</td>
-          <td width="8%">备注</td>
-          <td width="10%">操作</td>
+          <td width="12%">备注</td>
+          <td width="8%">操作</td>
         </tr>	
 <%
  sql=" select a.*,b.数量,b.金额,c.RealName,b.数量1,b.金额1 from billInfo a left join billdetail_sum b on a.billno=b.billno left join Customer c on a.customer_id=c.id where a.is_ok='TRUE' and a.billway='下单' order by a.status,billno desc "
@@ -250,13 +250,13 @@ function check()
 	 elseif rs("status")=3 then 
 	 sctd ztgs("已入库",1)
 	 end if 
-	 sctd rs("billno")
+	 sctd1 rs("billno"),rs("billdate")
 	 sctd rs("数量")&"|"&rs("数量1")
 	 sctd rs("金额")
 	 sctd rs("GDATE")
 	 sctd rs("RealName")
-	 sctd rs("billdate")
-	 sctd rs("billnote")
+	 sctd "-"
+	 sctd1 left(rs("billnote"),15),rs("billnote")
 	 sc "<td>"
 	 sc "<IMG src='../images/view.gif' align='absmiddle'><a href='?action=view&id="&rs("id")&"'>查看</a>"
           if rs("status")= 0 then 

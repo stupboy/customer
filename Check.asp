@@ -1,5 +1,6 @@
 <!--#include file="inc/conn.asp"-->
 <!--#include file="inc/md5.asp"-->
+<!--#include file="lib/lib.all.asp"-->
 <% 
 dim verifycode,verifycode2
 verifycode=Session("pSN")
@@ -30,6 +31,7 @@ rs.open sql,conn,1,3
         session("admin_name")=request("admin_name")
 		session("RealName")=rs("RealName")
 		session("Limit")=rs("LimitText")
+		db_log session("RealName"),sql,"µÇÈëÏµÍ³"
         response.redirect "sys.asp"
 	end if 
 rs.close

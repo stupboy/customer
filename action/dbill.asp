@@ -145,6 +145,7 @@ function check()
  }
 -->
 </script>
+<script type="text/javascript" src="../xlk/suggest.js"></script>
 </head>
 <body>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -159,8 +160,10 @@ function check()
         </tr>
         <tr bgcolor='#F2FDFF'>
           <td align='right' bgcolor="#F2FDFF"> 单号：</td>
-          <td colspan="5" bgcolor="#F2FDFF"><input name="billno" type="text" id="billno" value="<%=danhao("D")%>" size="30" maxlength="50" readonly="readonly" > 
+          <td colspan="4" bgcolor="#F2FDFF"><input name="billno" type="text" id="billno" value="<%=danhao("DD")%>" size="30" maxlength="50" readonly="readonly" > 
             按回车\TAB键即可输入下一选项</td>
+			<td colspan="5" bgcolor="#F2FDFF"><input type="text" name="keyword" id="keyword" onkeyup="keyupdeal(event);" onkeydown="keydowndeal(event);" onclick="keyupdeal(event);"/>&nbsp;&nbsp;
+		<div id="suggest"></div></td>
         </tr>		
 		<tr bgcolor='#FFFFFF'>
 		  <td align='right' bgcolor="#FFFFFF"> 业务员：</td>

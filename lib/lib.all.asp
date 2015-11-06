@@ -21,6 +21,7 @@
 '-16. sctd(x)         [s]输出表格td-
 '-17. ztgs(x,y)       小标签格式输出x为内容y为格式-
 '-18. sctd1(x,y)      [s]输出带标题td-
+'-19. db_log(x,y,z)   记录系统日志x用户y语句z备注-
 '-待增加-
 '-函数明细列表-
 '-输出函数SC -
@@ -233,8 +234,9 @@ if x= 1 then
   zd=trim(mid(zd,2,999))
   nr=trim(mid(nr,2,999))
  sql="insert into "&y&" ("&zd&") values ("&nr&") "
- conn.execute(sql)
  'sc sql
+ conn.execute(sql)
+ 
 elseif x=2 then 
  sql=y
  conn.execute(sql)
@@ -275,6 +277,7 @@ End Sub
 Sub sctd1(x,y)
 response.write "<td title='"&y&"'>"&x&"</td>"
 End Sub
+
 Function look_db(x,y,z,w)
 'mx=split(z,"-")
  mxa=split(z,"|")
@@ -301,6 +304,7 @@ do until rs.EOF
 loop
 rs.close
 end function 
+'-字体颜色格式函数-
 function ztgs(x,y)
 if y=1 then '绿底白字粗体
 ztgs="<span style='color:#FFFFFF;background-color:#009900;'><strong>"&x&"</strong></span>"
@@ -314,6 +318,15 @@ else
 ztgs="<strong>"&x&"</strong>"
 end if 
 end function 
+
+sub db_log(x,y,z)
+set conn=server.CreateObject("adodb.connection")
+ConnStr="server=113.10.138.110;driver={sql server};database=cha;uid=sa;pwd=!@#$%asdfg"
+conn.Open connstr
+y=replace(y,"'","$")
+sql="insert into sys_log (RealName,DOsql,DOnote) values ('"&x&"','"&y&"','"&z&"')"
+conn.execute(sql)
+end sub 
 '-娴嬭瘯鍑芥暟璇彞-
 'sc esql("UserInfo","Username:stupboy|password:123456")
 %>
