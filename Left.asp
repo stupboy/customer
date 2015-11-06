@@ -72,8 +72,10 @@ body {
 	  d.add(211, 21, ' 原料档案', 'action.asp?dz=a006');
 	  d.add(212, 21, ' 商品配比', 'action.asp?dz=a009');
 	  d.add(213, 21, ' 客户档案', 'action.asp?dz=a005');
-	  d.add(20, 2, ' 销售策略', '');
-	  d.add(201, 20, ' 定制销售', 'action.asp?dz=a003');
+	  d.add(20, 2, ' 销售渠道', '');
+	  d.add(201, 20, ' 定制下单', 'action.asp?dz=a020');
+	  d.add(205, 20, ' 销售下单', 'action.asp?dz=a003');
+	  d.add(204, 20, ' 备货下单', 'action.asp?dz=a003');
 	  d.add(202, 20, ' 批发销售', 'action.asp?dz=a013');
 	  d.add(203, 20, ' 零售销售', 'action.asp?dz=a016');
 	  d.add(22, 2, ' 报表查询', '');

@@ -35,6 +35,8 @@ select case dz
   'response.redirect "action/Cai.asp?action=list"
  case "a018"
   response.redirect "action/DateDel.asp"
+ case "a020"
+  response.redirect "action/dbill.asp?action=list"
  '-无其他动作返回错误页面-
  case else
   response.redirect "action/error.asp"
