@@ -22,9 +22,9 @@ elseif Request("wor")="del2" then
   id=request("danno")
 elseif Request("addon")="yes" then '-判断插入数据-
  if Request("rank")="" or Request("rank2")="" or request("Gdate")="" then 
- sc "<script>alert('业务员|客户|交货日期未填写');</script>"
+ sc "<script>alert('业务员|客户|交货日期未填写');</script>"'ztgs("业务员|客户|交货日期未填写",2)
  else 
- sql="insert into billInfo (billno,status,cuser,billway,customer_id,billnote,Gdate,cUSTOMER_ID1) values ('"&Request("billno")&"',0,'"&session("RealName")&"','定制','"&Request("rank")&"','"&request("comment")&"','"&request("Gdate")&"','"&Request("rank2")&"')"
+ sql="insert into billInfo (billno,status,cuser,billway,customer_id,billnote,Gdate,cUSTOMER_ID1) values ('"&Request("billno")&"',0,'"&session("RealName")&"','下单','"&Request("rank")&"','"&request("comment")&"','"&request("Gdate")&"','"&Request("rank2")&"')"
  conn.execute(sql)
  end if 
 end if
@@ -153,9 +153,9 @@ function check()
 <!--增加订单 及 订单列表-->
 <%if action="list" then%>
         <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
-        <form name="add" method="post" action="dbill.asp">
+        <form name="add" method="post" action="sbill.asp">
         <tr align="center" bgcolor="#F2FDFF">
-          <td colspan="6"  class="optiontitle"> 【定制】生产下单 </td>
+          <td colspan="6"  class="optiontitle"> 【销售】生产下单 </td>
         </tr>
         <tr bgcolor='#F2FDFF'>
           <td align='right' bgcolor="#F2FDFF"> 单号：</td>
@@ -185,7 +185,7 @@ function check()
 		  </td>
 		</tr>
 		<tr bgcolor='#FFFFFF'>
-		  <td align='right' bgcolor="#FFFFFF"> 定制客户：</td>
+		  <td align='right' bgcolor="#FFFFFF"> 销售客户：</td>
 		  <td colspan="5" >
 <%
  sql="select * from Customer where is_ok='true' and customerType>1 order by CustomerType "
@@ -240,7 +240,7 @@ function check()
           <td width="8%">操作</td>
         </tr>	
 <%
- sql=" select a.*,b.数量,b.金额,c.RealName,b.数量1,b.金额1,d.RealName RealName1 from billInfo a left join billdetail_sum b on a.billno=b.billno left join Customer c on a.customer_id=c.id left join customer d on a.customer_id1=d.id where a.is_ok='TRUE' and a.billway='定制' order by a.status,billno desc "
+ sql=" select a.*,b.数量,b.金额,c.RealName,b.数量1,b.金额1,d.RealName RealName1 from billInfo a left join billdetail_sum b on a.billno=b.billno left join Customer c on a.customer_id=c.id left join customer d on a.customer_id1=d.id where a.is_ok='TRUE' and a.billway='下单' and a.customer_id1 is not null order by a.status,billno desc "
  set rs=server.createobject("adodb.recordset") 
  rs.open sql,conn,1,1
  if not rs.eof then
@@ -408,7 +408,7 @@ if not rs.eof Then
 
 '-表头-
 sc "<table width='96%'  border='0' align='center' cellpadding='4' cellspacing='1' bgcolor='#aec3de'>"
-sc "<form action='dbill.asp?action=view&id="&id&"' method='POST' name='billd' id='billd'>"
+sc "<form action='sbill.asp?action=view&id="&id&"' method='POST' name='billd' id='billd'>"
 sc "<tr align='center' bgcolor='#F2FDFF'>"
 sc "<td colspan=4  class='optiontitle'> 单号："&rs("billno")&" <input type='hidden' id='viewaction' name='viewaction' value='yes'> "
 sc "<input type='hidden' id='danno' name='danno' value='"&rs("billno")&"'></td>"

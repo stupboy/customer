@@ -74,7 +74,7 @@ body {
 	  d.add(213, 21, ' 客户档案', 'action.asp?dz=a005');
 	  d.add(20, 2, ' 销售渠道', '');
 	  d.add(201, 20, ' 定制下单', 'action.asp?dz=a020');
-	  d.add(205, 20, ' 销售下单', 'action.asp?dz=a003');
+	  d.add(205, 20, ' 销售下单', 'action.asp?dz=a021');
 	  d.add(204, 20, ' 备货下单', 'action.asp?dz=a003');
 	  d.add(202, 20, ' 批发销售', 'action.asp?dz=a013');
 	  d.add(203, 20, ' 零售销售', 'action.asp?dz=a016');
