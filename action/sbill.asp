@@ -20,9 +20,13 @@ elseif Request("wor")="del2" then
   conn.execute(sql)
  next 
   id=request("danno")
-elseif Request("addon")="yes" then 
- sql="insert into billInfo (billno,status,cuser,billway,customer_id,billnote,Gdate) values ('"&Request("billno")&"',0,'"&session("RealName")&"','下单','"&Request("rank")&"','"&request("comment")&"','"&request("Gdate")&"')"
+elseif Request("addon")="yes" then '-判断插入数据-
+ if Request("rank")="" or Request("rank2")="" or request("Gdate")="" then 
+ sc "<script>alert('业务员|客户|交货日期未填写');</script>"'ztgs("业务员|客户|交货日期未填写",2)
+ else 
+ sql="insert into billInfo (billno,status,cuser,billway,customer_id,billnote,Gdate,cUSTOMER_ID1) values ('"&Request("billno")&"',0,'"&session("RealName")&"','下单','"&Request("rank")&"','"&request("comment")&"','"&request("Gdate")&"','"&Request("rank2")&"')"
  conn.execute(sql)
+ end if 
 end if
 if Request("tj")="yes" then 
 sql="update BillInfo set status=1 where id="&Request("id")
@@ -107,6 +111,13 @@ function check()
       document.add.address.select()
       return
      }
+  if (document.add.rank.value=="请选择")
+     {
+      alert("请填写商品类别！")
+      document.add.address.focus()
+      document.add.address.select()
+      return
+     }
 	 
   if (document.add.pcode.value=="")
      {
@@ -142,9 +153,9 @@ function check()
 <!--增加订单 及 订单列表-->
 <%if action="list" then%>
         <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
-        <form name="add" method="post" action="bill.asp">
+        <form name="add" method="post" action="sbill.asp">
         <tr align="center" bgcolor="#F2FDFF">
-          <td colspan="6"  class="optiontitle"> 添加客户信息 </td>
+          <td colspan="6"  class="optiontitle"> 【销售】生产下单 </td>
         </tr>
         <tr bgcolor='#F2FDFF'>
           <td align='right' bgcolor="#F2FDFF"> 单号：</td>
@@ -152,18 +163,40 @@ function check()
             按回车\TAB键即可输入下一选项</td>
         </tr>		
 		<tr bgcolor='#FFFFFF'>
-		  <td align='right' bgcolor="#FFFFFF"> 客户：</td>
+		  <td align='right' bgcolor="#FFFFFF"> 业务员：</td>
 		  <td colspan="5" >
 <%
- sql="select * from Customer where is_ok='true' order by CustomerType "
+ sql="select * from Customer where is_ok='true' and customerType=1 order by CustomerType "
  set rs_kehu=conn.execute(sql)
 %>
- <select name="rank" id="rank" selfvalue="客户级别">
+ <select name="rank" id="rank" selfvalue="客户级别"  style="width:200px">
  <option value="">请选择</option>
 <%
  do while rs_kehu.eof=false
 %>
  <option value="<%=rs_kehu("ID")%>"><%=rs_kehu("RealName")%>,客户类型：<%=rs_kehu("CustomerType")%>类.</option>
+<%
+ rs_kehu.movenext
+ loop
+ rs_kehu.close
+ set rs_kehu=nothing 
+%>
+ </select>
+		  </td>
+		</tr>
+		<tr bgcolor='#FFFFFF'>
+		  <td align='right' bgcolor="#FFFFFF"> 销售客户：</td>
+		  <td colspan="5" >
+<%
+ sql="select * from Customer where is_ok='true' and customerType>1 order by CustomerType "
+ set rs_kehu=conn.execute(sql)
+%>
+ <select name="rank2" id="rank2" selfvalue="客户级别"  style="width:200px">
+ <option value="">请选择</option>
+<%
+ do while rs_kehu.eof=false
+%>
+ <option value="<%=rs_kehu("ID")%>" ><%=rs_kehu("RealName")%>,客户类型：<%=rs_kehu("CustomerType")%>类.</option>
 <%
  rs_kehu.movenext
  loop
@@ -193,21 +226,21 @@ function check()
 <br>
   <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
         <tr align="center" bgcolor="#F2FDFF">
-          <td colspan="9"  class="optiontitle">商品信息</td>
+          <td colspan="9"  class="optiontitle">单据信息</td>
         </tr>
         <tr align="center" bgcolor="#ebf0f7">
 		  <td width="5%">选中</td>
           <td width="10%">单号</td>
           <td width="5%">下单|入库</td>
-          <td width="8%">金额</td>
-          <td width="10%">交货日期</td>
-          <td width="5%">客户</td>
-		  <td width="5%">下单日期</td>
-          <td width="8%">备注</td>
-          <td width="10%">操作</td>
+          <td width="5%">金额</td>
+          <td width="8%">交货日期</td>
+          <td width="5%">业务员</td>
+		  <td width="5%">定制客户</td>
+          <td width="15%">备注</td>
+          <td width="8%">操作</td>
         </tr>	
 <%
- sql=" select a.*,b.数量,b.金额,c.RealName,b.数量1,b.金额1 from billInfo a left join billdetail_sum b on a.billno=b.billno left join Customer c on a.customer_id=c.id where a.is_ok='TRUE' and a.billway='下单' order by a.status,billno desc "
+ sql=" select a.*,b.数量,b.金额,c.RealName,b.数量1,b.金额1,d.RealName RealName1 from billInfo a left join billdetail_sum b on a.billno=b.billno left join Customer c on a.customer_id=c.id left join customer d on a.customer_id1=d.id where a.is_ok='TRUE' and a.billway='下单' and a.customer_id1 is not null order by a.status,billno desc "
  set rs=server.createobject("adodb.recordset") 
  rs.open sql,conn,1,1
  if not rs.eof then
@@ -250,13 +283,13 @@ function check()
 	 elseif rs("status")=3 then 
 	 sctd ztgs("已入库",1)
 	 end if 
-	 sctd rs("billno")
+	 sctd1 rs("billno"),rs("billdate")
 	 sctd rs("数量")&"|"&rs("数量1")
 	 sctd rs("金额")
 	 sctd rs("GDATE")
 	 sctd rs("RealName")
-	 sctd rs("billdate")
-	 sctd rs("billnote")
+	 sctd rs("RealName1")
+	 sctd1 left(rs("billnote"),20),rs("billnote")
 	 sc "<td>"
 	 sc "<IMG src='../images/view.gif' align='absmiddle'><a href='?action=view&id="&rs("id")&"'>查看</a>"
           if rs("status")= 0 then 
@@ -367,41 +400,49 @@ if viewaction="yes" then
  sc "该商品不存在！"
  end if 
 end if 
+
 set rs=server.createobject("adodb.recordset") 
-'sql="select * from billInfo where id="&Request("id")
 sql="select * from billInfo where id="&id
 rs.open sql,conn,1,1
 if not rs.eof Then
-%>
-	  <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
-	    <form action="bill.asp?action=view&id=<%=id%>" method="POST" name="billd" id="billd">
-		<tr align="center" bgcolor="#F2FDFF">
-		  <td colspan=4  class="optiontitle"> 单号：<%=rs("billno")%> <input type="hidden" id="viewaction" name="viewaction" value="yes"> 
-		  <input type="hidden" id="danno" name="danno" value="<%=rs("billno")%>"></td>
-		</tr>
-	    <tr bgcolor='#EBF0F7' align='center'>
-		  <td>选中</td>
-		  <td>商品</td>
-		  <td>数量</td>
-		  <td>操作</td>
-		</tr>
-<%
-   sql2="select * from billdetail where billno='"&rs("billno")&"'  "
-   set rs2=server.createobject("adodb.recordset") 
-   rs2.open sql2,conn,1,1
-   if not rs.eof then
-	 For i = 0 to rs2.recordcount
-	 if rs2.eof then     
-	 Exit For 
-	 end if
-%>
-	    <tr bgcolor='#FFFFFF' align='center'>
-		  <td><input type="checkbox" name="id" value="<%=rs2("id")%>"></td>
-		  <td><%=rs2("goodsid")%></td>
-		  <td><%=rs2("billqyt")%>|<%=rs2("ProductQty")%></td>
-		  <td><% if rs("status")= 0 then %><IMG src="../images/drop.gif" align="absmiddle"><a href="javascript:DoEmpty('?wor=del2&id=<%=rs2("id")%>&danno=<%=id%>&action=view')">删除</a><% end if %></td>
-		</tr>
-<%
+
+'-表头-
+sc "<table width='96%'  border='0' align='center' cellpadding='4' cellspacing='1' bgcolor='#aec3de'>"
+sc "<form action='sbill.asp?action=view&id="&id&"' method='POST' name='billd' id='billd'>"
+sc "<tr align='center' bgcolor='#F2FDFF'>"
+sc "<td colspan=4  class='optiontitle'> 单号："&rs("billno")&" <input type='hidden' id='viewaction' name='viewaction' value='yes'> "
+sc "<input type='hidden' id='danno' name='danno' value='"&rs("billno")&"'></td>"
+sc "</tr>"
+sc "<tr bgcolor='#EBF0F7' align='center'>"
+sc "<td>选中</td>"
+sc "<td>商品</td>"
+sc "<td>数量</td>"
+sc "<td>操作</td>"
+sc "</tr>"
+
+sql2="select * from billdetail where billno='"&rs("billno")&"'  "
+set rs2=server.createobject("adodb.recordset") 
+rs2.open sql2,conn,1,1
+if not rs.eof then
+ For i = 0 to rs2.recordcount
+  if rs2.eof then     
+  Exit For 
+  end if
+
+sc "<tr bgcolor='#FFFFFF' align='center'>"
+sc "<td><input type='checkbox' name='id' value='"&rs2("id")&"'></td>"
+sctd rs2("goodsid")
+sctd rs2("billqyt")&"|"&rs2("ProductQty")
+sc "<td>" 		  
+if rs("status")= 0 then 
+sc "<IMG src='../images/drop.gif' align='absmiddle'><a href='javascript:DoEmpty(""?wor=del2&id="&rs2("id")&"&danno="&id&"&action=view"")'>删除</a>"
+elseif rs("status")= 2 then
+'-预留查看明细里有收货按钮- 
+'sc "<IMG src='../images/edit.gif' align='absmiddle'><a href='?action=list&tj=shou&id="&rs("id")&"'>收货</a>"
+end if
+sc "</td>"
+sc "</tr>"
+  
    rs2.movenext 
    next
    rs2.close

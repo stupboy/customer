@@ -11,7 +11,7 @@ td   {font-size:12px;color:#000;font-family: Helvetica, sans-serif, "ËÎÌו";}
 <body>
 <table width="100%" height="30" border="0" cellpadding="0" cellspacing="0">
   <tr>
-    <td align="center" background="images/bottom_bg.gif"> Copyright &copy; All Rights Reserved.</td>
+    <td align="center" background="images/bottom_bg.gif"> Copyright CT_AG &copy; All Rights Reserved.</td>
   </tr>
 </table>
 </body>

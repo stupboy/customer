@@ -20,6 +20,7 @@
 '-15. aspTips(x)      [s]弹窗警告 -
 '-16. sctd(x)         [s]输出表格td-
 '-17. ztgs(x,y)       小标签格式输出x为内容y为格式-
+'-18. sctd1(x,y)      [s]输出带标题td-
 '-待增加-
 '-函数明细列表-
 '-输出函数SC -
@@ -270,6 +271,9 @@ response.write "<script>alert("&x&");</script>"
 end sub 
 Sub sctd(x)
 response.write "<td>"&x&"</td>"
+End Sub
+Sub sctd1(x,y)
+response.write "<td title='"&y&"'>"&x&"</td>"
 End Sub
 Function look_db(x,y,z,w)
 'mx=split(z,"-")
