@@ -78,3 +78,10 @@ select {
 textarea {
 	BACKGROUND-COLOR: ffffff;BORDER: #CCE6FF 1px solid;  FONT-SIZE: 12px;  font-family:Verdana, Arial, Helvetica, sans-serif, "宋体";
 }
+
+.TIPSIN {
+	border-top-color: transparent;
+	border-right-color: transparent;
+	border-bottom-color: transparent;
+	border-left-color: transparent;
+}

@@ -1,3 +1,4 @@
+<!--#include file="s$s.asp"--> 
 <%
 'session.timeout=6000-
 'Server.ScriptTimeOut=2000-
@@ -12,7 +13,7 @@
 '-LIB函数文件中也有-
 set conn=server.CreateObject("adodb.connection")
 '“.”为服务器地址、ST为连接数据库名称、sa为数据库用户名、PWD为数据库密码-
-ConnStr="server=113.10.138.110;driver={sql server};database=cha;uid=sa;pwd=!@#$%asdfg"
+ConnStr="server="&DBIP&";driver={sql server};database="&DBBASE&";uid="&DBUSER&";pwd="&DBPASSWORD
 conn.Open connstr
 '如果连接出错则报错-
 If Err Then

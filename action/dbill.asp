@@ -1,6 +1,7 @@
 <!--#include file="../inc/right.asp"--> 
 <!--#include file="../inc/conn.asp"-->
 <!--#include file="../lib/lib.all.asp"-->
+<script type="text/javascript" src="../inc/jquery-1.11.3.min.js"></script>
 <script language="javascript" type="text/javascript" src="../date/WdatePicker.js"></script>
 <%
 id=Request("id")
@@ -145,7 +146,47 @@ function check()
  }
 -->
 </script>
-<script type="text/javascript" src="../xlk/suggest.js"></script>
+<script type="text/javascript">
+function showHint(str)
+{
+var xmlhttp;
+if (str.length==0)
+  { 
+  document.getElementById("txtHint").innerHTML="";
+  return;
+  }
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+    document.getElementById("txtHint").innerHTML=xmlhttp.responseText;
+    }
+  }
+  //ajax中文乱码解决
+str=encodeURIComponent(str);
+xmlhttp.open("GET","count.asp?q="+str,true);
+//xmlhttp.send("act="+encodeURIComponent(escape(post)));
+xmlhttp.send();
+}
+function GetSpan(x)
+{
+ var tt=document.getElementById(x);
+ var ss=document.getElementById("dname");
+ var vv=document.getElementById("billd");
+ //alert(tt.innerHTML);
+ ss.value=tt.innerHTML;
+ ss.focus();
+ vv.submit();
+}
+</script>
 </head>
 <body>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -162,8 +203,7 @@ function check()
           <td align='right' bgcolor="#F2FDFF"> 单号：</td>
           <td colspan="4" bgcolor="#F2FDFF"><input name="billno" type="text" id="billno" value="<%=danhao("DD")%>" size="30" maxlength="50" readonly="readonly" > 
             按回车\TAB键即可输入下一选项</td>
-			<td colspan="5" bgcolor="#F2FDFF"><input type="text" name="keyword" id="keyword" onkeyup="keyupdeal(event);" onkeydown="keydowndeal(event);" onclick="keyupdeal(event);"/>&nbsp;&nbsp;
-		<div id="suggest"></div></td>
+			<td colspan="5" bgcolor="#F2FDFF"></td>
         </tr>		
 		<tr bgcolor='#FFFFFF'>
 		  <td align='right' bgcolor="#FFFFFF"> 业务员：</td>
@@ -215,7 +255,7 @@ function check()
         </tr>
 		<tr bgcolor='#FFFFFF'>
 		  <td align='right' bgcolor="#FFFFFF"> 备注：</td>
-		  <td colspan="5"><textarea name="comment" cols="60" rows="5" id="comment" onKeyDown="next()"></textarea></td>
+		  <td colspan="5"><textarea name="comment" cols="60" rows="5" id="comment" onKeyDown="next()" ></textarea></td>
 		</tr>
         <tr align="center" bgcolor="#ebf0f7">
           <td colspan="6" >
@@ -400,7 +440,7 @@ if viewaction="yes" then
   'sc sql
   end if 
  else
- sc "该商品不存在！"
+ ERRtxt="该商品不存在！"
  end if 
 end if 
 
@@ -415,6 +455,13 @@ sc "<form action='dbill.asp?action=view&id="&id&"' method='POST' name='billd' id
 sc "<tr align='center' bgcolor='#F2FDFF'>"
 sc "<td colspan=4  class='optiontitle'> 单号："&rs("billno")&" <input type='hidden' id='viewaction' name='viewaction' value='yes'> "
 sc "<input type='hidden' id='danno' name='danno' value='"&rs("billno")&"'></td>"
+sc "</tr>"
+sc "<tr align='center' bgcolor='#F2FDFF'>"
+sc "<td colspan=6 align='left'>"
+sc "<br>订单备注："&rs("BillNote")&"</td>"
+sc "</tr>"
+sc "<tr align='center' bgcolor='#F2FDFF'>"
+sc "<td colspan=6 align='left'> 交货日期："&rs("Gdate")&"</td>"
 sc "</tr>"
 sc "<tr bgcolor='#EBF0F7' align='center'>"
 sc "<td>选中</td>"
@@ -453,28 +500,26 @@ sc "</tr>"
    end if
    if rs("status")= 0 then 
 %>
+		<tr align="center" bgcolor="#FFFFFF">
+		  <td colspan=6 ><%=ztgs("输入提示：",1)%><span id="txtHint"><%=ztgs(ERRtxt,2)%></span></td>
+		</tr>
 	    <tr bgcolor='#FFFFFF' align='center'>
 		  <td >输入商品：</td>
-		  <td>数量:<input id="dqyt" name="dqyt" size="4" value="1"></td>
-		  <td ><input id="dname" name="dname" style="width:100%" /></td>
-		  <td><input type="Submit" name="Submit3" value="提交" ></td>
+		  <td >数量:<input id="dqyt" name="dqyt" size="4" value="10"></td>
+		  <td align="left"><input id="dname" name="dname" style="width:40%" onkeyup="showHint(this.value)" /></td>
+		  <td ><input type="Submit" name="Submit3" value="提交" ></td>
 		</tr>
 <%
 end if 
 %>
-		<tr align="center" bgcolor="#F2FDFF">
-		  <td colspan=6 > 订单备注：<%=rs("BillNote")%></td>
-		</tr>
-		<tr align="center" bgcolor="#F2FDFF">
-		  <td colspan=6 > 交货日期：<%=rs("Gdate")%></td>
-		</tr>
 		<tr align="center" bgcolor="#ebf0f7">
-		  <td colspan="4"><a href='?action=list'><u><strong><em>返回</em></strong></u></a>
-          <!--<input type="button" name="Submit2" value="返回" onClick="history.back(-1)">--></td>
+		  <td colspan="4"><a href='?action=list'><u><strong><em>返回</em></strong></u></a></td>
 		</tr>
 		</form>
   	</table>
 <%
+sc "<script>var ss=document.getElementById('dname');ss.focus();</script>"
+ERRtxt=""
 end if
 end if
 %>
