@@ -505,7 +505,7 @@ sc "</tr>"
 		</tr>
 	    <tr bgcolor='#FFFFFF' align='center'>
 		  <td >输入商品：</td>
-		  <td >数量:<input id="dqyt" name="dqyt" size="4" value="10"></td>
+		  <td >数量:<input type="number" id="dqyt" name="dqyt" size="4" value="10"></td>
 		  <td align="left"><input id="dname" name="dname" style="width:40%" onkeyup="showHint(this.value)" /></td>
 		  <td ><input type="Submit" name="Submit3" value="提交" ></td>
 		</tr>
