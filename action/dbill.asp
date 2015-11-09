@@ -247,8 +247,8 @@ function GetSpan(x)
  set rs_kehu=nothing 
 %>
  </select>
-		  </td>
-		</tr>
+</td>
+</tr>
 		<tr bgcolor='#FFFFFF'>
           <td align='right' bgcolor="#FFFFFF"> 交货日期：</td>
           <td colspan="5" bgcolor="#FFFFFF"><input name="Gdate" type="text" id="Gdate" value="" onClick="WdatePicker()"></td>
@@ -276,11 +276,11 @@ function GetSpan(x)
           <td width="10%">单号</td>
           <td width="5%">下单|入库</td>
           <td width="5%">金额</td>
-          <td width="8%">交货日期</td>
+          <td width="6%">交货日期</td>
           <td width="5%">业务员</td>
 		  <td width="5%">定制客户</td>
           <td width="15%">备注</td>
-          <td width="8%">操作</td>
+          <td width="10%">操作</td>
         </tr>	
 <%
  sql=" select a.*,b.数量,b.金额,c.RealName,b.数量1,b.金额1,d.RealName RealName1 from billInfo a left join billdetail_sum b on a.billno=b.billno left join Customer c on a.customer_id=c.id left join customer d on a.customer_id1=d.id where a.is_ok='TRUE' and a.billway='定制' order by a.status,billno desc "
