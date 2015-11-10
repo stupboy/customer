@@ -393,6 +393,9 @@ if not rs.eof Then
 		  <td colspan=4  class="optiontitle"> 单号：<%=rs("billno")%> <input type="hidden" id="viewaction" name="viewaction" value="yes"> 
 		  <input type="hidden" id="danno" name="danno" value="<%=rs("billno")%>"></td>
 		</tr>
+				<tr align="center" bgcolor="#F2FDFF">
+		  <td colspan=6 align='left'> 订单备注：<%=rs("BillNote")%><br>配送方式：<%=rs("PostWay")%></td>
+		</tr>
 	    <tr bgcolor='#EBF0F7' align='center'>
 		  <td>选中</td>
 		  <td>商品</td>
@@ -435,9 +438,6 @@ if not rs.eof Then
 end if 
 end if 
 %>
-		<tr align="center" bgcolor="#F2FDFF">
-		  <td colspan=6 > 订单备注：<%=rs("BillNote")%></td>
-		</tr>
 		<tr align="center" bgcolor="#ebf0f7">
 		  <td colspan="4"><a href='?action=list'><u><strong><em>返回</em></strong></u></a></td>
 		</tr>

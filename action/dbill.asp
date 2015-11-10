@@ -25,16 +25,29 @@ elseif Request("addon")="yes" then '-判断插入数据-
  if Request("rank")="" or Request("rank2")="" or request("Gdate")="" then 
  sc "<script>alert('业务员|客户|交货日期未填写');</script>"
  else 
- sql="insert into billInfo (billno,status,cuser,billway,customer_id,billnote,Gdate,cUSTOMER_ID1) values ('"&Request("billno")&"',0,'"&session("RealName")&"','定制','"&Request("rank")&"','"&request("comment")&"','"&request("Gdate")&"','"&Request("rank2")&"')"
+ sql="insert into billInfo (billno,status,cuser,billway,customer_id,billnote,Gdate,cUSTOMER_ID1,PostWay) values ('"&Request("billno")&"',0,'"&session("RealName")&"','定制','"&Request("rank")&"','"&request("comment")&"','"&request("Gdate")&"','"&Request("rank2")&"','"&Request("rank3")&"')"
  conn.execute(sql)
  end if 
 end if
+'明细试图SQL语句切换条件
+ViewS=0
+
 if Request("tj")="yes" then 
 sql="update BillInfo set status=1 where id="&Request("id")
 conn.execute(sql)
 elseif Request("tj")="shou" then 
 sql="update BillInfo set status=3 where id="&Request("id")
 conn.execute(sql)
+elseif Request("tj")="viewtj" then 
+sql="update BillInfo set status=1 where billno='"&Request("billno")&"'"
+conn.execute(sql)
+ViewS=1
+id=Request("billno")
+elseif Request("tj")="viewsh" then 
+sql="update BillInfo set status=3 where billno='"&Request("billno")&"'"
+conn.execute(sql)
+ViewS=1
+id=Request("billno")
 end if 
 '-添加和修改记录 id为空则为添加 否则为修改-
 '-获取传递变量-
@@ -249,6 +262,17 @@ function GetSpan(x)
  </select>
 </td>
 </tr>
+<tr bgcolor='#FFFFFF'>
+<td align='right' bgcolor="#FFFFFF"> 配送方式：</td>
+<td colspan="5" >
+ <select name="rank3" id="rank3" selfvalue="客户级别"  style="width:200px">
+ <option value="">请选择</option>
+ <option value="快递" >1.快递</option>
+ <option value="物流" >2.物流</option>
+ <option value="自取" >3.自取</option>
+ </select>
+</td>
+</tr>
 		<tr bgcolor='#FFFFFF'>
           <td align='right' bgcolor="#FFFFFF"> 交货日期：</td>
           <td colspan="5" bgcolor="#FFFFFF"><input name="Gdate" type="text" id="Gdate" value="" onClick="WdatePicker()"></td>
@@ -318,7 +342,7 @@ function GetSpan(x)
 	 elseif rs("status")=1 and rs("数量1")=rs("数量") then 
 	 sctd ztgs("生产完",4)
 	 elseif rs("status")=1 and rs("数量1")>0 then 
-	 sctd ztgs("生产中",4)
+	 sctd ztgs("生产中:"&(rs("数量1")*100/rs("数量"))&"%",4)
 	 elseif rs("status")=1 and rs("数量1")=0 then 
 	 sctd ztgs("已提交",4)
 	 elseif rs("status")=2 then 
@@ -336,13 +360,12 @@ function GetSpan(x)
 	 sc "<td>"
 	 sc "<IMG src='../images/view.gif' align='absmiddle'><a href='?action=view&id="&rs("id")&"'>查看</a>"
           if rs("status")= 0 then 
-		  sc "| <IMG src='../images/edit.gif' align='absmiddle'><a href='?action=list&tj=yes&id="&rs("id")&"'>提交</a>"&_
-		  " | <IMG src='../images/drop.gif' align='absmiddle'>"&_
+		  sc "| <IMG src='../images/drop.gif' align='absmiddle'>"&_
 		  "<a href=""javascript:DoEmpty('?wor=del&id="&rs("id")&"&action=list&ToPage="&intCurPage&"')"">删除</a>"
           elseif rs("status")=1 then 
 		  sc "| 已提交"
 		  elseif rs("status")=2 then 
-		  sc "| <IMG src='../images/edit.gif' align='absmiddle'><a href='?action=list&tj=shou&id="&rs("id")&"'>收货</a>"
+		  'sc "| <IMG src='../images/edit.gif' align='absmiddle'><a href='?action=list&tj=shou&id="&rs("id")&"'>收货</a>"
 		  elseif rs("status")=3 then 
 		  sc "|"&ztgs("已入库",1)
 		  end if
@@ -445,7 +468,11 @@ if viewaction="yes" then
 end if 
 
 set rs=server.createobject("adodb.recordset") 
+if ViewS=0 then 
 sql="select * from billInfo where id="&id
+else 
+sql="select * from billInfo where billno='"&id&"'"
+end if 
 rs.open sql,conn,1,1
 if not rs.eof Then
 
@@ -454,11 +481,17 @@ sc "<table width='96%'  border='0' align='center' cellpadding='4' cellspacing='1
 sc "<form action='dbill.asp?action=view&id="&id&"' method='POST' name='billd' id='billd'>"
 sc "<tr align='center' bgcolor='#F2FDFF'>"
 sc "<td colspan=4  class='optiontitle'> 单号："&rs("billno")&" <input type='hidden' id='viewaction' name='viewaction' value='yes'> "
-sc "<input type='hidden' id='danno' name='danno' value='"&rs("billno")&"'></td>"
+sc "<input type='hidden' id='danno' name='danno' value='"&rs("billno")&"'>"
+sc "</td>"
 sc "</tr>"
 sc "<tr align='center' bgcolor='#F2FDFF'>"
 sc "<td colspan=6 align='left'>"
-sc "<br>订单备注："&rs("BillNote")&"</td>"
+if rs("status")= 2 then 
+sc "<IMG src='../images/edit.gif' align='absmiddle'><a href='?action=view&tj=viewsh&billno="&rs("billno")&"'>收货</a>"
+elseif rs("status")= 0 then  
+sc "<IMG src='../images/edit.gif' align='absmiddle'><a href='?action=view&tj=viewtj&billno="&rs("billno")&"'>提交</a>"
+end if 
+sc "<br>订单备注："&rs("BillNote")&";<br>配送方式:"&rs("PostWay")&"</td>"
 sc "</tr>"
 sc "<tr align='center' bgcolor='#F2FDFF'>"
 sc "<td colspan=6 align='left'> 交货日期："&rs("Gdate")&"</td>"
