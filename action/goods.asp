@@ -171,7 +171,7 @@ function check()
 		  <td><input name="T2" type="text" id="T2" onKeyDown="next()" value="0"/></td>
 		  <td align='right'>代销价格3：</td>
 		  <td><input name="T3" type="text" id="T3" onKeyDown="next()" value="0"/></td>
-		</tr>
+		</tr><!--
 		<tr bgcolor='#FFFFFF'>
 		  <td align='right' bgcolor="#FFFFFF"> 代销价格4：</td>
 		  <td><input name="T4" type="text" id="T4" onKeyDown="next()" value="0"/></td>
@@ -179,7 +179,7 @@ function check()
 		  <td><input name="T5" type="text" id="T5" onKeyDown="next()" value="0"/></td>
 		  <td align='right'>代销价格6：</td>
 		  <td><input name="T6" type="text" id="T6" onKeyDown="next()" value="0"/></td>
-		</tr>
+		</tr>-->
         <tr align="center" bgcolor="#ebf0f7">
           <td colspan="6" >
 		     <INPUT TYPE="hidden" name="action" value="yes">
