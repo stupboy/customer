@@ -22,7 +22,7 @@ setInterval("document.getElementById('time').innerHTML=new Date().toLocaleString
 </script></span></td>
   </tr>
   <tr style="background-image:url(images/top_bg.gif); height:16px">    
-    <td width="40%" style="color:#000000;">欢迎您<b><%=session("RealName")%></b>! 您现在登录的是<%=sysConfig%>! </td>
+    <td width="40%" style="color:#000000;">欢迎您<b><%=session("RealName")&session("Limit")%></b>! 您现在登录的是<%=sysConfig%>! </td>
     <td width="60%" align="right" style="color:#000000;"><a href="logout.asp" target="_parent">退出系统</a></td>
   </tr>
 </table>
