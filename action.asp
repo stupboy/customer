@@ -40,6 +40,10 @@ select case dz
  case "a021"
   response.redirect "action/sbill.asp?action=list"
  '-无其他动作返回错误页面-
+ case "a022"
+  response.redirect "action/supply.asp?action=list"
+ case "a023"
+  response.redirect "action/supply_yuan.asp?action=list"
  case else
   response.redirect "action/error.asp"
 end select 

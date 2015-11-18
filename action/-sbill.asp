@@ -1,7 +1,6 @@
 <!--#include file="../inc/right.asp"--> 
 <!--#include file="../inc/conn.asp"-->
 <!--#include file="../lib/lib.all.asp"-->
-<script type="text/javascript" src="../inc/jquery-1.11.3.min.js"></script>
 <script language="javascript" type="text/javascript" src="../date/WdatePicker.js"></script>
 <%
 id=Request("id")
@@ -23,31 +22,18 @@ elseif Request("wor")="del2" then
   id=request("danno")
 elseif Request("addon")="yes" then '-判断插入数据-
  if Request("rank")="" or Request("rank2")="" or request("Gdate")="" then 
- sc "<script>alert('业务员|客户|交货日期未填写');</script>"
+ sc "<script>alert('业务员|客户|交货日期未填写');</script>"'ztgs("业务员|客户|交货日期未填写",2)
  else 
- sql="insert into billInfo (billno,status,cuser,billway,customer_id,billnote,Gdate,cUSTOMER_ID1,PostWay) values ('"&Request("billno")&"',0,'"&session("RealName")&"','批发','"&Request("rank")&"','"&request("comment")&"','"&request("Gdate")&"','"&Request("rank2")&"','"&Request("rank3")&"')"
+ sql="insert into billInfo (billno,status,cuser,billway,customer_id,billnote,Gdate,cUSTOMER_ID1) values ('"&Request("billno")&"',0,'"&session("RealName")&"','批发','"&Request("rank")&"','"&request("comment")&"','"&request("Gdate")&"','"&Request("rank2")&"')"
  conn.execute(sql)
  end if 
 end if
-'明细试图SQL语句切换条件
-ViewS=0
-
 if Request("tj")="yes" then 
 sql="update BillInfo set status=1 where id="&Request("id")
 conn.execute(sql)
 elseif Request("tj")="shou" then 
 sql="update BillInfo set status=3 where id="&Request("id")
 conn.execute(sql)
-elseif Request("tj")="viewtj" then 
-sql="update BillInfo set status=1 where billno='"&Request("billno")&"'"
-conn.execute(sql)
-ViewS=1
-id=Request("billno")
-elseif Request("tj")="viewsh" then 
-sql="update BillInfo set status=3 where billno='"&Request("billno")&"'"
-conn.execute(sql)
-ViewS=1
-id=Request("billno")
 end if 
 '-添加和修改记录 id为空则为添加 否则为修改-
 '-获取传递变量-
@@ -159,47 +145,6 @@ function check()
  }
 -->
 </script>
-<script type="text/javascript">
-function showHint(str)
-{
-var xmlhttp;
-if (str.length==0)
-  { 
-  document.getElementById("txtHint").innerHTML="";
-  return;
-  }
-if (window.XMLHttpRequest)
-  {// code for IE7+, Firefox, Chrome, Opera, Safari
-  xmlhttp=new XMLHttpRequest();
-  }
-else
-  {// code for IE6, IE5
-  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
-  }
-xmlhttp.onreadystatechange=function()
-  {
-  if (xmlhttp.readyState==4 && xmlhttp.status==200)
-    {
-    document.getElementById("txtHint").innerHTML=xmlhttp.responseText;
-    }
-  }
-  //ajax中文乱码解决
-str=encodeURIComponent(str);
-xmlhttp.open("GET","count.asp?q="+str,true);
-//xmlhttp.send("act="+encodeURIComponent(escape(post)));
-xmlhttp.send();
-}
-function GetSpan(x)
-{
- var tt=document.getElementById(x);
- var ss=document.getElementById("dname");
- var vv=document.getElementById("billd");
- //alert(tt.innerHTML);
- ss.value=tt.innerHTML;
- ss.focus();
- vv.submit();
-}
-</script>
 </head>
 <body>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -210,13 +155,12 @@ function GetSpan(x)
         <table width="96%"  border="0" align="center" cellpadding="4" cellspacing="1" bgcolor="#aec3de">
         <form name="add" method="post" action="sbill.asp">
         <tr align="center" bgcolor="#F2FDFF">
-          <td colspan="6"  class="optiontitle"> 【定制】生产下单 </td>
+          <td colspan="6"  class="optiontitle"> 【销售】生产下单 </td>
         </tr>
         <tr bgcolor='#F2FDFF'>
           <td align='right' bgcolor="#F2FDFF"> 单号：</td>
-          <td colspan="4" bgcolor="#F2FDFF"><input name="billno" type="text" id="billno" value="<%=danhao("DP")%>" size="30" maxlength="50" readonly="readonly" > 
+          <td colspan="5" bgcolor="#F2FDFF"><input name="billno" type="text" id="billno" value="<%=danhao("DP")%>" size="30" maxlength="50" readonly="readonly" > 
             按回车\TAB键即可输入下一选项</td>
-			<td colspan="5" bgcolor="#F2FDFF"></td>
         </tr>		
 		<tr bgcolor='#FFFFFF'>
 		  <td align='right' bgcolor="#FFFFFF"> 业务员：</td>
@@ -241,7 +185,7 @@ function GetSpan(x)
 		  </td>
 		</tr>
 		<tr bgcolor='#FFFFFF'>
-		  <td align='right' bgcolor="#FFFFFF"> 定制客户：</td>
+		  <td align='right' bgcolor="#FFFFFF"> 销售客户：</td>
 		  <td colspan="5" >
 <%
  sql="select * from Customer where is_ok='true' and customerType>1 order by CustomerType "
@@ -260,26 +204,15 @@ function GetSpan(x)
  set rs_kehu=nothing 
 %>
  </select>
-</td>
-</tr>
-<tr bgcolor='#FFFFFF'>
-<td align='right' bgcolor="#FFFFFF"> 配送方式：</td>
-<td colspan="5" >
- <select name="rank3" id="rank3" selfvalue="客户级别"  style="width:200px">
- <option value="">请选择</option>
- <option value="快递" >1.快递</option>
- <option value="物流" >2.物流</option>
- <option value="自取" >3.自取</option>
- </select>
-</td>
-</tr>
+		  </td>
+		</tr>
 		<tr bgcolor='#FFFFFF'>
           <td align='right' bgcolor="#FFFFFF"> 交货日期：</td>
           <td colspan="5" bgcolor="#FFFFFF"><input name="Gdate" type="text" id="Gdate" value="" onClick="WdatePicker()"></td>
         </tr>
 		<tr bgcolor='#FFFFFF'>
 		  <td align='right' bgcolor="#FFFFFF"> 备注：</td>
-		  <td colspan="5"><textarea name="comment" cols="60" rows="5" id="comment" onKeyDown="next()" ></textarea></td>
+		  <td colspan="5"><textarea name="comment" cols="60" rows="5" id="comment" onKeyDown="next()"></textarea></td>
 		</tr>
         <tr align="center" bgcolor="#ebf0f7">
           <td colspan="6" >
@@ -300,14 +233,14 @@ function GetSpan(x)
           <td width="10%">单号</td>
           <td width="5%">下单|入库</td>
           <td width="5%">金额</td>
-          <td width="6%">交货日期</td>
+          <td width="8%">交货日期</td>
           <td width="5%">业务员</td>
-		  <td width="5%">销售客户</td>
+		  <td width="5%">定制客户</td>
           <td width="15%">备注</td>
-          <td width="10%">操作</td>
+          <td width="8%">操作</td>
         </tr>	
 <%
- sql=" select a.*,b.数量,b.金额,c.RealName,b.数量1,b.金额1,d.RealName RealName1 from billInfo a left join billdetail_sum b on a.billno=b.billno left join Customer c on a.customer_id=c.id left join customer d on a.customer_id1=d.id where a.is_ok='TRUE' and a.billway='批发' order by a.status,billno desc "
+ sql=" select a.*,b.数量,b.金额,c.RealName,b.数量1,b.金额1,d.RealName RealName1 from billInfo a left join billdetail_sum b on a.billno=b.billno left join Customer c on a.customer_id=c.id left join customer d on a.customer_id1=d.id where a.is_ok='TRUE' and a.billway='批发' and a.customer_id1 is not null order by a.status,billno desc "
  set rs=server.createobject("adodb.recordset") 
  rs.open sql,conn,1,1
  if not rs.eof then
@@ -342,7 +275,7 @@ function GetSpan(x)
 	 elseif rs("status")=1 and rs("数量1")=rs("数量") then 
 	 sctd ztgs("生产完",4)
 	 elseif rs("status")=1 and rs("数量1")>0 then 
-	 sctd ztgs("生产中:"&(rs("数量1")*100/rs("数量"))&"%",4)
+	 sctd ztgs("生产中",4)
 	 elseif rs("status")=1 and rs("数量1")=0 then 
 	 sctd ztgs("已提交",4)
 	 elseif rs("status")=2 then 
@@ -356,16 +289,17 @@ function GetSpan(x)
 	 sctd rs("GDATE")
 	 sctd rs("RealName")
 	 sctd rs("RealName1")
-	 sctd1 left(replace(rs("billnote"),"<br>",""),20),rs("billnote")
+	 sctd1 left(rs("billnote"),20),rs("billnote")
 	 sc "<td>"
 	 sc "<IMG src='../images/view.gif' align='absmiddle'><a href='?action=view&id="&rs("id")&"'>查看</a>"
           if rs("status")= 0 then 
-		  sc "| <IMG src='../images/drop.gif' align='absmiddle'>"&_
+		  sc "| <IMG src='../images/edit.gif' align='absmiddle'><a href='?action=list&tj=yes&id="&rs("id")&"'>提交</a>"&_
+		  " | <IMG src='../images/drop.gif' align='absmiddle'>"&_
 		  "<a href=""javascript:DoEmpty('?wor=del&id="&rs("id")&"&action=list&ToPage="&intCurPage&"')"">删除</a>"
           elseif rs("status")=1 then 
 		  sc "| 已提交"
 		  elseif rs("status")=2 then 
-		  'sc "| <IMG src='../images/edit.gif' align='absmiddle'><a href='?action=list&tj=shou&id="&rs("id")&"'>收货</a>"
+		  sc "| <IMG src='../images/edit.gif' align='absmiddle'><a href='?action=list&tj=shou&id="&rs("id")&"'>收货</a>"
 		  elseif rs("status")=3 then 
 		  sc "|"&ztgs("已入库",1)
 		  end if
@@ -451,10 +385,8 @@ end if
 end if
 %>  
 <%if action="view" then
-'-view模块判断-
 viewaction=request("viewaction")
-'-商品输入检测 开始-
-if viewaction="yes" and left(trim(request("dname")),2)<>"备注" then 
+if viewaction="yes" then 
  if is_sku("Gname","GoodsInfo","'"&request("dname")&"'")=1 then 
   'sc "有该款式！"
   if is_sku("billno|goodsid","billdetail","'"&request("danno")&"'|'"&request("dname")&"'")=0 then 
@@ -462,28 +394,15 @@ if viewaction="yes" and left(trim(request("dname")),2)<>"备注" then
   else 
   sql="update billdetail set billqyt=billqyt +"&request("dqyt")&" where billno='"&request("danno")&"' and goodsid='"&request("dname")&"' "
   call dbdo(2,sql,sql)
+  'sc sql
   end if 
  else
- ERRtxt="该商品不存在！"
+ sc "该商品不存在！"
  end if 
-elseif viewaction="yes" and left(trim(request("dname")),2)="备注" then
- BillNoteNew= trim(mid(trim(request("dname")),3,9999))
- if BillNoteNew="清除" then 
- sql="update BillInfo set BillNote='' where billno='"&request("danno")&"'"
- conn.execute(sql)
- else 
- sql="update BillInfo set BillNote=replace(BillNote,' ','') +'<br>-'+'"&BillNoteNew&"' where billno='"&request("danno")&"'"
- conn.execute(sql)
- end if 
- 'sc sql
 end if 
-'-商品输入检测 结束-
+
 set rs=server.createobject("adodb.recordset") 
-if ViewS=0 then 
 sql="select * from billInfo where id="&id
-else 
-sql="select * from billInfo where billno='"&id&"'"
-end if 
 rs.open sql,conn,1,1
 if not rs.eof Then
 
@@ -492,20 +411,7 @@ sc "<table width='96%'  border='0' align='center' cellpadding='4' cellspacing='1
 sc "<form action='sbill.asp?action=view&id="&id&"' method='POST' name='billd' id='billd'>"
 sc "<tr align='center' bgcolor='#F2FDFF'>"
 sc "<td colspan=4  class='optiontitle'> 单号："&rs("billno")&" <input type='hidden' id='viewaction' name='viewaction' value='yes'> "
-sc "<input type='hidden' id='danno' name='danno' value='"&rs("billno")&"'>"
-sc "</td>"
-sc "</tr>"
-sc "<tr align='center' bgcolor='#F2FDFF'>"
-sc "<td colspan=6 align='left'>"
-if rs("status")= 2 then 
-sc "<IMG src='../images/edit.gif' align='absmiddle'><a href='?action=view&tj=viewsh&billno="&rs("billno")&"'>收货</a>"
-elseif rs("status")= 0 then  
-sc "<IMG src='../images/edit.gif' align='absmiddle'><a href='?action=view&tj=viewtj&billno="&rs("billno")&"'>提交</a>"
-end if 
-sc "<br>订单备注："&rs("BillNote")&";<br>配送方式:"&rs("PostWay")&"</td>"
-sc "</tr>"
-sc "<tr align='center' bgcolor='#F2FDFF'>"
-sc "<td colspan=6 align='left'> 交货日期："&rs("Gdate")&"</td>"
+sc "<input type='hidden' id='danno' name='danno' value='"&rs("billno")&"'></td>"
 sc "</tr>"
 sc "<tr bgcolor='#EBF0F7' align='center'>"
 sc "<td>选中</td>"
@@ -544,26 +450,28 @@ sc "</tr>"
    end if
    if rs("status")= 0 then 
 %>
-		<tr align="center" bgcolor="#FFFFFF">
-		  <td colspan=6 ><%=ztgs("输入提示：",1)%><span id="txtHint"><%=ztgs(ERRtxt,2)%></span></td>
-		</tr>
 	    <tr bgcolor='#FFFFFF' align='center'>
 		  <td >输入商品：</td>
-		  <td >数量:<input type="number" id="dqyt" name="dqyt" size="4" value="10"></td>
-		  <td align="left"><input id="dname" name="dname" style="width:40%" onkeyup="showHint(this.value)" /></td>
-		  <td ><input type="Submit" name="Submit3" value="提交" ></td>
+		  <td>数量:<input id="dqyt" name="dqyt" size="4" value="1"></td>
+		  <td ><input id="dname" name="dname" style="width:100%" /></td>
+		  <td><input type="Submit" name="Submit3" value="提交" ></td>
 		</tr>
 <%
 end if 
 %>
+		<tr align="center" bgcolor="#F2FDFF">
+		  <td colspan=6 > 订单备注：<%=rs("BillNote")%></td>
+		</tr>
+		<tr align="center" bgcolor="#F2FDFF">
+		  <td colspan=6 > 交货日期：<%=rs("Gdate")%></td>
+		</tr>
 		<tr align="center" bgcolor="#ebf0f7">
-		  <td colspan="4"><a href='?action=list'><u><strong><em>返回</em></strong></u></a></td>
+		  <td colspan="4"><a href='?action=list'><u><strong><em>返回</em></strong></u></a>
+          <!--<input type="button" name="Submit2" value="返回" onClick="history.back(-1)">--></td>
 		</tr>
 		</form>
   	</table>
 <%
-sc "<script>var ss=document.getElementById('dname');ss.focus();</script>"
-ERRtxt=""
 end if
 end if
 %>

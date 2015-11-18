@@ -36,6 +36,8 @@ rs("address")=Request("address")
 rs("Moblie")=Request("pcode")
 rs("WeiXin")=Request("owner")
 rs("Password")=Request("www")
+rs("PostCode")=Request("PostCode")
+rs("MailName")=Request("MailName")
 if id ="" then 
 rs("createUser")=Session("RealName")
 end if
@@ -138,7 +140,7 @@ function check()
           <td colspan="6"  class="optiontitle"> 添加客户信息 </td>
         </tr>
         <tr bgcolor='#F2FDFF'>
-          <td align='right' bgcolor="#FFFFFF"> 姓名：</td>
+          <td align='right' bgcolor="#FFFFFF"> 客户：</td>
           <td colspan="5" bgcolor="#FFFFFF"><input name="cname" type="text" id="cname" onKeyDown="next()" size="20" maxlength="20" > 
             按回车\TAB键即可输入下一选项</td>
         </tr>		
@@ -148,7 +150,7 @@ function check()
 		</tr>
 		<tr bgcolor='#FFFFFF'>
 		  <td align='right' bgcolor="#FFFFFF"> 级别：</td>
-		  <td colspan="5" >
+		  <td>
            <select name="rank" id="rank" selfvalue="客户级别">
               <option value="">请选择</option>
               <option value="1">★</option>
@@ -158,6 +160,10 @@ function check()
               <option value="5">★★★★★</option>
             </select>
 		  </td>
+		  <td align='right'>收货人：</td>
+		  <td><input name="MailName" type="text" id="MailName" onKeyDown="next()" maxlength="11"></td>
+		  <td align='right'>邮编：</td>
+		  <td><input name="PostCode" type="text" id="PostCode" onKeyDown="next()"></td>
 		</tr>
 		<tr bgcolor='#FFFFFF'>
 		  <td align='right' bgcolor="#FFFFFF"> 地址：</td>
@@ -332,12 +338,19 @@ if not rs.eof Then
 		<tr bgcolor='#FFFFFF'>
 		  <td align='right' bgcolor="#FFFFFF"> 地址：</td>
 		  <td><%=rs("address")%></td>
-		  <td align='right'>电话：</td>
+		  <td align='right'>联系电话：</td>
 		  <td><%=rs("mOBLIE")%></td>
 		  <td align='right'>微信：</td>
 		  <td><%=rs("wEIXIN")%></td>
 		</tr>
-		
+		<tr bgcolor='#FFFFFF'>
+		  <td align='right' bgcolor="#FFFFFF"> 邮编：</td>
+		  <td><%=rs("PostCode")%></td>
+		  <td align='right'>收货人：</td>
+		  <td><%=rs("MailName")%></td>
+		  <td align='right'></td>
+		  <td></td>
+		</tr>
 		<tr bgcolor='#FFFFFF'>
 		  <td align='right' bgcolor="#FFFFFF"> 销售数量：</td>
 		  <td><%=rs("Sellqty")%></td>

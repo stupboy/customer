@@ -356,7 +356,7 @@ function GetSpan(x)
 	 sctd rs("GDATE")
 	 sctd rs("RealName")
 	 sctd rs("RealName1")
-	 sctd1 left(rs("billnote"),20),rs("billnote")
+	 sctd1 left(replace(rs("billnote"),"<br>",""),20),rs("billnote")
 	 sc "<td>"
 	 sc "<IMG src='../images/view.gif' align='absmiddle'><a href='?action=view&id="&rs("id")&"'>查看</a>"
           if rs("status")= 0 then 
@@ -451,8 +451,10 @@ end if
 end if
 %>  
 <%if action="view" then
+'-view模块判断-
 viewaction=request("viewaction")
-if viewaction="yes" then 
+'-商品输入检测 开始-
+if viewaction="yes" and left(trim(request("dname")),2)<>"备注" then 
  if is_sku("Gname","GoodsInfo","'"&request("dname")&"'")=1 then 
   'sc "有该款式！"
   if is_sku("billno|goodsid","billdetail","'"&request("danno")&"'|'"&request("dname")&"'")=0 then 
@@ -460,13 +462,22 @@ if viewaction="yes" then
   else 
   sql="update billdetail set billqyt=billqyt +"&request("dqyt")&" where billno='"&request("danno")&"' and goodsid='"&request("dname")&"' "
   call dbdo(2,sql,sql)
-  'sc sql
   end if 
  else
  ERRtxt="该商品不存在！"
  end if 
+elseif viewaction="yes" and left(trim(request("dname")),2)="备注" then
+ BillNoteNew= trim(mid(trim(request("dname")),3,9999))
+ if BillNoteNew="清除" then 
+ sql="update BillInfo set BillNote='' where billno='"&request("danno")&"'"
+ conn.execute(sql)
+ else 
+ sql="update BillInfo set BillNote=replace(BillNote,' ','') +'<br>-'+'"&BillNoteNew&"' where billno='"&request("danno")&"'"
+ conn.execute(sql)
+ end if 
+ 'sc sql
 end if 
-
+'-商品输入检测 结束-
 set rs=server.createobject("adodb.recordset") 
 if ViewS=0 then 
 sql="select * from billInfo where id="&id

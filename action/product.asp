@@ -41,6 +41,8 @@ elseif Request("addon")="yes" then
  sql="insert into billInfo (billno,status,cuser,billway,customer_id,billnote) values ('"&Request("billno")&"',0,'"&session("RealName")&"','下单','"&Request("rank")&"','"&request("comment")&"')"
  conn.execute(sql)
 end if
+
+ViewS=0
 '-更新订单信息状态 1变2 -
 if Request("tj")="yes" then 
 sql="update BillInfo set status=2 where id="&Request("id")
@@ -51,7 +53,14 @@ sql="update BillInfo set status=0,billnote='订单退回！' where id="&Request("id")
 conn.execute(sql)
 sql="update billdetail set ProductQty=0 where billno='"&Request("danno")&"'"
 conn.execute(sql)
-'-原料扣减-
+'-明细内提交-
+elseif Request("tj")="viewtj" then 
+'sql="update BillInfo set status=0,billnote='订单退回！' where id="&Request("id")
+sql="update BillInfo set status=2 where billno='"&Request("billno")&"'"
+conn.execute(sql)
+ViewS=1
+id=Request("billno")
+
 elseif Request("tj")="yuan" then 
 '-扣减标注-
 sql="update BillInfo set YuanCut=1 where id="&Request("id")
@@ -191,6 +200,47 @@ function check()
  }
 -->
 </script>
+<script type="text/javascript">
+function showHint(str)
+{
+var xmlhttp;
+if (str.length==0)
+  { 
+  document.getElementById("txtHint").innerHTML="";
+  return;
+  }
+if (window.XMLHttpRequest)
+  {// code for IE7+, Firefox, Chrome, Opera, Safari
+  xmlhttp=new XMLHttpRequest();
+  }
+else
+  {// code for IE6, IE5
+  xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  }
+xmlhttp.onreadystatechange=function()
+  {
+  if (xmlhttp.readyState==4 && xmlhttp.status==200)
+    {
+    document.getElementById("txtHint").innerHTML=xmlhttp.responseText;
+    }
+  }
+  //ajax中文乱码解决
+str=encodeURIComponent(str);
+xmlhttp.open("GET","count.asp?q="+str,true);
+//xmlhttp.send("act="+encodeURIComponent(escape(post)));
+xmlhttp.send();
+}
+function GetSpan(x)
+{
+ var tt=document.getElementById(x);
+ var ss=document.getElementById("dname");
+ var vv=document.getElementById("billd");
+ //alert(tt.innerHTML);
+ ss.value=tt.innerHTML;
+ ss.focus();
+ vv.submit();
+}
+</script>
 </head>
 <body>
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -244,7 +294,7 @@ function check()
 	 end if
 	      '-数据循环输出 start-
 		  sc "<form name='del' action='' method='post'>"
-		  sc "<tr align='center' bgcolor='#FFFFFF' onmouseover=""this.style.background='#F2FDFF'"" onmouseout=""this.style.background='#FFFFFF'"">"
+		  sc "<tr align='center' bgcolor='#FFFFFF' bore='0' onmouseover=""this.style.background='#F2FDFF'"" onmouseout=""this.style.background='#FFFFFF'"">"
 		  if rs("status")=0 then 
 		  sctd "<input type='checkbox' name='id' value='"&rs("id")&"'>"
 		  elseif rs("status")=1 and rs("数量1")=0 then 
@@ -264,39 +314,31 @@ function check()
 		  sctd rs("Realname1")
 		  sctd rs("RealName")
 		  sctd rs("Gdate")
-		  sctd1 left(rs("billnote"),15),rs("billnote")
+		  sctd1 left(replace(rs("billnote"),"<br>",""),15),rs("billnote")
 		  sc "<td>"
+		  if rs("status")>1 then 
+		  sc "<IMG src='../images/view.gif' align='absmiddle'><a href='?action=view&id="&rs("id")&"'>查看</a>"
+		  else 
 		  sc "<IMG src='../images/view.gif' align='absmiddle'><a href='?action=view&id="&rs("id")&"'>生产</a>"
+		  end if
           if rs("status")= 1 then 
-		  sc "| <IMG src='../images/edit.gif' align='absmiddle'><a href='?action=list&tj=yes&id="&rs("id")&"'>发货</a>"&_
-		  " | <IMG src='../images/drop.gif' align='absmiddle'>"&_
+		  sc "| <IMG src='../images/drop.gif' align='absmiddle'>"&_
 		  "<a href='?action=list&tj=sb&id="&rs("id")&"&danno="&rs("billno")&"'>取消</a>"
           elseif rs("status")=2 then 
-		  sc "|"&ztgs("待入库",2)
+		  'sc "|"&ztgs("待入库",2)
 		  elseif rs("status")=3 then 
-		  sc "| "&ztgs("已入库",1)
+		  'sc "|"&ztgs("已入库",1)
 		  if rs("YuanCut")=0 then 
 		  sc "|<IMG src='../images/view.gif' align='absmiddle'><a href='?action=list&tj=yuan&id="&rs("id")&"&danno="&rs("billno")&"'>原料</a>"
 		  end if 
 		  end if
-		  sc "</td>"		  
+		  sc "</td>"
+          sc "<tr>"		  
 %>
-          <!--<td><IMG src="../images/view.gif" align="absmiddle"><a href="?action=view&id=<%=rs("id")%>">生产</a><% if rs("status")= 1 then %>| <IMG src="../images/edit.gif" align="absmiddle"><a href="?action=list&tj=yes&id=<%=rs("id")%>">发货</a> | <IMG src="../images/drop.gif" align="absmiddle"><a href="?action=list&tj=sb&id=<%=rs("id")%>&danno=<%=rs("billno")%>">取消</a><% else %> | 已发货 <% end if %></td>-->
-        </tr>
 <%
 rs.movenext 
 next
 %>
-<!--
-		<tr bgcolor="#F2FDFF">
-		  <td colspan="9">&nbsp;&nbsp;
-		   <input name="chkall" type="checkbox" id="chkall" value="select" onclick=CheckAll(this.form)> 全选
-		   <input name="wor" type="hidden" id="wor" value="del" />
-		   <input name="tj" type="hidden" id="tj" value="yes" />
-		   <input type="submit" name="Submit3" value="删除所选" onClick="{if(confirm('确定发货？发货后无法修改数量！')){return true;}return false;}" />
-		  </td>
-		</tr>
--->
 		</form>
         <tr align="center" bgcolor="#ebf0f7">
           <td colspan="9">总共：
@@ -366,9 +408,8 @@ end if
 %>  
 <%if action="view" then
 viewaction=request("viewaction")
-if viewaction="yes" then 
+if viewaction="yes" and left(trim(request("dname")),2)<>"物流" then 
  if is_sku("Gname","GoodsInfo","'"&request("dname")&"'")=1 then 
-  'sc "有该款式！"
   if is_sku("billno|goodsid","billdetail","'"&request("danno")&"'|'"&request("dname")&"'")=0 then 
   'call dbdo(1,"billdetail","billno|goodsid|billqyt|cuser-'"&request("danno")&"'|'"&request("dname")&"'|"&request("dqyt")&"|'"&session("RealName")&"'")
   sc "订单无这款商品！"
@@ -380,10 +421,22 @@ if viewaction="yes" then
  else
  sc "该商品不存在！"
  end if 
+elseif viewaction="yes" and left(trim(request("dname")),2)="物流" then
+ BillNoteNew= trim(mid(trim(request("dname")),3,9999))
+ if BillNoteNew="清除" then 
+ sql="update BillInfo set PostNo='' where billno='"&request("danno")&"'"
+ conn.execute(sql)
+ else 
+ sql="update BillInfo set PostNo='"&BillNoteNew&"' where billno='"&request("danno")&"'"
+ conn.execute(sql)
+ end if 
 end if 
 set rs=server.createobject("adodb.recordset") 
-'sql="select * from billInfo where id="&Request("id")
+if ViewS=0 then 
 sql="select * from billInfo where id="&id
+else 
+sql="select * from billInfo where billno='"&id&"'"
+end if 
 rs.open sql,conn,1,1
 if not rs.eof Then
 %>
@@ -394,7 +447,15 @@ if not rs.eof Then
 		  <input type="hidden" id="danno" name="danno" value="<%=rs("billno")%>"></td>
 		</tr>
 				<tr align="center" bgcolor="#F2FDFF">
-		  <td colspan=6 align='left'> 订单备注：<%=rs("BillNote")%><br>配送方式：<%=rs("PostWay")%></td>
+		  <td colspan=6 align='left'> 订单备注：
+		 <%
+if rs("status")= 3 then 
+'sc "<IMG src='../images/edit.gif' align='absmiddle'><a href='?action=view&tj=viewsh&billno="&rs("billno")&"'>收货</a>"
+elseif rs("status")= 1 then  
+sc "<IMG src='../images/edit.gif' align='absmiddle'><a href='?action=view&tj=viewtj&billno="&rs("billno")&"'>发货</a>"
+end if 
+		 %>
+		  <br><%=rs("BillNote")%><br>配送方式：<%=rs("PostWay")%><br>物流信息：<%=rs("PostNo")%></td>
 		</tr>
 	    <tr bgcolor='#EBF0F7' align='center'>
 		  <td>选中</td>
@@ -428,15 +489,18 @@ if not rs.eof Then
 <%
    if rs("status")= 1 then 
 %>
+		<tr align="center" bgcolor="#FFFFFF">
+		  <td colspan=6 ><%=ztgs("输入提示：",1)%><span id="txtHint"><%=ztgs(ERRtxt,2)%></span></td>
+		</tr>
 	    <tr bgcolor='#FFFFFF' align='center'>
 		  <td >输入商品：</td>
-		  <td>数量:<input id="dqyt" name="dqyt" size="4" value="1"></td>
-		  <td ><input id="dname" name="dname" style="width:100%" /></td>
+		  <td>数量:<input type="number" id="dqyt" name="dqyt" size="4" value="10"></td>
+		  <td ><input id="dname" name="dname" style="width:100%" onkeyup="showHint(this.value)" /></td>
 		  <td><input type="Submit" name="Submit3" value="提交" ></td>
 		</tr>
 <%
-end if 
-end if 
+   end if 
+   end if 
 %>
 		<tr align="center" bgcolor="#ebf0f7">
 		  <td colspan="4"><a href='?action=list'><u><strong><em>返回</em></strong></u></a></td>
@@ -448,18 +512,18 @@ end if
 		  <td>库存数量</td>
 		  <td>需求情况</td>
 		</tr>
-		<%
-   sql2="select aa.GnameYuan,aa.Yuanqty,qty Storeqty from (select sum(b.GnameYuanQty*(billqyt-ProductQty)) Yuanqty,b.GnameYuan from BillDetail_Info a left join Goods_Yuan b on a.goodsid=b.Gname where status=1 and billway in ('下单','定制','批发','XNY') group by b.GnameYuan) aa left join (select a.Yname,sum(Yqty) qty from Yuan_Store a left join Yuan_Info b on a.Yname=b.Yname group by a.Yname) bb on aa.GnameYuan=bb.Yname "
-   set rs2=server.createobject("adodb.recordset") 
-   rs2.open sql2,conn,1,1
-   if not rs.eof then
-	 For i = 0 to rs2.recordcount
-	 if rs2.eof then     
-	 Exit For 
-	 end if
-	 
-	 dim cysl
-	 cysl=rs2("Storeqty")-rs2("Yuanqty")
+<%
+ sql2="select aa.GnameYuan,aa.Yuanqty,qty Storeqty from (select sum(b.GnameYuanQty*(billqyt-ProductQty)) Yuanqty,b.GnameYuan from BillDetail_Info a left join Goods_Yuan b on a.goodsid=b.Gname where status=1 and billno='"&rs("billno")&"' and billway in ('下单','定制','批发','XNY') group by b.GnameYuan) aa left join (select a.Yname,sum(Yqty) qty from Yuan_Store a left join Yuan_Info b on a.Yname=b.Yname group by a.Yname) bb on aa.GnameYuan=bb.Yname "
+ set rs2=server.createobject("adodb.recordset") 
+ rs2.open sql2,conn,1,1
+ if not rs.eof then
+ For i = 0 to rs2.recordcount
+ if rs2.eof then     
+ Exit For 
+ end if
+ Dim Cysl
+ Cysl=rs2("Storeqty")-rs2("Yuanqty")
+ Cybl=round(rs2("Storeqty")/rs2("Yuanqty"),0)
 %>
 	    <tr bgcolor='#FFFFFF' align='center' class='YLQK'>
 		  <td><%=rs2("GnameYuan")%></td>
@@ -468,7 +532,11 @@ end if
 		  <td>
 		  <% 	  
 		  if cysl>=0 then 
+		  if cybl>2 then 
 		  sc ztgs("库存充足",1)
+		  else 
+		  sc ztgs("库存适量",1)
+		  end if 
 		  else
 		  sc ztgs("库存不足",2)
 		  end if 
@@ -476,11 +544,11 @@ end if
 		  </td>
 		</tr>
 <%
-   rs2.movenext 
-   next
-   rs2.close
-   set rs2=nothing
-   end if
+ rs2.movenext 
+ next
+ rs2.close
+ set rs2=nothing
+ end if
 %>
   	</table>
 <%

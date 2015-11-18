@@ -60,18 +60,10 @@ body {
 	  d = new dTree('d');
 	  d.config.target="mainFrame";
 	  d.add(0,-1,' 网站内容管理');
-	  <% if qx("C1",session("Limit")) then %>
-	  d.add(1, 0, ' 系统管理', '');
-      d.add(10, 1, ' 用户档案', 'action.asp?dz=a002');
-	  //d.add(16, 1, ' 微信配置', 'action.asp?dz=a014');
-	  <% end if %>
-	  <% if qx("C1",session("Limit")) or qx("Y1",session("Limit")) then %>
 	  d.add(2, 0, ' 运营中心', '');
 	  d.add(21, 2, ' 档案管理', '');
 	  d.add(210, 21, ' 商品档案', 'action.asp?dz=a001');
 	  d.add(211, 21, ' 原料档案', 'action.asp?dz=a006');
-	  d.add(214, 21, ' 厂家档案', 'action.asp?dz=a022');
-	  d.add(215, 21, ' 厂家提供', 'action.asp?dz=a023');
 	  d.add(212, 21, ' 商品配比', 'action.asp?dz=a009');
 	  d.add(213, 21, ' 客户档案', 'action.asp?dz=a005');
 	  d.add(20, 2, ' 销售渠道', '');
@@ -82,19 +74,6 @@ body {
 	  d.add(203, 20, ' 零售销售', 'action.asp?dz=a016');
 	  d.add(22, 2, ' 报表查询', '');
 	  d.add(220, 22, ' 零售销售', 'action.asp?dz=a016');
-	  <% end if %>
-	  <% if qx("C1",session("Limit")) or qx("K1",session("Limit")) then %>
-	  d.add(3, 0, ' 仓库管理', '');
-	  d.add(30, 3, ' 生产订单', 'action.asp?dz=a011');
-	  d.add(35, 3, ' 销售入库', 'action.asp?dz=a015');
-	  d.add(36, 3, ' 原料入库', 'action.asp?dz=a007');
-	  d.add(34, 3, ' 原料库存', 'action.asp?dz=a010');
-	  d.add(31, 3, ' 商品库存', 'action.asp?dz=a012');
-	  <% end if %>
-	  <% if qx("C1",session("Limit")) then %>
-	  d.add(4, 0, ' 报表查询', '');
-	  d.add(40, 4, ' 财务报表', 'action.asp?dz=a017');
-	  <% end if %>
 	  d.add(9, 0, ' 个人管理', '');
 	  d.add(91, 9, ' 退出登入', 'logout.asp');		
 	  document.write(d);
