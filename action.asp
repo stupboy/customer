@@ -4,7 +4,7 @@
 dz=request.querystring("dz")
 select case dz
  case "a001"
-  response.redirect "action/goods.asp?action=list"
+  response.redirect C("action","goods","action|list")
  case "a002"
   response.redirect "action/admin.asp?action=list"
  case "a003"

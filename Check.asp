@@ -14,16 +14,23 @@ session("pSN")=""
 if request("action")="login" then
    Username=trim(request("admin_name"))
    Password=trim(request("admin_pass"))
+   LogType=trim(request("LogType"))
 end if
 If Instr(Username,"or")<>0 or Instr(Password,"or")<>0 or Instr(Username,"and")<>0 or Instr(Password,"and")<>0 Then
    response.write "<br><br><br><br><font size=2><center>没事别搞人家后台，谢谢！<br>否则一切后果自负！<br>校无忧-Www.Xiao5u.Com</font>"
 else
 set rs=server.createobject("adodb.recordset")
-sql="select * from admin where Username='"&replace(Username,"'","''")&"' and Password='"&replace(md5(Password),"'","''")&"'"
+sql="select * from admin where Username='"&replace(Username,"'","''")&"' and Password='"&replace(md5(Password),"'","''")&"' and limitText like '%"&logType&"%' "
 rs.open sql,conn,1,3
     if rs.eof then
         response.write"<SCRIPT language=JavaScript>alert('您输入的用户名或密码有误。返回重新输入!\n \n 校无忧科技-Www.Xiao5u.Com-友情提示');"
-        response.write"location.href='index.asp'</SCRIPT>"
+		if LogType="C1" then 
+        response.write"location.href='admin/index.asp'</SCRIPT>"
+		elseif LogType="K1" then 
+		response.write"location.href='store/index.asp'</SCRIPT>"
+		elseif LogType="Y1" then 
+		response.write"location.href='manager/index.asp'</SCRIPT>"
+		end if 
     else
 		rs("LastLoginIP")=Request.ServerVariables("REMOTE_ADDR")
 		rs("LastLoginTime")=now()

@@ -241,7 +241,7 @@ function check()
 		  <td><%=rs("Gsell")%></td>
 		  <td><%=rs("addtime")%></td>
 		  <td><%=rs("adduser")%></td>
-          <td><IMG src="../images/view.gif" align="absmiddle"><a href="?action=view&id=<%=rs("id")%>">查看</a> | <IMG src="../images/edit.gif" align="absmiddle"><a href="?action=edit&id=<%=rs("id")%>">修改</a> | <IMG src="../images/drop.gif" align="absmiddle"><a href="javascript:DoEmpty('?wor=del&id=<%=rs("id")%>&action=list&ToPage=<%=intCurPage%>')">删除</a></td>
+          <td><IMG src="../images/view.gif" align="absmiddle"><!--<a href="?action=view&id=<%=rs("id")%>">查看</a>--><%=U("查看","?action=view&id="&rs("id"),"DD")%> | <IMG src="../images/edit.gif" align="absmiddle"><a href="?action=edit&id=<%=rs("id")%>">修改</a> | <IMG src="../images/drop.gif" align="absmiddle"><a href="javascript:DoEmpty('?wor=del&id=<%=rs("id")%>&action=list&ToPage=<%=intCurPage%>')">删除</a></td>
         </tr>
 <%
 rs.movenext 

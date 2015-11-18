@@ -7,6 +7,7 @@
 '-03. LimitCheck(a)   [s]权限检测函数，若无权限则终端输出-
 '-04. qx(a,b)         判断是否有权限，返回boolen值 TRUE OR FALSE【b中是否包含a】-
 '-05. str_x(x,y)      字符补位函数x为原字符,y为位数不足用0补齐-
+'-06. CreateArr(str,x,y) 生成二维数组，str为字符串xy为分割字符-
 '-06. date2str(x,y)   日期转字符函数，x为日期，y为类型，y为1则到日150801，y为2则到秒150801120025,3则返回8位日期如20150801-
 '-07. DanHao(x)       单号生成函数，x为单号前缀，后连接当期日期【类型2】-
 '-08. getip()         [s]获取IP函数-
@@ -17,6 +18,7 @@
 '-13. is_sku(a.b.c)   查找b表中是否包含字段c=a的值返回1和0-
 '-13. is_skux(a,b,c,d)   查找b表中是否包含字段c=a的值返回1和0-
 '-14. dbdo(x,y,z)     [s]数据库操作函数 x=1 待完善说明-
+'-15. look_db(x,y,z,w) 查找数据库值x为查找字段y为表z为条件字段w为条件-
 '-15. aspTips(x)      [s]弹窗警告 -
 '-16. sctd(x)         [s]输出表格td-
 '-17. ztgs(x,y)       小标签格式输出x为内容y为格式-
@@ -25,6 +27,8 @@
 '-待增加-
 '-函数明细列表-
 '-输出函数SC -
+dim baseurl
+baseurl="/customer/"
 Sub sc(str)
 Response.write str
 End Sub
@@ -67,6 +71,7 @@ else
    qx=false
  end if   
 end if 
+
 end function 
 '--瀛楃杞浣嶆暟--
 function str_x(x,y)
@@ -327,6 +332,49 @@ y=replace(y,"'","$")
 sql="insert into sys_log (RealName,DOsql,DOnote) values ('"&x&"','"&y&"','"&z&"')"
 conn.execute(sql)
 end sub 
+'-生成二维数组-
+Function CreateArr(str,x,y)
+dim arr()
+dim i,j
+str=split(str,x)
+for i=0 to UBound(str)
+    arrstr=split(str(i),y)
+    for j=0 to Ubound(arrstr)
+        ReDim Preserve arr(UBound(str),UBound(arrstr))
+        arr(i,j)=arrstr(j)
+    next
+next
+CreateArr=arr
+End Function
+'KKM=CreateArr("a,b,c|1,2,3","|",",")
+'SC KKM(0,0)
+
+function C(w,x,z)
+'-x为目录-
+'-y为动作-
+'-z为条件-
+dim TiaoJian
+zz=CreateArr(z,"|",",")
+zs=ubound(zz,2)
+TiaoJian=""
+for zi=0 to zs
+TiaoJian=Tiaojian&"&"&zz(0,zi)&"="&zz(1,zi)
+next
+TiaoJian=trim(mid(TiaoJian,2,9999))
+C=w&"/"&x&".asp?"&TiaoJian
+end function 
+function U(a,b,c)
+if instr(session("Limit"),c)>0 then 
+U= "<a href='"&b&"'>"&a&"</a>"
+else 
+U=""
+end if 
+end function
+
+'sc C("goods","action,yes|list,no")
 '-娴嬭瘯鍑芥暟璇彞-
 'sc esql("UserInfo","Username:stupboy|password:123456")
+%>
+<%
+'sc "http://"&Request.ServerVariables("HTTP_HOST")&request.ServerVariables("URL")&"?"&Request.ServerVariables("QUERY_STRING") 
 %>
