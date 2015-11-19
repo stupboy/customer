@@ -2,29 +2,41 @@
 <!DOCTYPE html PUBLIC "-//WAPFORUM//DTD XHTML Mobile 1.0//EN" "http://www.wapforum.org/DTD/xhtml-mobile10.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title><%=SiteName%></title>
-<meta http-equiv=Content-type content="text/html; charset=gb2312">
-<!--#include file=../images/ini.sys -->
-<STYLE type=text/css> 
-body {FONt-SIZE: 12px; BACKGROUND: #E8F2FB; COLOR: #333; MARGIN: 80px;background:url(../images/bg.jpg) repeat-x;}
-.bt{ font-size:24px; color:#FFFFFF; text-align:center; font-weight:bold}
-.btn {
-	BORDER-RIGHT: #0033cc 1px solid; BORDER-TOP: #00ccff 1px solid; FONT-SIZE: 12px; BORDER-LEFT: #00ccff 1px solid; CURSOR: hand; COLOR: #ffffff; BORDER-BOTTOM: #0033cc 1px solid; FONT-FAMILY: "宋体"; BACKGROUND-COLOR: #0099ff
-}
-</STYLE>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>鍚庡彴绠＄悊绯荤粺</title>
+<!-- CSS -->
+<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
+<link rel="stylesheet" href="../inc/assets/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="../inc/assets/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="../inc/assets/css/form-elements.css">
+<link rel="stylesheet" href="../inc/assets/css/style.css">
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+<!-- Favicon and touch icons -->
+<link rel="shortcut icon" href="../inc/assets/ico/favicon.png">
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="../inc/assets/ico/apple-touch-icon-144-precomposed.png">
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="../inc/assets/ico/apple-touch-icon-114-precomposed.png">
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="../inc/assets/ico/apple-touch-icon-72-precomposed.png">
+<link rel="apple-touch-icon-precomposed" href="../inc/assets/ico/apple-touch-icon-57-precomposed.png">
 <script language="JavaScript">
 <!--
 function chk(theForm)
 {
 if (theForm.admin_name.value == "")
 {
-alert("请输入管理帐号！");
+alert("鐢ㄦ埛鍚嶄笉鑳戒负绌�");
 theForm.admin_name.focus();
 return (false);
 }
 if (theForm.admin_pass.value == "")
 {
-alert("请输入管理密码！");
+alert("瀵嗙爜涓嶈兘涓虹┖");
 theForm.admin_pass.focus();
 return (false);
 }
@@ -33,53 +45,78 @@ return true;
 }
 //-->
 </script>
+<!--#include file=../images/ini.sys -->
 </head>
 <body>
-<table cellSpacing=1 cellPadding=5 width=460 align=center bgColor=#b9b0a9 border=0>
- <FORM action="../check.asp?action=login" method=post onSubmit="return chk(this)">
-  <tbody>
-  <tr>
-    <td vAlign=top bgColor=#ffffff>
-      <table cellSpacing=0 cellPadding=0 width="100%" border=0>
-        <tbody>
-        <tr><td width=460 background=../images/login_top.jpg height=54 class="bt"><%=SiteName%></td></tr>
-        <tr>
-          <td bgColor=#FFFFFF height=150>
-            <table height="100%" cellSpacing=0 cellPadding=0 width="100%" border=0>
-              <tbody>
-              <tr>
-                <td align=middle width="40%"><IMG height=90 src="../images/login.gif" width=91></td>
-                <td>
-                  <table cellSpacing=1 cellPadding=2 width="100%" align=center border=0>
-                    <tbody>
-                    <tr>
-                      <td align=right width=60 height=30>用户名：</td>
-                      <td height=30><INPUt id=admin_name name=admin_name> </td><INPUt type="hidden" id=logtype name=logtype value="C1"></tr>
-                    <tr>
-                      <td align=right height=30>密&nbsp;&nbsp;码：</td>
-                      <td height=30><INPUt id=admin_pass type=password name=admin_pass> </td></tr>
-                    <tr>
-                      <td align=right>验证码：</td>
-                      <td><INPUt class=pwd id=VerifyCode style="WIDtH: 40px" maxLength=4 name=VerifyCode><img src="../yz.asp" border='0' onClick="this.src='../yz.asp'" alt='点击刷新验证码' /></td></tr>
-                    <tr align=middle>
-                      <td colSpan=2 height=40><INPUt class=btn type=submit value="提 交" name=Submit> <input  class=btn type="Reset" value="取 消" name="Reset"></td>
-					</tr>
-				    </tbody>
-				   </table>
-				 </td>
-			  </tr>
-			 </tbody>
-		   </table>
-		 </td>
-		</tr>
-        <tr>
-          <td align=middle bgColor=#9CBFE5 height=25><%=Copyright%></td>
-        </tr>
-		</tbody>
-	  </table>
-	</td>
-   </tr></FORM>
-   </tbody>
-  </table>
+<style type="text/css">
+body{background: url("../inc/assets/img/backgrounds/1.jpg") center center no-repeat, url(images/weather-clouds.png) top left no-repeat, url("../inc/assets/img/backgrounds/1@2x.jpg") top right no-repeat;}
+</style>
+
+<!-- Top content -->
+<div class="top-content">
+	
+    <div class="inner-bg">
+<div class="container">
+    <div class="row">
+    </div>
+    <div class="row">
+<div class="col-sm-6 col-sm-offset-3 form-box">
+	<div class="form-top">
+		<div class="form-top-left">
+			<h3>鍚庡彴绠＄悊绯荤粺<h3>
+    		<p></p>
+		</div>
+		<div class="form-top-right">
+			<i class="fa fa-key"></i>
+		</div>
+    </div>
+    <div class="form-bottom">
+	<FORM action="../check.asp?action=login" method=post onSubmit="return chk(this)" class="login-form"><INPUt type="hidden" id=logtype name=logtype value="C1">
+			    	<div class="form-group">
+			    		<label class="sr-only" for="form-username">Username</label>
+				<input type="text" name="admin_name" placeholder="Username..." class="form-username form-control" id="admin_name">
+			</div>
+			<div class="form-group">
+				<label class="sr-only" for="form-password">Password</label>
+				<input type="password" name="admin_pass" placeholder="Password..." class="form-password form-control" id="admin_pass">
+			</div>
+			<div class="form-group">
+			<label class="sr-only" for="form-password">楠岃瘉鐮�</label>
+				<input type="text" name="VerifyCode" placeholder="楠岃瘉鐮�" class="form-password form-control" id="VerifyCode">
+				<img src="../yz.asp" border='0' width='100' onClick="this.src='../yz.asp'" alt='鐐瑰嚮鍒锋柊' />
+			</div>
+			<button type="submit" class="btn">鐧诲叆绯荤粺</button>
+			    </form>
+		    </div>
+</div>
+    </div>
+    <div class="row">
+    <!--
+<div class="col-sm-6 col-sm-offset-3 social-login">
+	<h3>...or login with:</h3>
+	<div class="social-login-buttons">
+		<a class="btn btn-link-1 btn-link-1-facebook" href="#">
+			<i class="fa fa-facebook"></i> Facebook
+		</a>
+		<a class="btn btn-link-1 btn-link-1-twitter" href="#">
+			<i class="fa fa-twitter"></i> Twitter
+		</a>
+		<a class="btn btn-link-1 btn-link-1-google-plus" href="#">
+			<i class="fa fa-google-plus"></i> Google Plus
+		</a>
+	</div>
+</div>-->
+</div>
+</div>
+</div>
+</div>
+<!-- Javascript -->
+<script src="../inc/assets/js/jquery-1.11.1.min.js"></script>
+<script src="../inc/assets/bootstrap/js/bootstrap.min.js"></script>
+<script src="../inc/assets/js/jquery.backstretch.min.js"></script>
+<script src="../inc/assets/js/scripts.js"></script>
+<!--[if lt IE 10]>
+    <script src="../inc/assets/js/placeholder.js"></script>
+<![endif]-->
 </body>
 </html>

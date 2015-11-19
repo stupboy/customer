@@ -24,7 +24,7 @@ sql="select * from admin where Username='"&replace(Username,"'","''")&"' and Pas
 rs.open sql,conn,1,3
     if rs.eof then
         response.write"<SCRIPT language=JavaScript>alert('您输入的用户名或密码有误。返回重新输入!\n \n 校无忧科技-Www.Xiao5u.Com-友情提示');"
-		if LogType="C1" then 
+		if LogType="C1" or LogType="" then 
         response.write"location.href='admin/index.asp'</SCRIPT>"
 		elseif LogType="K1" then 
 		response.write"location.href='store/index.asp'</SCRIPT>"
